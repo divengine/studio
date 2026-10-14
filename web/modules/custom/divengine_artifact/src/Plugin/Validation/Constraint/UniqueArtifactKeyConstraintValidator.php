@@ -28,8 +28,9 @@ class UniqueArtifactKeyConstraintValidator extends ConstraintValidator implement
       return;
     }
 
-    $key = $entity->get('artifact_key')->value;
-    if (empty($key)) {
+    // preSave() trims the key, so compare the value that will be stored.
+    $key = trim((string) $entity->get('artifact_key')->value);
+    if ($key === '') {
       return;
     }
 
@@ -45,6 +46,7 @@ class UniqueArtifactKeyConstraintValidator extends ConstraintValidator implement
     if ($query->count()->execute() > 0) {
       $this->context->buildViolation($constraint->message)
         ->setParameter('%key', $key)
+        ->atPath('artifact_key')
         ->addViolation();
     }
   }

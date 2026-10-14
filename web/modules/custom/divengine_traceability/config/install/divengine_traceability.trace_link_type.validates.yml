@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: validates
+label: 'Validates'
+inverse_label: 'Is validated by'
+description: 'The source confirms the target meets its intended use.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 6

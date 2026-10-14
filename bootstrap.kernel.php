@@ -13,6 +13,9 @@ $loader->add('Drupal\BuildTests', __DIR__ . '/web/core/tests');
 $loader->add('Drupal\TestSite', __DIR__ . '/web/core/tests');
 
 $extension_roots = [
+    __DIR__ . '/web/core/modules',
+    __DIR__ . '/web/core/profiles',
+    __DIR__ . '/web/core/themes',
     __DIR__ . '/web/modules',
     __DIR__ . '/web/profiles',
     __DIR__ . '/web/themes',

@@ -1,14 +1,26 @@
+permission_callbacks:
+  - \Drupal\divengine_artifact\ArtifactPermissions::artifactTypePermissions
+
 create artifact:
-  title: 'Create artifacts'
+  title: 'Create artifacts of any type'
 
 view artifact:
   title: 'View artifacts'
 
 edit artifact:
-  title: 'Edit artifacts'
+  title: 'Edit artifacts of any type'
 
 delete artifact:
-  title: 'Delete artifacts'
+  title: 'Delete artifacts of any type'
+
+view artifact revisions:
+  title: 'View revisions of artifacts of any type'
+
+revert artifact revisions:
+  title: 'Revert revisions of artifacts of any type'
+
+delete artifact revisions:
+  title: 'Delete revisions of artifacts of any type'
 
 administer artifact types:
   title: 'Administer artifact types'

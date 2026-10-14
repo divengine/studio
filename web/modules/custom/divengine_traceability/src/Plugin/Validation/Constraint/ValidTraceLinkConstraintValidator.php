@@ -33,10 +33,12 @@ class ValidTraceLinkConstraintValidator extends ConstraintValidator implements C
     $target_type = $entity->get('target_entity_type')->value ?? '';
     $target_id = (int) ($entity->get('target_entity_id')->value ?? 0);
 
-    $errors = $this->traceLinkValidator->validateAll($source_type, $source_id, $target_type, $target_id);
+    $link_type = (string) ($entity->get('link_type')->value ?? '');
+    $exclude_id = $entity->isNew() ? NULL : (int) $entity->id();
 
-    if ($errors) {
-      $this->context->addViolation(implode(' ', $errors));
+    $errors = $this->traceLinkValidator->validateAll($source_type, $source_id, $target_type, $target_id, $link_type, $exclude_id);
+    foreach ($errors as $error) {
+      $this->context->addViolation($error);
     }
   }
 

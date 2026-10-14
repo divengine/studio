@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: tests
+label: 'Tests'
+inverse_label: 'Is tested by'
+description: 'The source is a test exercising the target.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 7

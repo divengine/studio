@@ -20,7 +20,6 @@ class ValidTraceLinkConstraintTest extends KernelTestBase {
     'field',
     'divengine_core',
     'divengine_artifact',
-    'divengine_knowledge',
     'divengine_traceability',
   ];
 
@@ -30,7 +29,7 @@ class ValidTraceLinkConstraintTest extends KernelTestBase {
     $this->installEntitySchema('artifact');
     $this->installEntitySchema('artifact_type');
     $this->installEntitySchema('trace_link');
-    $this->installConfig('divengine_artifact');
+    $this->installConfig(['divengine_artifact', 'divengine_traceability']);
   }
 
   public function testValidTraceLinkSucceeds(): void {

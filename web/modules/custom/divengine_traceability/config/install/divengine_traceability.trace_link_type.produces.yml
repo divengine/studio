@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: produces
+label: 'Produces'
+inverse_label: 'Is produced by'
+description: 'An activity whose output is the target work product.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 12

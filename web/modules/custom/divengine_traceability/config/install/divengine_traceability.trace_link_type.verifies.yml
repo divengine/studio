@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: verifies
+label: 'Verifies'
+inverse_label: 'Is verified by'
+description: 'The source provides verification that the target holds.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 5

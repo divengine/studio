@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: realizes
+label: 'Realizes'
+inverse_label: 'Is realized by'
+description: 'The source makes the target real, e.g. a system use case realizes a business use case.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 1

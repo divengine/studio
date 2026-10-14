@@ -14,15 +14,6 @@ class ArtifactTypeForm extends EntityForm {
 
     $artifact_type = $this->entity;
 
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#default_value' => $artifact_type->id(),
-      '#machine_name' => [
-        'exists' => '\Drupal\divengine_artifact\Entity\ArtifactType::load',
-      ],
-      '#disabled' => !$artifact_type->isNew(),
-    ];
-
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -31,10 +22,27 @@ class ArtifactTypeForm extends EntityForm {
       '#required' => TRUE,
     ];
 
+    $form['id'] = [
+      '#type' => 'machine_name',
+      '#default_value' => $artifact_type->id(),
+      '#machine_name' => [
+        'exists' => '\Drupal\divengine_artifact\Entity\ArtifactType::load',
+        'source' => ['label'],
+      ],
+      '#disabled' => !$artifact_type->isNew(),
+    ];
+
     $form['description'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Description'),
       '#default_value' => $artifact_type->get('description'),
+    ];
+
+    $form['new_revision'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Create new revision'),
+      '#default_value' => $artifact_type->shouldCreateNewRevision(),
+      '#description' => $this->t('Artifacts of this type keep their history: every save creates a revision unless the editor unchecks it.'),
     ];
 
     return $form;

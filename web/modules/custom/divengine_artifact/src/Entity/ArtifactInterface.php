@@ -6,9 +6,11 @@ namespace Drupal\divengine_artifact\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\EntityPublishedInterface;
+use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\user\EntityOwnerInterface;
 
-interface ArtifactInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
+interface ArtifactInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface, EntityPublishedInterface, RevisionLogInterface {
 
   public function getTitle(): string;
 

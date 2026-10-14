@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: represents
+label: 'Represents'
+inverse_label: 'Is represented by'
+description: 'The source stands for the target in another model, e.g. a system actor for a business worker.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 14

@@ -19,6 +19,9 @@ class TraceLinkAccessControlHandler extends EntityAccessControlHandler {
       'view' => AccessResult::allowedIfHasPermissions($account, ['view trace links', $admin, $trace_admin], 'OR'),
       'update' => AccessResult::allowedIfHasPermissions($account, ['edit trace links', $admin, $trace_admin], 'OR'),
       'delete' => AccessResult::allowedIfHasPermissions($account, ['delete trace links', $admin, $trace_admin], 'OR'),
+      'view revision', 'view all revisions' => AccessResult::allowedIfHasPermissions($account, ['view trace link revisions', $admin, $trace_admin], 'OR'),
+      'revert' => AccessResult::allowedIfHasPermissions($account, ['revert trace link revisions', $admin, $trace_admin], 'OR'),
+      'delete revision' => AccessResult::allowedIfHasPermissions($account, ['delete trace link revisions', $admin, $trace_admin], 'OR'),
       default => AccessResult::neutral(),
     };
   }

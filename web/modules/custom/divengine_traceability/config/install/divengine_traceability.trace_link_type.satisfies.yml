@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: satisfies
+label: 'Satisfies'
+inverse_label: 'Is satisfied by'
+description: 'The source fulfils the target requirement or constraint.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 4

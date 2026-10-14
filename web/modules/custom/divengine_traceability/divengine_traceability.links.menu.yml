@@ -4,3 +4,10 @@ divengine_traceability.trace_link:
   route_name: entity.trace_link.collection
   parent: divengine.admin
   weight: 20
+
+entity.trace_link_type.collection:
+  title: 'Trace link types'
+  description: 'Manage the relationship types trace links can express.'
+  route_name: entity.trace_link_type.collection
+  parent: divengine.admin
+  weight: 25

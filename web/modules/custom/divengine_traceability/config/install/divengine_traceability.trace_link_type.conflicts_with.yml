@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: conflicts_with
+label: 'Conflicts with'
+inverse_label: 'Conflicts with'
+description: 'The source and the target cannot both hold as stated.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 9

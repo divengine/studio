@@ -96,7 +96,7 @@ class UniqueArtifactKeyConstraintTest extends KernelTestBase {
     $this->assertCount(0, $violations, 'Different keys should not conflict.');
   }
 
-  public function testKeyWithTrailingWhitespaceIsDifferent(): void {
+  public function testKeyWithSurroundingWhitespaceIsDuplicate(): void {
     Artifact::create([
       'title' => 'Without Space',
       'artifact_key' => 'REQ-001',
@@ -109,7 +109,18 @@ class UniqueArtifactKeyConstraintTest extends KernelTestBase {
       'type' => 'requirement',
     ]);
     $violations = $artifact2->validate();
-    $this->assertCount(0, $violations, 'Key with trailing whitespace should not be considered a duplicate of the same key without whitespace.');
+    $this->assertCount(1, $violations, 'Surrounding whitespace must not make a key distinct.');
+    $this->assertSame('artifact_key', $violations->get(0)->getPropertyPath());
+  }
+
+  public function testKeyIsTrimmedOnSave(): void {
+    $artifact = Artifact::create([
+      'title' => 'Padded',
+      'artifact_key' => '  REQ-009  ',
+      'type' => 'requirement',
+    ]);
+    $artifact->save();
+    $this->assertSame('REQ-009', Artifact::load($artifact->id())->getArtifactKey());
   }
 
   public function testMultipleUniqueKeysSucceed(): void {

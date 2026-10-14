@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Hooks for Divengine Traceability.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * A trace link without one of its ends records nothing, so it goes with the
+ * deleted entity.
+ */
+function divengine_traceability_entity_delete(EntityInterface $entity): void {
+  if (!$entity instanceof ContentEntityInterface || $entity->getEntityTypeId() === 'trace_link') {
+    return;
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('trace_link');
+  $query = $storage->getQuery()->accessCheck(FALSE);
+  $source = $query->andConditionGroup()
+    ->condition('source_entity_type', $entity->getEntityTypeId())
+    ->condition('source_entity_id', $entity->id());
+  $target = $query->andConditionGroup()
+    ->condition('target_entity_type', $entity->getEntityTypeId())
+    ->condition('target_entity_id', $entity->id());
+  $ids = $query->condition($query->orConditionGroup()->condition($source)->condition($target))->execute();
+  if ($ids) {
+    $storage->delete($storage->loadMultiple($ids));
+  }
+}

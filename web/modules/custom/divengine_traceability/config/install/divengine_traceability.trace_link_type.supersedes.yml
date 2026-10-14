@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: supersedes
+label: 'Supersedes'
+inverse_label: 'Is superseded by'
+description: 'The source replaces the target; both must be the same kind.'
+source_rules: {  }
+target_rules: {  }
+same_kind: true
+weight: 16

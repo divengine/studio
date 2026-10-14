@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: implements
+label: 'Implements'
+inverse_label: 'Is implemented by'
+description: 'The source is the implementation of the target.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 2

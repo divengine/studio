@@ -6,7 +6,6 @@ package: 'Divengine'
 dependencies:
   - divengine_core
   - divengine_artifact
-  - divengine_knowledge
   - drupal:text
   - drupal:options
   - drupal:user

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\divengine_artifact\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\Core\Entity\RevisionableEntityBundleInterface;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
@@ -39,6 +40,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'id',
     'label',
     'description',
+    'new_revision',
     'uuid',
   ],
   links: [
@@ -49,12 +51,26 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'collection' => '/admin/divengine/artifact-types',
   ],
 )]
-class ArtifactType extends ConfigEntityBundleBase {
+class ArtifactType extends ConfigEntityBundleBase implements RevisionableEntityBundleInterface {
 
   protected $id;
 
   protected $label;
 
   protected $description;
+
+  /**
+   * Whether saving an artifact of this type creates a new revision by default.
+   *
+   * @var bool
+   */
+  protected $new_revision = TRUE;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function shouldCreateNewRevision(): bool {
+    return (bool) $this->new_revision;
+  }
 
 }

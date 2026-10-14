@@ -11,6 +11,9 @@ divengine_artifact.artifact_type.*:
     description:
       type: text
       label: 'Description'
+    new_revision:
+      type: boolean
+      label: 'Create a new revision by default'
     uuid:
       type: string
       label: 'UUID'

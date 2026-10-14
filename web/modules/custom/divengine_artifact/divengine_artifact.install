@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for Divengine Artifact.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Use core revision log fields and revision routes for artifacts.
+ */
+function divengine_artifact_update_11001(): string {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('artifact');
+  foreach (['revision_uid', 'revision_timestamp', 'revision_log'] as $name) {
+    $manager->updateFieldStorageDefinition($definitions[$name]);
+  }
+  $manager->updateEntityType(\Drupal::entityTypeManager()->getDefinition('artifact'));
+  return (string) t('Artifacts now use core revision log fields and revision routes.');
+}

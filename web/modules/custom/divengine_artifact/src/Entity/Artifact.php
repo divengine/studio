@@ -8,7 +8,12 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\RevisionLogEntityTrait;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerTrait;
@@ -28,9 +33,12 @@ use Drupal\user\EntityOwnerTrait;
       'add' => 'Drupal\divengine_artifact\Form\ArtifactForm',
       'edit' => 'Drupal\divengine_artifact\Form\ArtifactForm',
       'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
+      'revision-delete' => RevisionDeleteForm::class,
+      'revision-revert' => RevisionRevertForm::class,
     ],
     'route_provider' => [
       'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+      'revision' => RevisionHtmlRouteProvider::class,
     ],
   ],
   base_table: 'artifact',
@@ -69,6 +77,8 @@ use Drupal\user\EntityOwnerTrait;
     'delete-form' => '/artifact/{artifact}/delete',
     'version-history' => '/artifact/{artifact}/revisions',
     'revision' => '/artifact/{artifact}/revisions/{artifact_revision}/view',
+    'revision-revert-form' => '/artifact/{artifact}/revisions/{artifact_revision}/revert',
+    'revision-delete-form' => '/artifact/{artifact}/revisions/{artifact_revision}/delete',
     'collection' => '/admin/divengine/artifacts',
   ],
 )]
@@ -77,6 +87,16 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
   use EntityChangedTrait;
   use EntityOwnerTrait;
   use EntityPublishedTrait;
+  use RevisionLogEntityTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage): void {
+    parent::preSave($storage);
+    // Keys are identifiers: surrounding whitespace never makes them distinct.
+    $this->set('artifact_key', trim($this->getArtifactKey()));
+  }
 
   public function getTitle(): string {
     return $this->get('title')->value ?? '';
@@ -177,8 +197,10 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
       ->setDefaultValue(TRUE)
       ->setDisplayOptions('form', [
         'type' => 'boolean_checkbox',
-        'weight' => 0,
-      ]);
+        'settings' => ['display_label' => TRUE],
+        'weight' => 20,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Owner'))
@@ -204,21 +226,7 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
       ->setDescription(t('The time the artifact was last edited.'))
       ->setRevisionable(TRUE);
 
-    $fields['revision_uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Revision author'))
-      ->setDescription(t('The user ID of the revision author.'))
-      ->setRevisionable(TRUE)
-      ->setSetting('target_type', 'user');
-
-    $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Revision timestamp'))
-      ->setDescription(t('The time the revision was created.'))
-      ->setRevisionable(TRUE);
-
-    $fields['revision_log'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Revision log message'))
-      ->setDescription(t('A log message describing the revision.'))
-      ->setRevisionable(TRUE);
+    $fields += static::revisionLogBaseFieldDefinitions($entity_type);
 
     return $fields;
   }

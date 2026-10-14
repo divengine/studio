@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: documents
+label: 'Documents'
+inverse_label: 'Is documented by'
+description: 'The source describes or explains the target.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 15

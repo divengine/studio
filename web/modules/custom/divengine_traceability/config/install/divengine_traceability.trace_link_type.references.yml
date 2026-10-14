@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: references
+label: 'References'
+inverse_label: 'Is referenced by'
+description: 'A plain reference with no stronger meaning.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 17

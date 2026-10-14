@@ -1,0 +1,34 @@
+divengine_traceability.trace_link_type.*:
+  type: config_entity
+  label: 'Trace link type'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Machine name'
+    label:
+      type: required_label
+      label: 'Label'
+    inverse_label:
+      type: label
+      label: 'Inverse label'
+    description:
+      type: text
+      label: 'Description'
+    source_rules:
+      type: sequence
+      label: 'Allowed sources'
+      sequence:
+        type: string
+        label: 'Entity type or entity type:bundle'
+    target_rules:
+      type: sequence
+      label: 'Allowed targets'
+      sequence:
+        type: string
+        label: 'Entity type or entity type:bundle'
+    same_kind:
+      type: boolean
+      label: 'Both ends must be the same kind'
+    weight:
+      type: weight
+      label: 'Weight'

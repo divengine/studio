@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: derives_from
+label: 'Derives from'
+inverse_label: 'Is the origin of'
+description: 'The source was derived from the target, e.g. a requirement from a business rule.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 3

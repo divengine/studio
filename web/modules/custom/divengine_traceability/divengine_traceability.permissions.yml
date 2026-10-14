@@ -14,3 +14,17 @@
 
 'view trace links':
   title: 'View trace links'
+
+'view trace link revisions':
+  title: 'View trace link revisions'
+
+'revert trace link revisions':
+  title: 'Revert trace link revisions'
+
+'delete trace link revisions':
+  title: 'Delete trace link revisions'
+
+'administer trace link types':
+  title: 'Administer trace link types'
+  description: 'Create, edit and delete the relationship types trace links can express.'
+  restrict access: true

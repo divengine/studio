@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+id: refines
+label: 'Refines'
+inverse_label: 'Is refined by'
+description: 'The source adds detail to the target without changing its intent.'
+source_rules: {  }
+target_rules: {  }
+same_kind: false
+weight: 0

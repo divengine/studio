@@ -8,7 +8,13 @@ use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\Form\RevisionDeleteForm;
+use Drupal\Core\Entity\Form\RevisionRevertForm;
+use Drupal\Core\Entity\RevisionLogEntityTrait;
+use Drupal\Core\Entity\Routing\RevisionHtmlRouteProvider;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\user\EntityOwnerTrait;
@@ -28,9 +34,12 @@ use Drupal\user\EntityOwnerTrait;
       'add' => 'Drupal\divengine_traceability\Form\TraceLinkForm',
       'edit' => 'Drupal\divengine_traceability\Form\TraceLinkForm',
       'delete' => 'Drupal\Core\Entity\ContentEntityDeleteForm',
+      'revision-delete' => RevisionDeleteForm::class,
+      'revision-revert' => RevisionRevertForm::class,
     ],
     'route_provider' => [
       'html' => 'Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider',
+      'revision' => RevisionHtmlRouteProvider::class,
     ],
   ],
   base_table: 'trace_link',
@@ -53,7 +62,6 @@ use Drupal\user\EntityOwnerTrait;
     'revision_created' => 'revision_timestamp',
     'revision_log_message' => 'revision_log',
   ],
-  field_ui_base_route: 'entity.trace_link.settings',
   constraints: [
     'ValidTraceLink' => [],
   ],
@@ -65,6 +73,8 @@ use Drupal\user\EntityOwnerTrait;
     'delete-form' => '/trace-link/{trace_link}/delete',
     'version-history' => '/trace-link/{trace_link}/revisions',
     'revision' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/view',
+    'revision-revert-form' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/revert',
+    'revision-delete-form' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/delete',
     'collection' => '/admin/divengine/trace-links',
   ],
 )]
@@ -73,26 +83,65 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
   use EntityChangedTrait;
   use EntityOwnerTrait;
   use EntityPublishedTrait;
+  use RevisionLogEntityTrait;
 
+  /**
+   * {@inheritdoc}
+   */
   public function label(): string {
-    $source_key = $this->resolveArtifactKey($this->getSourceEntityType(), $this->getSourceEntityId());
-    $target_key = $this->resolveArtifactKey($this->getTargetEntityType(), $this->getTargetEntityId());
-    $link_type = $this->get('link_type')->value ?? '';
-
-    if ($source_key && $target_key && $link_type) {
-      return sprintf('%s %s %s', $source_key, $link_type, $target_key);
+    $source = $this->getSourceEntity();
+    $target = $this->getTargetEntity();
+    $type = $this->getLinkType();
+    if ($source && $target && $type) {
+      return sprintf('%s %s %s', static::endLabel($source), mb_strtolower((string) $type->label()), static::endLabel($target));
     }
-    return parent::label();
+    return (string) parent::label();
   }
 
-  protected function resolveArtifactKey(string $entity_type, int $entity_id): string {
-    if ($entity_type === 'artifact' && $entity_id > 0) {
-      $artifact = \Drupal::entityTypeManager()->getStorage('artifact')->load($entity_id);
-      if ($artifact) {
-        return $artifact->getArtifactKey() ?: $artifact->getTitle();
-      }
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage): void {
+    parent::preSave($storage);
+    $reviewer = $this->get('reviewed_by')->target_id;
+    $previous = $this->getOriginal() ? $this->getOriginal()->get('reviewed_by')->target_id : NULL;
+    if ($reviewer && $reviewer !== $previous) {
+      $this->set('reviewed_at', \Drupal::time()->getRequestTime());
     }
-    return '';
+    elseif (!$reviewer) {
+      $this->set('reviewed_at', NULL);
+    }
+  }
+
+  /**
+   * Short label of a link end: the artifact key when there is one.
+   */
+  protected static function endLabel(EntityInterface $entity): string {
+    if ($entity->hasField('artifact_key') && $entity->get('artifact_key')->value) {
+      return $entity->get('artifact_key')->value;
+    }
+    return (string) $entity->label();
+  }
+
+  public function getLinkType(): ?TraceLinkType {
+    $id = $this->get('link_type')->value;
+    return $id ? TraceLinkType::load($id) : NULL;
+  }
+
+  public function getSourceEntity(): ?EntityInterface {
+    return static::loadEnd($this->getSourceEntityType(), $this->getSourceEntityId());
+  }
+
+  public function getTargetEntity(): ?EntityInterface {
+    return static::loadEnd($this->getTargetEntityType(), $this->getTargetEntityId());
+  }
+
+  protected static function loadEnd(string $entity_type_id, int $entity_id): ?EntityInterface {
+    $manager = \Drupal::entityTypeManager();
+    if ($entity_type_id === '' || $entity_id <= 0 || !$manager->hasDefinition($entity_type_id)) {
+      return NULL;
+    }
+    return $manager->getStorage($entity_type_id)->load($entity_id);
   }
 
   public function getSourceEntityType(): string {
@@ -164,20 +213,7 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
       ->setDescription(t('The semantic type of this trace link.'))
       ->setRequired(TRUE)
       ->setRevisionable(TRUE)
-      ->setSetting('allowed_values', [
-        'derives_from' => 'Derives from',
-        'satisfies' => 'Satisfies',
-        'realizes' => 'Realizes',
-        'validates' => 'Validates',
-        'tests' => 'Tests',
-        'depends_on' => 'Depends on',
-        'conflicts_with' => 'Conflicts with',
-        'mitigates' => 'Mitigates',
-        'impacts' => 'Impacts',
-        'documents' => 'Documents',
-        'supersedes' => 'Supersedes',
-        'references' => 'References',
-      ])
+      ->setSetting('allowed_values_function', TraceLinkType::class . '::allowedValues')
       ->setDisplayOptions('form', [
         'type' => 'options_select',
         'weight' => -10,
@@ -219,7 +255,13 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
       ->setLabel(t('Published'))
       ->setDescription(t('Whether the trace link is published.'))
       ->setRevisionable(TRUE)
-      ->setDefaultValue(TRUE);
+      ->setDefaultValue(TRUE)
+      ->setDisplayOptions('form', [
+        'type' => 'boolean_checkbox',
+        'settings' => ['display_label' => TRUE],
+        'weight' => 20,
+      ])
+      ->setDisplayConfigurable('form', TRUE);
 
     $fields['reviewed_by'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Reviewed by'))
@@ -261,21 +303,7 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
       ->setDescription(t('The time the trace link was last edited.'))
       ->setRevisionable(TRUE);
 
-    $fields['revision_uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Revision author'))
-      ->setDescription(t('The user ID of the revision author.'))
-      ->setRevisionable(TRUE)
-      ->setSetting('target_type', 'user');
-
-    $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Revision timestamp'))
-      ->setDescription(t('The time the revision was created.'))
-      ->setRevisionable(TRUE);
-
-    $fields['revision_log'] = BaseFieldDefinition::create('string_long')
-      ->setLabel(t('Revision log message'))
-      ->setDescription(t('A log message describing the revision.'))
-      ->setRevisionable(TRUE);
+    $fields += static::revisionLogBaseFieldDefinitions($entity_type);
 
     return $fields;
   }

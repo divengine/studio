@@ -4,7 +4,7 @@ Shared services, interfaces, constants and permissions for Divengine Studio.
 
 ## Responsibilities
 
-- Define canonical value objects (ArtifactType, TraceLinkType).
+- Own the Divengine administration area (/admin/divengine).
 - Declare shared permissions for all Divengine modules.
 - Provide reusable interfaces and base classes.
 - No business entities live here — only truly shared primitives.

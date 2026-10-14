@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions for Divengine Traceability.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Config\FileStorage;
+
+/**
+ * Turn trace link types into configuration and use core revision fields.
+ */
+function divengine_traceability_update_11001(): string {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $manager = \Drupal::entityDefinitionUpdateManager();
+
+  if (!$manager->getEntityType('trace_link_type')) {
+    $manager->installEntityType($entity_type_manager->getDefinition('trace_link_type'));
+  }
+
+  // Create the default types; existing ones are left as they are.
+  $path = \Drupal::service('extension.list.module')->getPath('divengine_traceability');
+  $source = new FileStorage($path . '/config/install');
+  $storage = $entity_type_manager->getStorage('trace_link_type');
+  foreach ($source->listAll('divengine_traceability.trace_link_type.') as $name) {
+    $data = $source->read($name);
+    if (!$storage->load($data['id'])) {
+      $storage->createFromStorageRecord($data)->save();
+    }
+  }
+
+  $definitions = \Drupal::service('entity_field.manager')->getFieldStorageDefinitions('trace_link');
+  foreach (['link_type', 'revision_uid', 'revision_timestamp', 'revision_log'] as $name) {
+    $manager->updateFieldStorageDefinition($definitions[$name]);
+  }
+  $manager->updateEntityType($entity_type_manager->getDefinition('trace_link'));
+  return (string) t('Trace link types are now configuration; trace links use core revision log fields.');
+}
