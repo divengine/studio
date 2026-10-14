@@ -18,6 +18,15 @@ are:
 | IFML | ifml-js | MIT |
 | ArchiMate | archimate-js, fork at github.com/rafageist/archimate-js | MIT |
 | Free-form | Excalidraw | MIT |
+| UML | PlantUML (`@plantuml/core`, runs in the browser) | MIT |
+| Mermaid | mermaid | MIT |
+
+The notations fall into two families:
+
+- **Canvas notations** (bpmn.io family, IFML, ArchiMate, Excalidraw): the user draws on a
+  canvas; the engine serializes the drawing to XML or JSON.
+- **Text notations** (UML, Mermaid): the user writes source text; the engine renders it to
+  SVG. The SVG is derived and never edited.
 
 These engines do not agree on a diagram-js version, and the ArchiMate engine is a fork.
 A previous implementation (Odoo) proved a design where a shared platform module provides
@@ -29,7 +38,7 @@ contracts and services while each notation module ships its own engine.
 
 - **`divengine_modeler`** — the platform. It never imports a diagram engine.
 - **`divengine_modeler_<notation>`** — one module per notation: `bpmn`, `dmn`, `cmmn`,
-  `ifml`, `archimate`, `excalidraw`. Each ships its engine as its own Drupal library, its
+  `ifml`, `archimate`, `excalidraw`, `uml`, `mermaid`. Each ships its engine as its own Drupal library, its
   editor, its off-screen preview renderer and its link extractor.
 
 ### Storage
@@ -38,8 +47,9 @@ contracts and services while each notation module ships its own engine.
   installs its bundle as config. One entity type gives every notation the same listing,
   search target, trace target, access model and revision history.
 - Base fields: `label`, `description`, `source` (the canonical document: XML for the
-  bpmn.io family, IFML and ArchiMate; scene JSON for Excalidraw), `preview_svg`,
-  `preview_hash`, `uid` (owner), revision metadata, `status`.
+  bpmn.io family, IFML and ArchiMate; scene JSON for Excalidraw; source text for UML and
+  Mermaid), `preview_svg`, `preview_hash` (hash of the source the preview was rendered
+  from, so a stale preview is detectable), `uid` (owner), revision metadata, `status`.
 - **Revisions and content moderation replace copy-based versions.** Every save is a
   revision; the workflow is draft → review → approved → archived. Approved diagrams are
   not edited in place: editing creates a new draft revision.
@@ -48,10 +58,14 @@ contracts and services while each notation module ships its own engine.
 
 A `ModelerNotation` plugin type (PHP attribute discovery), one plugin per notation module:
 
-- `id`, `label`, `icon`, `diagram_type` bundle, `source_format` (`xml` | `json`),
+- `id`, `label`, `icon`, `diagram_type` bundle, `family` (`canvas` | `text`),
+  `source_format` (`xml` | `json` | `text`),
   `editor_library`, `preview_library`, `default_source()`.
 - `validateSource(string $source): array` — structural checks (for example a BPMN
-  `definitions` root), using a hardened XML parser (no entities, no network).
+  `definitions` root), using a hardened XML parser (no entities, no network). Text
+  notations require their start marker (`@startuml`, a Mermaid diagram keyword), cap the
+  size (1 MB) and reject external includes and remote images (`!include` of URLs,
+  `!includeurl`, remote sprites), so rendering never fetches anything.
 - `extractLinks(string $source): array` — element id → entity URI pairs (ADR-0005).
 - `extractSearchText(string $source): string` — names and documentation for search.
 
@@ -65,6 +79,9 @@ The platform finds notations through the plugin manager and never names them.
   token and `update` access. It receives the source and the SVG exported by the engine,
   validates both, writes a new revision and rebuilds the link index in one transaction.
   A failed SVG export never blocks saving the source.
+- Text notations use a split editor: a code editor (CodeMirror, MIT) on one side and the
+  live render on the other, with the render debounced while typing and errors shown
+  inline. Element linking happens on the rendered side (ADR-0005).
 - Shared front-end helpers (undo/redo shortcuts, fit-to-viewport, dirty guard, save
   client) live in the platform and use only the public API common to every engine.
 

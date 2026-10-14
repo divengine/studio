@@ -21,13 +21,21 @@ Make the existing modules a solid base before adding on top.
 - Fix `SIMPLESTET_DB` → `SIMPLETEST_DB` in `phpunit.xml.dist` and docs; align
   `composer.json` license and name.
 
-## Phase 1 — Modeler platform + BPMN (ADR-0004, ADR-0005)
+## Phase 1 — Modeler platform + BPMN + UML (ADR-0004, ADR-0005)
+
+BPMN and UML are built together so the platform is proven on both notation families
+(canvas and text) from the start.
+
 
 - `divengine_modeler`: `diagram` entity and `diagram_type`, `ModelerNotation` plugin type,
   save controller, safe SVG preview route, link index, backlinks block, entity picker
   dialog, shared editor helpers, moderation workflow.
 - `divengine_modeler_bpmn` as the reference notation: vendored bpmn-js, editor, moddle
   extension for `divengine:entity`, off-screen preview renderer, link extractor.
+- `divengine_modeler_uml` as the reference text notation: vendored `@plantuml/core`
+  (browser engine, files kept byte-identical to upstream) and CodeMirror, split editor,
+  source safety checks (no external includes), semantic-key element bindings, link
+  extractor.
 - Kernel tests: source validation, link extraction, index rebuild, SVG safety, access.
 
 ## Phase 2 — Embedding
@@ -36,8 +44,9 @@ Make the existing modules a solid base before adding on top.
 
 ## Phase 3 — Remaining notations
 
-One module each, in this order: `dmn`, `archimate` (fork rafageist/archimate-js),
-`cmmn`, `ifml`, `excalidraw`. Each repeats the BPMN pattern: plugin, bundle, vendored
+One module each, in this order: `mermaid`, `dmn`, `archimate` (fork
+rafageist/archimate-js), `cmmn`, `ifml`, `excalidraw`. Each repeats the BPMN pattern
+(canvas) or the UML pattern (text): plugin, bundle, vendored
 engine, editor, preview renderer, link extractor, tests.
 
 ## Phase 4 — Unified Process
@@ -52,6 +61,10 @@ Port the ideas of the CodeIntel Unified Process (not its code):
 - Readiness engine with `ReadinessCriterion` plugins: advisory, never blocking, per
   milestone.
 - Work products and traces pointing to diagrams.
+- Deterministic UML generation from the model (system and business use-case diagrams)
+  with provenance: canonical input, input and output hashes, author, previous generation.
+  Regenerating never overwrites a diagram that was edited by hand; it creates a new
+  revision instead.
 
 ## Phase 5 — Development Pulse
 
@@ -63,5 +76,4 @@ Never counts hours.
 
 - Semantic search across diagrams.
 - UI design (GrapesJS) and flow/function authoring.
-- UML and Mermaid text notations (to be confirmed).
 - AI assistance (planned on top of the explicit artifact and trace model).

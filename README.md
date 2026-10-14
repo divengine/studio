@@ -20,7 +20,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 ## Direction
 
 Studio is becoming an engineering suite: explicit artifacts and traces, diagram modelers
-(BPMN, DMN, CMMN, IFML, ArchiMate, Excalidraw) whose elements link to Drupal entities, and a
+(BPMN, UML, Mermaid, DMN, CMMN, IFML, ArchiMate, Excalidraw) whose elements link to Drupal entities, and a
 Unified Process layer. See [docs/roadmap.md](docs/roadmap.md) and the ADRs in
 [docs/architecture](docs/architecture).
 

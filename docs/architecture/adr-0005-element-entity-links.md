@@ -27,6 +27,17 @@ export, import and revisions:
   extension in each engine. They are never added to a standard namespace.
 - Excalidraw: the element's `customData.divengine = {entity, label}`.
 
+- Text notations (UML, Mermaid): the source has no stable element ids, and the SVG is
+  regenerated on every render. Links are stored in a structured field of the diagram,
+  `element_bindings`, as a map from a **semantic key** to `{entity, label}`. The key
+  identifies the element by meaning, not by position: element kind plus qualified name
+  (`class:billing.Invoice`, `usecase:Pay invoice`), or for relations, kind plus both ends
+  plus relation type. After each render the editor applies the bindings to the SVG
+  elements that match exactly one key; bindings with zero or several matches are listed
+  as unresolved for the user to re-bind, never guessed. Native link syntax written in the
+  source with an `entity:` URI (PlantUML `[[entity:node/42]]`, Mermaid `click … href`)
+  is also recognized by the extractor.
+
 The value is Drupal's own `entity:<entity_type>/<id>` URI, the scheme already used by
 core's link field, so any content entity can be a target: artifacts, nodes, users,
 taxonomy terms, diagrams.
@@ -35,7 +46,8 @@ taxonomy terms, diagrams.
 
 A non-revisionable index, `diagram_element_link` (diagram id, revision id, element id,
 target entity type, target id, label snapshot), is rebuilt from the source on every save
-by the notation plugin's `extractLinks()`. The document is the truth; the index exists
+by the notation plugin's `extractLinks()` (from the document for canvas notations, from
+`element_bindings` plus native link syntax for text notations). The document is the truth; the index exists
 for queries:
 
 - **Backlinks**: "diagrams referencing this entity" is a query on target; any entity can
@@ -80,6 +92,8 @@ element link, but never creates traces automatically (ADR-0002, explicit traceab
 ### Negative
 
 - Each notation needs a moddle extension (or Excalidraw mapping) and an extractor.
+- Text notations need a semantic-key builder per diagram kind (class, sequence, use case,
+  component, flowchart…), and renamed elements lose their binding until re-bound.
 - Label snapshots can go stale; they are refreshed on save and only used as a fallback.
 
 ## Alternatives Rejected
