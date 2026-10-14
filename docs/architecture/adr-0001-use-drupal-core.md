@@ -63,5 +63,7 @@ Drupal core provides:
 
 ## Related Decisions
 
-- ADR-0002 (future): Custom content entities for Artifact and TraceLink domain model.
+- ADR-0002: Artifact and TraceLink as the engineering domain model.
 - ADR-0003 (future): Taxonomy for controlled vocabularies vs. custom config entities.
+- ADR-0004: Modeler platform for engineering diagrams.
+- ADR-0005: Links between diagram elements and Drupal entities.

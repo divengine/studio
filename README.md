@@ -13,9 +13,16 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_artifact` | Artifact entities and artifact types |
 | `web/modules/custom/divengine_knowledge` | Knowledge configuration |
 | `web/modules/custom/divengine_traceability` | Trace links between artifacts |
-| `docs/` | Architecture decisions, MVP scope, research and handoff notes |
+| `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
+
+## Direction
+
+Studio is becoming an engineering suite: explicit artifacts and traces, diagram modelers
+(BPMN, DMN, CMMN, IFML, ArchiMate, Excalidraw) whose elements link to Drupal entities, and a
+Unified Process layer. See [docs/roadmap.md](docs/roadmap.md) and the ADRs in
+[docs/architecture](docs/architecture).
 
 ## Setup
 
