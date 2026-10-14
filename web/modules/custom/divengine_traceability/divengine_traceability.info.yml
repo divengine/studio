@@ -1,0 +1,13 @@
+name: 'Divengine Traceability'
+type: module
+description: 'Semantic trace links between engineering artifacts and knowledge items.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_artifact
+  - divengine_knowledge
+  - drupal:text
+  - drupal:options
+  - drupal:user
+  - drupal:content_moderation

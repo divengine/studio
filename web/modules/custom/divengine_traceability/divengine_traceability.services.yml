@@ -1,0 +1,5 @@
+services:
+  divengine_traceability.trace_link_validator:
+    class: Drupal\divengine_traceability\TraceLinkValidator
+    arguments: ['@entity_type.manager']
+

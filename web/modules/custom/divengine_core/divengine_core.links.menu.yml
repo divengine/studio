@@ -1,0 +1,6 @@
+divengine.admin:
+  title: 'Divengine Studio'
+  description: 'Divengine Studio administration.'
+  route_name: divengine.admin
+  parent: system.admin
+  weight: 100

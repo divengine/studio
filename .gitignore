@@ -1,0 +1,20 @@
+# Allowlist: only Divengine Studio's own code lives in this repo.
+# Drupal core, contrib and vendor come from `composer install`.
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/composer.json
+!/composer.lock
+!/bootstrap.kernel.php
+!/phpunit.xml.dist
+!/docs/
+
+!/web/
+/web/*
+!/web/modules/
+/web/modules/*
+!/web/modules/custom/
+
+# Local test config holds real DB credentials.
+/phpunit.xml

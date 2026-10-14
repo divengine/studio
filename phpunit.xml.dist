@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="bootstrap.kernel.php"
+         colors="true"
+         beStrictAboutTestsThatDoNotTestAnything="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         failOnPhpunitWarning="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         cacheResult="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache">
+  <php>
+    <ini name="error_reporting" value="32767"/>
+    <ini name="memory_limit" value="-1"/>
+    <env name="SIMPLETEST_BASE_URL" value="http://localhost"/>
+    <!--
+      SIMPLESTET_DB format: pgsql://user:password@host/database
+      Override by setting the environment variable or copying to phpunit.xml:
+      export SIMPLESTET_DB="pgsql://username:password@localhost/dbname"
+    -->
+    <env name="SIMPLESTET_DB" value="pgsql://user:password@localhost/database"/>
+  </php>
+  <testsuites>
+    <testsuite name="kernel">
+      <directory>web/modules/custom/*/tests/src/Kernel</directory>
+    </testsuite>
+  </testsuites>
+  <source ignoreSuppressionOfDeprecations="true">
+    <include>
+      <directory>web/modules/custom</directory>
+    </include>
+  </source>
+</phpunit>

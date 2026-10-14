@@ -1,0 +1,16 @@
+'administer trace links':
+  title: 'Administer trace links'
+  description: 'Manage all trace link operations.'
+  restrict access: true
+
+'create trace links':
+  title: 'Create trace links'
+
+'edit trace links':
+  title: 'Edit trace links'
+
+'delete trace links':
+  title: 'Delete trace links'
+
+'view trace links':
+  title: 'View trace links'

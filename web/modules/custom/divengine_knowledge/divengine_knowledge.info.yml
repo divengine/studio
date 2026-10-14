@@ -1,0 +1,10 @@
+name: 'Divengine Knowledge'
+type: module
+description: 'Structured engineering knowledge items, references and taxonomies for Divengine Studio.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - drupal:taxonomy
+  - drupal:text
+  - drupal:options

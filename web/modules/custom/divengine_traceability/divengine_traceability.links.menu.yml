@@ -1,0 +1,6 @@
+divengine_traceability.trace_link:
+  title: 'Trace links'
+  description: 'Manage trace links between artifacts and knowledge.'
+  route_name: entity.trace_link.collection
+  parent: divengine.admin
+  weight: 20

@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Standard Body'
+vid: standard_body
+description: 'Standards organizations and bodies such as ISO, IEEE, IEC, NIST, and OMG.'
+weight: 0

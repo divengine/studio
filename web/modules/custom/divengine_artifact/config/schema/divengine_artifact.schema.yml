@@ -1,0 +1,16 @@
+divengine_artifact.artifact_type.*:
+  type: config_entity
+  label: 'Artifact type'
+  mapping:
+    id:
+      type: string
+      label: 'Machine name'
+    label:
+      type: label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Description'
+    uuid:
+      type: string
+      label: 'UUID'

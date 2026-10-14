@@ -1,0 +1,16 @@
+create artifact:
+  title: 'Create artifacts'
+
+view artifact:
+  title: 'View artifacts'
+
+edit artifact:
+  title: 'Edit artifacts'
+
+delete artifact:
+  title: 'Delete artifacts'
+
+administer artifact types:
+  title: 'Administer artifact types'
+  description: 'Create, edit and delete artifact types.'
+  restrict access: true

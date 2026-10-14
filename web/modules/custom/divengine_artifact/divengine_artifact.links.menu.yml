@@ -1,0 +1,13 @@
+entity.artifact.collection:
+  title: 'Artifacts'
+  description: 'List artifacts.'
+  route_name: entity.artifact.collection
+  parent: divengine.admin
+  weight: 5
+
+entity.artifact_type.collection:
+  title: 'Artifact types'
+  description: 'Manage artifact type bundles.'
+  route_name: entity.artifact_type.collection
+  parent: divengine.admin
+  weight: 10

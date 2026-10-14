@@ -1,0 +1,11 @@
+name: 'Divengine Artifact'
+type: module
+description: 'Engineering artifact management for requirements, decisions, risks, test cases, evidence and more.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - drupal:text
+  - drupal:options
+  - drupal:user
+  - drupal:content_moderation

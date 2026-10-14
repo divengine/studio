@@ -1,0 +1,6 @@
+name: 'Divengine Core'
+type: module
+description: 'Shared services, interfaces, constants and permissions for Divengine Studio.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies: []

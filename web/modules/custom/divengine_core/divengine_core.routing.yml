@@ -1,0 +1,7 @@
+divengine.admin:
+  path: '/admin/divengine'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Divengine Studio'
+  requirements:
+    _permission: 'access divengine'

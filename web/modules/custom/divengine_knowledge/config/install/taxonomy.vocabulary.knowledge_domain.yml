@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Knowledge Domain'
+vid: knowledge_domain
+description: 'Engineering knowledge domains such as requirements, architecture, security, testing, and process.'
+weight: 0

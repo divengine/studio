@@ -1,0 +1,12 @@
+administer divengine:
+  title: 'Administer Divengine Studio'
+  description: 'Configure Divengine Studio settings and manage all artifacts.'
+  restrict access: true
+
+access divengine:
+  title: 'Access Divengine Studio'
+  description: 'View Divengine Studio content and interfaces.'
+
+view divengine reports:
+  title: 'View Divengine reports'
+  description: 'Access Divengine Studio reporting and analytics.'

@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Knowledge Source Type'
+vid: knowledge_source_type
+description: 'Types of knowledge sources such as standard, methodology, article, internal decision, and tool documentation.'
+weight: 0
