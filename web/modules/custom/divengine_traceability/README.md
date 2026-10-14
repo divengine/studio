@@ -5,7 +5,10 @@ Semantic trace links between engineering artifacts and knowledge items.
 ## Responsibilities
 
 - Define the **TraceLink** content entity.
-- Provide semantic link types for engineering traceability.
+- Provide semantic link types as `trace_link_type` configuration (18 seeded types, admin UI at
+  `/admin/divengine/trace-link-types`), each with allowed source/target patterns and an
+  optional same-kind rule.
+- Reject unknown types, disallowed ends and duplicate links; delete links with either end.
 - Support revision tracking and content moderation.
 - Enable JSON:API access for trace querying.
 

@@ -33,3 +33,19 @@ function divengine_traceability_entity_delete(EntityInterface $entity): void {
     $storage->delete($storage->loadMultiple($ids));
   }
 }
+
+/**
+ * Implements hook_views_data_alter().
+ *
+ * Views treats list base fields as plain strings; filter the link type and
+ * the confidence with a select of their allowed values instead.
+ */
+function divengine_traceability_views_data_alter(array &$data): void {
+  foreach (['link_type', 'confidence'] as $field) {
+    if (isset($data['trace_link'][$field]['filter'])) {
+      $data['trace_link'][$field]['filter']['id'] = 'list_field';
+      $data['trace_link'][$field]['filter']['field_name'] = $field;
+      $data['trace_link'][$field]['filter']['entity_type'] = 'trace_link';
+    }
+  }
+}

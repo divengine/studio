@@ -1,0 +1,214 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - divengine_traceability
+    - options
+    - user
+id: divengine_trace_links
+label: 'Trace links'
+module: views
+description: 'Recorded relationships between engineering items.'
+tag: ''
+base_table: trace_link
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: 'Trace links'
+      fields:
+        id:
+          id: id
+          table: trace_link
+          field: id
+          entity_type: trace_link
+          entity_field: id
+          plugin_id: field
+          label: 'Trace link'
+          alter:
+            alter_text: true
+            text: '#{{ id }}'
+            make_link: true
+            path: 'internal:/trace-link/{{ id }}'
+          type: number_integer
+          settings:
+            thousand_separator: ''
+        source_entity_type:
+          id: source_entity_type
+          table: trace_link
+          field: source_entity_type
+          entity_type: trace_link
+          entity_field: source_entity_type
+          plugin_id: field
+          label: 'Source type'
+        source_entity_id:
+          id: source_entity_id
+          table: trace_link
+          field: source_entity_id
+          entity_type: trace_link
+          entity_field: source_entity_id
+          plugin_id: field
+          label: Source
+          type: number_integer
+          settings:
+            thousand_separator: ''
+        link_type:
+          id: link_type
+          table: trace_link
+          field: link_type
+          entity_type: trace_link
+          entity_field: link_type
+          plugin_id: field
+          label: Relation
+          type: list_default
+        target_entity_type:
+          id: target_entity_type
+          table: trace_link
+          field: target_entity_type
+          entity_type: trace_link
+          entity_field: target_entity_type
+          plugin_id: field
+          label: 'Target type'
+        target_entity_id:
+          id: target_entity_id
+          table: trace_link
+          field: target_entity_id
+          entity_type: trace_link
+          entity_field: target_entity_id
+          plugin_id: field
+          label: Target
+          type: number_integer
+          settings:
+            thousand_separator: ''
+        confidence:
+          id: confidence
+          table: trace_link
+          field: confidence
+          entity_type: trace_link
+          entity_field: confidence
+          plugin_id: field
+          label: Confidence
+          type: list_default
+        changed:
+          id: changed
+          table: trace_link
+          field: changed
+          entity_type: trace_link
+          entity_field: changed
+          plugin_id: field
+          label: Changed
+          type: timestamp
+          settings:
+            date_format: short
+        operations:
+          id: operations
+          table: trace_link
+          field: operations
+          entity_type: trace_link
+          plugin_id: entity_operations
+          label: Operations
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+      access:
+        type: perm
+        options:
+          perm: 'view trace links'
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No trace links recorded.'
+      sorts:
+        changed:
+          id: changed
+          table: trace_link
+          field: changed
+          plugin_id: date
+          order: DESC
+      filters:
+        link_type:
+          id: link_type
+          table: trace_link
+          field: link_type
+          entity_type: trace_link
+          entity_field: link_type
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: link_type_op
+            label: Relation
+            identifier: link_type
+            remember: true
+            multiple: false
+        confidence:
+          id: confidence
+          table: trace_link
+          field: confidence
+          entity_type: trace_link
+          entity_field: confidence
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: confidence_op
+            label: Confidence
+            identifier: confidence
+            remember: true
+            multiple: false
+      style:
+        type: table
+        options:
+          sticky: true
+          empty_table: true
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: admin/divengine/trace-links
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags: {  }
+

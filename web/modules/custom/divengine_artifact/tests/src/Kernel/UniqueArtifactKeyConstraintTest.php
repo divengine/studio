@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Drupal\Tests\divengine_artifact\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\divengine_artifact\Entity\Artifact;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 
 #[RunTestsInSeparateProcesses]
 class UniqueArtifactKeyConstraintTest extends KernelTestBase {
+
+  use UserCreationTrait;
 
   protected static $modules = [
     'system',
@@ -17,6 +20,8 @@ class UniqueArtifactKeyConstraintTest extends KernelTestBase {
     'text',
     'options',
     'field',
+    'workflows',
+    'content_moderation',
     'divengine_core',
     'divengine_artifact',
   ];
@@ -25,8 +30,11 @@ class UniqueArtifactKeyConstraintTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('artifact');
+    $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('artifact_type');
     $this->installConfig('divengine_artifact');
+    // Moderated saves validate the transition against the current user.
+    $this->setUpCurrentUser([], [], TRUE);
   }
 
   public function testUniqueKeySucceeds(): void {

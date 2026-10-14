@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Hooks for Divengine Artifact.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_views_data_alter().
+ *
+ * Artifacts are not translatable, so their fields live in the base table and
+ * the declared data table is never created. Content moderation registers its
+ * Views integration on the data table; move it to the table that exists.
+ */
+function divengine_artifact_views_data_alter(array &$data): void {
+  foreach (['artifact_field_data' => 'artifact', 'artifact_field_revision' => 'artifact_revision'] as $declared => $actual) {
+    if (isset($data[$declared]['moderation_state'], $data[$actual]) && !isset($data[$declared]['table'])) {
+      $data[$actual]['moderation_state'] = $data[$declared]['moderation_state'];
+      unset($data[$declared]['moderation_state']);
+      if ($data[$declared] === []) {
+        unset($data[$declared]);
+      }
+    }
+  }
+}

@@ -25,6 +25,8 @@ class ArtifactRevisionAccessTest extends KernelTestBase {
     'text',
     'options',
     'field',
+    'workflows',
+    'content_moderation',
     'divengine_core',
     'divengine_artifact',
   ];
@@ -33,6 +35,7 @@ class ArtifactRevisionAccessTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('artifact');
+    $this->installEntitySchema('content_moderation_state');
     $this->installConfig('divengine_artifact');
     // Take uid 1, which bypasses every access check.
     $this->createUser();
@@ -80,7 +83,13 @@ class ArtifactRevisionAccessTest extends KernelTestBase {
     $risk = Artifact::create(['title' => 'K', 'artifact_key' => 'RSK-1', 'type' => 'risk']);
     $risk->save();
 
-    $analyst = $this->createUser(['edit requirement artifact', 'create requirement artifact', 'view requirement artifact revisions']);
+    $analyst = $this->createUser([
+      'edit requirement artifact',
+      'create requirement artifact',
+      'view requirement artifact revisions',
+      // Moderated artifacts can only be edited through a transition.
+      'use artifact_lifecycle transition create_new_draft',
+    ]);
     $this->assertTrue($requirement->access('update', $analyst));
     $this->assertFalse($risk->access('update', $analyst));
     $this->assertTrue($requirement->access('view all revisions', $analyst));
@@ -90,7 +99,7 @@ class ArtifactRevisionAccessTest extends KernelTestBase {
     $this->assertTrue($handler->createAccess('requirement', $analyst));
     $this->assertFalse($handler->createAccess('risk', $analyst));
 
-    $editor = $this->createUser(['edit artifact']);
+    $editor = $this->createUser(['edit artifact', 'use artifact_lifecycle transition create_new_draft']);
     $this->assertTrue($risk->access('update', $editor), 'The type-wide permission covers every type.');
   }
 

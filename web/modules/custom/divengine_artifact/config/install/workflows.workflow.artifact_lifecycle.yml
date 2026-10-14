@@ -1,0 +1,91 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - divengine_artifact.artifact_type.decision
+    - divengine_artifact.artifact_type.evidence
+    - divengine_artifact.artifact_type.knowledge_reference
+    - divengine_artifact.artifact_type.method_fragment
+    - divengine_artifact.artifact_type.requirement
+    - divengine_artifact.artifact_type.risk
+    - divengine_artifact.artifact_type.standard_reference
+    - divengine_artifact.artifact_type.test_case
+    - divengine_artifact.artifact_type.use_case
+  module:
+    - content_moderation
+    - divengine_artifact
+id: artifact_lifecycle
+label: 'Artifact lifecycle'
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Draft
+      weight: -5
+      published: false
+      default_revision: false
+    review:
+      label: 'In review'
+      weight: -2
+      published: false
+      default_revision: false
+    published:
+      label: Approved
+      weight: 0
+      published: true
+      default_revision: true
+    archived:
+      label: Deprecated
+      weight: 5
+      published: false
+      default_revision: true
+  transitions:
+    create_new_draft:
+      label: 'Create new draft'
+      from:
+        - draft
+        - published
+      to: draft
+      weight: 0
+    submit_for_review:
+      label: 'Submit for review'
+      from:
+        - draft
+      to: review
+      weight: 1
+    request_changes:
+      label: 'Request changes'
+      from:
+        - review
+      to: draft
+      weight: 2
+    approve:
+      label: Approve
+      from:
+        - review
+      to: published
+      weight: 3
+    deprecate:
+      label: Deprecate
+      from:
+        - published
+      to: archived
+      weight: 4
+    restore:
+      label: 'Restore to draft'
+      from:
+        - archived
+      to: draft
+      weight: 5
+  entity_types:
+    artifact:
+      - decision
+      - evidence
+      - knowledge_reference
+      - method_fragment
+      - requirement
+      - risk
+      - standard_reference
+      - test_case
+      - use_case
+  default_moderation_state: draft

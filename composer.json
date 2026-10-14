@@ -1,8 +1,8 @@
 {
-    "name": "drupal/recommended-project",
-    "description": "Project template for Drupal projects with a relocated document root",
+    "name": "divengine/studio",
+    "description": "Divengine Studio: an engineering suite on Drupal core (artifacts, traceability, modelers, Unified Process).",
     "type": "project",
-    "license": "GPL-2.0-or-later",
+    "license": "GPL-3.0-or-later",
     "homepage": "https://www.drupal.org/project/drupal",
     "support": {
         "docs": "https://www.drupal.org/docs/user_guide/en/index.html",

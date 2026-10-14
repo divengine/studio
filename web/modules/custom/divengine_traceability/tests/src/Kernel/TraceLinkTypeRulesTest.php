@@ -25,6 +25,8 @@ class TraceLinkTypeRulesTest extends KernelTestBase {
     'text',
     'options',
     'field',
+    'workflows',
+    'content_moderation',
     'divengine_core',
     'divengine_artifact',
     'divengine_traceability',
@@ -34,8 +36,10 @@ class TraceLinkTypeRulesTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('artifact');
+    $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('trace_link');
     $this->installConfig(['divengine_artifact', 'divengine_traceability']);
+    $this->setUpCurrentUser([], [], TRUE);
   }
 
   public function testDefaultTypesAreOrderedAllowedValues(): void {

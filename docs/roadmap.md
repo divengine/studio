@@ -5,7 +5,9 @@ modelers whose elements link to engineering records, and a Unified Process layer
 governs the work. Each phase ends with kernel tests passing and the site installable from
 config.
 
-## Phase 0 — Foundation cleanup
+## Phase 0 — Foundation cleanup ✅
+
+Done; see [handoff-003](handoff-003.md).
 
 Make the existing modules a solid base before adding on top.
 

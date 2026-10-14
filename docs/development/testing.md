@@ -14,7 +14,7 @@ Tests are configured via `phpunit.xml` (local overrides) or `phpunit.xml.dist` (
 
 ```bash
 # Set database credentials via environment variable:
-export SIMPLESTET_DB="pgsql://user:password@localhost/database"
+export SIMPLETEST_DB="pgsql://user:password@localhost/database"
 
 # Or edit phpunit.xml directly (gitignored recommended)
 # Then run:
@@ -78,4 +78,4 @@ class MyConstraintTest extends KernelTestBase {
 
 ## CI Integration
 
-For CI pipelines, set the `SIMPLESTET_DB` environment variable to the test database DSN.
+For CI pipelines, set the `SIMPLETEST_DB` environment variable to the test database DSN.

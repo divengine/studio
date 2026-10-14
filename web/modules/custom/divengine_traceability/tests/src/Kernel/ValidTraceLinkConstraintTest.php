@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\divengine_traceability\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 use Drupal\divengine_artifact\Entity\Artifact;
 use Drupal\divengine_traceability\Entity\TraceLink;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -12,12 +13,16 @@ use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 #[RunTestsInSeparateProcesses]
 class ValidTraceLinkConstraintTest extends KernelTestBase {
 
+  use UserCreationTrait;
+
   protected static $modules = [
     'system',
     'user',
     'text',
     'options',
     'field',
+    'workflows',
+    'content_moderation',
     'divengine_core',
     'divengine_artifact',
     'divengine_traceability',
@@ -27,9 +32,11 @@ class ValidTraceLinkConstraintTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('user');
     $this->installEntitySchema('artifact');
+    $this->installEntitySchema('content_moderation_state');
     $this->installEntitySchema('artifact_type');
     $this->installEntitySchema('trace_link');
     $this->installConfig(['divengine_artifact', 'divengine_traceability']);
+    $this->setUpCurrentUser([], [], TRUE);
   }
 
   public function testValidTraceLinkSucceeds(): void {

@@ -10,3 +10,4 @@ dependencies:
   - drupal:options
   - drupal:user
   - drupal:content_moderation
+  - drupal:views

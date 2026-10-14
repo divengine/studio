@@ -19,11 +19,11 @@
     <ini name="memory_limit" value="-1"/>
     <env name="SIMPLETEST_BASE_URL" value="http://localhost"/>
     <!--
-      SIMPLESTET_DB format: pgsql://user:password@host/database
+      SIMPLETEST_DB format: pgsql://user:password@host/database
       Override by setting the environment variable or copying to phpunit.xml:
-      export SIMPLESTET_DB="pgsql://username:password@localhost/dbname"
+      export SIMPLETEST_DB="pgsql://username:password@localhost/dbname"
     -->
-    <env name="SIMPLESTET_DB" value="pgsql://user:password@localhost/database"/>
+    <env name="SIMPLETEST_DB" value="pgsql://user:password@localhost/database"/>
   </php>
   <testsuites>
     <testsuite name="kernel">

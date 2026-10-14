@@ -1,0 +1,210 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - content_moderation
+    - divengine_artifact
+    - user
+id: divengine_artifacts
+label: Artifacts
+module: views
+description: 'Engineering artifacts with their type and lifecycle state.'
+tag: ''
+base_table: artifact
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Artifacts
+      fields:
+        artifact_key:
+          id: artifact_key
+          table: artifact
+          field: artifact_key
+          entity_type: artifact
+          entity_field: artifact_key
+          plugin_id: field
+          label: Key
+        title:
+          id: title
+          table: artifact
+          field: title
+          entity_type: artifact
+          entity_field: title
+          plugin_id: field
+          label: Title
+          type: string
+          settings:
+            link_to_entity: true
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: field
+          label: Type
+          type: entity_reference_label
+          settings:
+            link: false
+        moderation_state:
+          id: moderation_state
+          table: artifact
+          field: moderation_state
+          entity_type: artifact
+          plugin_id: moderation_state_field
+          label: State
+          type: content_moderation_state
+        uid:
+          id: uid
+          table: artifact
+          field: uid
+          entity_type: artifact
+          entity_field: uid
+          plugin_id: field
+          label: Owner
+          type: entity_reference_label
+          settings:
+            link: false
+        changed:
+          id: changed
+          table: artifact
+          field: changed
+          entity_type: artifact
+          entity_field: changed
+          plugin_id: field
+          label: Changed
+          type: timestamp
+          settings:
+            date_format: short
+        operations:
+          id: operations
+          table: artifact
+          field: operations
+          entity_type: artifact
+          plugin_id: entity_operations
+          label: Operations
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+      access:
+        type: perm
+        options:
+          perm: 'view artifact'
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No artifacts match.'
+      sorts:
+        changed:
+          id: changed
+          table: artifact
+          field: changed
+          plugin_id: date
+          order: DESC
+      filters:
+        combine:
+          id: combine
+          table: views
+          field: combine
+          plugin_id: combine
+          operator: contains
+          value: ''
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Key or title'
+            identifier: search
+            remember: true
+            multiple: false
+          fields:
+            artifact_key: artifact_key
+            title: title
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: Type
+            identifier: type
+            remember: true
+            multiple: false
+        moderation_state:
+          id: moderation_state
+          table: artifact
+          field: moderation_state
+          entity_type: artifact
+          entity_field: moderation_state
+          plugin_id: moderation_state_filter
+          operator: in
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: moderation_state_op
+            label: State
+            identifier: moderation_state
+            remember: true
+            multiple: false
+      style:
+        type: table
+        options:
+          sticky: true
+          empty_table: true
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags:
+        - 'config:workflow_list'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: admin/divengine/artifacts
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags:
+        - 'config:workflow_list'
+
