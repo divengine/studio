@@ -26,7 +26,6 @@ Make the existing modules a solid base before adding on top.
 BPMN and UML are built together so the platform is proven on both notation families
 (canvas and text) from the start.
 
-
 - `divengine_modeler`: `diagram` entity and `diagram_type`, `ModelerNotation` plugin type,
   save controller, safe SVG preview route, link index, backlinks block, entity picker
   dialog, shared editor helpers, moderation workflow.
@@ -46,8 +45,8 @@ BPMN and UML are built together so the platform is proven on both notation famil
 
 One module each, in this order: `mermaid`, `dmn`, `archimate` (fork
 rafageist/archimate-js), `cmmn`, `ifml`, `excalidraw`. Each repeats the BPMN pattern
-(canvas) or the UML pattern (text): plugin, bundle, vendored
-engine, editor, preview renderer, link extractor, tests.
+(canvas) or the UML pattern (text): plugin, bundle, vendored engine, editor, preview
+renderer, link extractor, tests.
 
 ## Phase 4 — Unified Process
 

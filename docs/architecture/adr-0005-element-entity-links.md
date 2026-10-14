@@ -26,7 +26,6 @@ export, import and revisions:
   `divengine:entity="entity:node/42"` and `divengine:label="…"`, registered as a moddle
   extension in each engine. They are never added to a standard namespace.
 - Excalidraw: the element's `customData.divengine = {entity, label}`.
-
 - Text notations (UML, Mermaid): the source has no stable element ids, and the SVG is
   regenerated on every render. Links are stored in a structured field of the diagram,
   `element_bindings`, as a map from a **semantic key** to `{entity, label}`. The key
@@ -47,8 +46,8 @@ taxonomy terms, diagrams.
 A non-revisionable index, `diagram_element_link` (diagram id, revision id, element id,
 target entity type, target id, label snapshot), is rebuilt from the source on every save
 by the notation plugin's `extractLinks()` (from the document for canvas notations, from
-`element_bindings` plus native link syntax for text notations). The document is the truth; the index exists
-for queries:
+`element_bindings` plus native link syntax for text notations). The document is the
+truth; the index exists for queries:
 
 - **Backlinks**: "diagrams referencing this entity" is a query on target; any entity can
   show it in a block or tab.
