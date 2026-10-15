@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Install hooks for Divengine Diagram Embed.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function divengine_diagram_embed_schema(): array {
+  $schema['diagram_usage'] = [
+    'description' => 'Where diagrams are embedded: one row per diagram, host entity, field and language.',
+    'fields' => [
+      'diagram_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The embedded diagram.',
+      ],
+      'host_type' => [
+        'type' => 'varchar_ascii',
+        'length' => 64,
+        'not null' => TRUE,
+        'description' => 'Entity type of the host.',
+      ],
+      'host_id' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+        'description' => 'ID of the host.',
+      ],
+      'field_name' => [
+        'type' => 'varchar_ascii',
+        'length' => 32,
+        'not null' => TRUE,
+        'description' => 'Text field of the host holding the embed.',
+      ],
+      'langcode' => [
+        'type' => 'varchar_ascii',
+        'length' => 12,
+        'not null' => TRUE,
+        'description' => 'Language of the host translation.',
+      ],
+      'count' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'How many times the diagram is embedded in that field.',
+      ],
+    ],
+    'primary key' => ['diagram_id', 'host_type', 'host_id', 'field_name', 'langcode'],
+    'indexes' => [
+      'host' => ['host_type', 'host_id'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ *
+ * Records the embeds of content saved before the module was installed.
+ */
+function divengine_diagram_embed_install(bool $is_syncing): void {
+  \Drupal::service('divengine_diagram_embed.usage')->rebuildAll();
+}

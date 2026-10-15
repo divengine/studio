@@ -1,0 +1,30 @@
+{#
+/**
+ * @file
+ * One diagram embedded in formatted text.
+ *
+ * Available variables:
+ * - attributes: Attributes of the figure.
+ * - state: ready, no_preview, restricted or missing.
+ * - label: The diagram label (ready and no_preview only).
+ * - url: The diagram page (ready and no_preview only).
+ * - preview_url: The preview, scaled to its frame (ready only).
+ * - frame_attributes: Attributes of the frame holding the preview.
+ */
+#}
+<figure{{ attributes }}>
+  {% if state == 'ready' %}
+    <div{{ frame_attributes.addClass('divengine-diagram-embed__frame') }}>
+      <iframe src="{{ preview_url }}" title="{{ 'Diagram: @label'|t({'@label': label}) }}" loading="lazy" sandbox="allow-top-navigation-by-user-activation allow-popups"></iframe>
+    </div>
+  {% elseif state == 'no_preview' %}
+    <p class="divengine-diagram-embed__notice">{{ 'This diagram has no preview yet.'|t }}</p>
+  {% elseif state == 'restricted' %}
+    <p class="divengine-diagram-embed__notice">{{ 'Restricted diagram.'|t }}</p>
+  {% else %}
+    <p class="divengine-diagram-embed__notice">{{ 'Missing diagram.'|t }}</p>
+  {% endif %}
+  {% if url %}
+    <figcaption class="divengine-diagram-embed__caption"><a href="{{ url }}">{{ label }}</a></figcaption>
+  {% endif %}
+</figure>

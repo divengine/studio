@@ -1,0 +1,4 @@
+services:
+  divengine_diagram_embed.usage:
+    class: Drupal\divengine_diagram_embed\DiagramUsage
+    arguments: ['@database', '@entity_type.manager', '@entity_field.manager', '@cache_tags.invalidator', '@entity.last_installed_schema.repository']

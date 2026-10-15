@@ -1,0 +1,10 @@
+name: 'Divengine Diagram Embed'
+type: module
+description: 'Embeds diagrams in formatted text: a CKEditor 5 button, the <drupal-diagram> text filter and a usage table showing where each diagram is embedded.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_modeler
+  - drupal:filter
+  - drupal:editor
+  - drupal:ckeditor5

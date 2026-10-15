@@ -157,7 +157,7 @@ class DiagramModelerController extends ControllerBase {
     if ($diagram->getPreviewSvg() === '' || !hash_equals($diagram->getPreviewHash(), $hash)) {
       throw new NotFoundHttpException();
     }
-    $svg = $this->previewBuilder->build($diagram, $this->currentUser());
+    $svg = $this->previewBuilder->build($diagram, $this->currentUser(), (bool) $request->query->get('fit'));
     if ($svg === '') {
       throw new NotFoundHttpException();
     }

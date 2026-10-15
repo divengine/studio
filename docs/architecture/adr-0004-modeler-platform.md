@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted. Implemented in Phase 1 with BPMN and UML (see `docs/handoff-004.md`).
+Accepted. Implemented in Phase 1 with BPMN and UML (see `docs/handoff-004.md`); embedding
+in Phase 2 (see `docs/handoff-005.md`).
 
 ## Context
 
@@ -106,8 +107,15 @@ The platform finds notations through the plugin manager and never names them.
 - A CKEditor 5 plugin inserts `<drupal-diagram data-diagram-uuid="…">`, and a text format
   filter renders it as the stored preview with clickable linked elements (pattern of core's
   `<drupal-media>`).
-- The platform keeps a usage table (diagram ↔ host entity and field), rebuilt when a host
-  is saved, so a diagram shows where it is embedded and deletions can clean up.
+- The preview is shown in a sandboxed `<iframe>` of the preview route, not inlined: an
+  inline SVG would leak its `<style>` rules and element IDs into the page, and an `<img>`
+  cannot carry links. The frame keeps the diagram's aspect ratio; links open in the top
+  window on user activation.
+- Embeds show the diagram's default (published) revision.
+- A usage table (diagram ↔ host entity, field and language), rebuilt when a host's default
+  revision is saved, lets a diagram show where it is embedded and warns before deletion.
+- Embedding lives in its own module, `divengine_diagram_embed`, so the platform does not
+  depend on the editor and filter modules.
 
 ### Access
 

@@ -1,0 +1,173 @@
+<?php
+
+/**
+ * @file
+ * Hooks for Divengine Diagram Embed.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\ContentEntityDeleteForm;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\divengine_diagram_embed\DiagramUsage;
+use Drupal\divengine_diagram_embed\EmbedTheme;
+use Drupal\divengine_modeler\Entity\DiagramInterface;
+
+/**
+ * Implements hook_theme().
+ */
+function divengine_diagram_embed_theme(): array {
+  return [
+    'divengine_diagram_embed' => [
+      'variables' => [
+        'state' => 'missing',
+        'label' => NULL,
+        'url' => NULL,
+        'preview_url' => NULL,
+        'dimensions' => NULL,
+        'align' => NULL,
+      ],
+      'initial preprocess' => EmbedTheme::class . ':preprocess',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function divengine_diagram_embed_entity_insert(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('divengine_diagram_embed.usage')->track($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function divengine_diagram_embed_entity_update(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('divengine_diagram_embed.usage')->track($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function divengine_diagram_embed_entity_delete(EntityInterface $entity): void {
+  if (!$entity instanceof ContentEntityInterface) {
+    return;
+  }
+  $usage = \Drupal::service('divengine_diagram_embed.usage');
+  if ($entity instanceof DiagramInterface) {
+    $usage->forgetDiagram((int) $entity->id());
+  }
+  else {
+    $usage->forgetHost($entity->getEntityTypeId(), (string) $entity->id());
+  }
+}
+
+/**
+ * Implements hook_entity_translation_delete().
+ */
+function divengine_diagram_embed_entity_translation_delete(EntityInterface $translation): void {
+  if ($translation instanceof ContentEntityInterface) {
+    \Drupal::service('divengine_diagram_embed.usage')->forgetTranslation($translation->getEntityTypeId(), (string) $translation->id(), $translation->language()->getId());
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function divengine_diagram_embed_entity_extra_field_info(): array {
+  $extra = [];
+  foreach (array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('diagram')) as $bundle) {
+    $extra['diagram'][$bundle]['display']['diagram_usage'] = [
+      'label' => t('Embedded in'),
+      'description' => t('Content where the diagram is embedded.'),
+      'weight' => 30,
+      'visible' => TRUE,
+    ];
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for diagram.
+ */
+function divengine_diagram_embed_diagram_view(array &$build, DiagramInterface $diagram, EntityViewDisplayInterface $display, string $view_mode): void {
+  if (!$diagram->isNew() && $display->getComponent('diagram_usage')) {
+    $build['diagram_usage'] = divengine_diagram_embed_usage_list($diagram);
+  }
+}
+
+/**
+ * The "Embedded in" list of a diagram, showing only hosts the user can view.
+ */
+function divengine_diagram_embed_usage_list(DiagramInterface $diagram): array {
+  $entity_type_manager = \Drupal::entityTypeManager();
+  $tags = [DiagramUsage::cacheTag((int) $diagram->id())];
+  $items = [];
+  $restricted = 0;
+  $hosts = [];
+  foreach (\Drupal::service('divengine_diagram_embed.usage')->usagesOf((int) $diagram->id()) as $row) {
+    $hosts[$row->host_type . ':' . $row->host_id] = [$row->host_type, $row->host_id];
+  }
+  foreach ($hosts as [$host_type, $host_id]) {
+    $host = $entity_type_manager->hasDefinition($host_type) ? $entity_type_manager->getStorage($host_type)->load($host_id) : NULL;
+    if (!$host) {
+      continue;
+    }
+    $tags = array_merge($tags, $host->getCacheTags());
+    if (!$host->access('view')) {
+      $restricted++;
+      continue;
+    }
+    $items[] = $host->hasLinkTemplate('canonical') ? $host->toLink()->toRenderable() : ['#plain_text' => $host->label()];
+  }
+  $build = [
+    '#type' => 'details',
+    '#title' => t('Embedded in (@count)', ['@count' => count($items) + $restricted]),
+    '#open' => (bool) $items,
+    '#weight' => 30,
+    '#cache' => ['contexts' => ['user'], 'tags' => array_values(array_unique($tags))],
+    'list' => [
+      '#theme' => 'item_list',
+      '#items' => $items,
+      '#empty' => $restricted ? NULL : t('This diagram is not embedded anywhere.'),
+    ],
+  ];
+  if ($restricted) {
+    $build['restricted'] = [
+      '#markup' => '<p>' . \Drupal::translation()->formatPlural($restricted, 'Also embedded in 1 item you cannot view.', 'Also embedded in @count items you cannot view.') . '</p>',
+    ];
+  }
+  return $build;
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Warns before deleting a diagram that is embedded somewhere.
+ */
+function divengine_diagram_embed_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof ContentEntityDeleteForm || !$form_object->getEntity() instanceof DiagramInterface) {
+    return;
+  }
+  $count = array_sum(array_map(
+    static fn (object $row): int => (int) $row->count,
+    \Drupal::service('divengine_diagram_embed.usage')->usagesOf((int) $form_object->getEntity()->id()),
+  ));
+  if ($count) {
+    $form['divengine_diagram_usage'] = [
+      '#type' => 'html_tag',
+      '#tag' => 'p',
+      '#value' => \Drupal::translation()->formatPlural($count, 'This diagram is embedded once in formatted text; the embed will show as a missing diagram.', 'This diagram is embedded @count times in formatted text; those embeds will show as missing diagrams.'),
+      '#attributes' => ['class' => ['messages', 'messages--warning']],
+      '#weight' => -10,
+    ];
+  }
+}

@@ -1,0 +1,93 @@
+.ck-content .divengine-diagram-widget {
+  margin: 1rem 0;
+  padding: 0.5rem;
+  border: 1px solid #d3d4d9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.ck-content .divengine-diagram-widget--align-center {
+  max-width: 75%;
+  margin-inline: auto;
+}
+
+.ck-content .divengine-diagram-widget--align-left {
+  float: left;
+  max-width: 50%;
+  margin-inline-end: 1.5rem;
+}
+
+.ck-content .divengine-diagram-widget--align-right {
+  float: right;
+  max-width: 50%;
+  margin-inline-start: 1.5rem;
+}
+
+.ck-content .divengine-diagram-widget__preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.ck-content .divengine-diagram-widget__caption {
+  margin-top: 0.25rem;
+  color: #55565b;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.divengine-diagram-picker {
+  width: min(32rem, calc(100vw - 2rem));
+  padding: 1rem 1.25rem;
+  border: 1px solid #d3d4d9;
+  border-radius: 6px;
+}
+
+.divengine-diagram-picker h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.125rem;
+}
+
+.divengine-diagram-picker__search {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.divengine-diagram-picker__status {
+  min-height: 1.25rem;
+  margin: 0.5rem 0;
+  color: #55565b;
+}
+
+.divengine-diagram-picker__results {
+  max-height: 20rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  overflow: auto;
+  list-style: none;
+}
+
+.divengine-diagram-picker__result {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: 0;
+  border-bottom: 1px solid #e6e7eb;
+  background: none;
+  text-align: start;
+  cursor: pointer;
+}
+
+.divengine-diagram-picker__result:hover,
+.divengine-diagram-picker__result:focus {
+  background: #f3f4f9;
+}
+
+.divengine-diagram-picker__type {
+  color: #55565b;
+  font-size: 0.875rem;
+}

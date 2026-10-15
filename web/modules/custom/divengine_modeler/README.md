@@ -26,7 +26,8 @@ each notation is a separate module (`divengine_modeler_bpmn`, `divengine_modeler
 - **Previews** `GET /diagram/{id}/preview/{hash}.svg`: the SVG is checked by `SvgSafety`
   before it is stored, then served per viewer with `Content-Security-Policy:
   default-src 'none'` (inline styles only), `nosniff` and private caching. Linked
-  elements become links only when the viewer can see the target. `?download=1` downloads
+  elements become links only when the viewer can see the target. `?fit=1` scales it to
+  its viewport (embeds use it); `?download=1` downloads
   it. Diagrams without a fresh preview are rendered off-screen by the first editor who
   opens them.
 - **Element links** (`entity:<type>/<id>`): index table `diagram_element_link`, rebuilt

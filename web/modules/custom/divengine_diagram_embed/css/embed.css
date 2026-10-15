@@ -1,0 +1,50 @@
+.divengine-diagram-embed {
+  width: var(--divengine-diagram-width, 100%);
+  max-width: 100%;
+  margin: 1rem 0;
+}
+
+.divengine-diagram-embed--align-center {
+  margin-inline: auto;
+}
+
+.divengine-diagram-embed--align-left {
+  float: left;
+  max-width: 50%;
+  margin-inline-end: 1.5rem;
+}
+
+.divengine-diagram-embed--align-right {
+  float: right;
+  max-width: 50%;
+  margin-inline-start: 1.5rem;
+}
+
+.divengine-diagram-embed__frame {
+  width: 100%;
+  aspect-ratio: var(--divengine-diagram-ratio, 4 / 3);
+  border: 1px solid #d3d4d9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.divengine-diagram-embed__frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.divengine-diagram-embed__notice {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border: 1px dashed #b5b6bb;
+  border-radius: 4px;
+  color: #55565b;
+  font-style: italic;
+}
+
+.divengine-diagram-embed__caption {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+}

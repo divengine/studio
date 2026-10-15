@@ -27,11 +27,14 @@ class PreviewBuilder {
   /**
    * The preview of a diagram as served to an account.
    */
-  public function build(DiagramInterface $diagram, AccountInterface $account): string {
+  public function build(DiagramInterface $diagram, AccountInterface $account, bool $fit = FALSE): string {
     $svg = $diagram->getPreviewSvg();
     $document = ModelerNotationBase::parseXml($svg);
     if (!$document) {
       return '';
+    }
+    if ($fit) {
+      $this->fit($document->documentElement);
     }
     $links = [];
     foreach ($diagram->getNotation()->extractLinks($diagram->getSource(), $diagram->getBindings()) as $link) {
@@ -55,6 +58,55 @@ class PreviewBuilder {
       }
     }
     return $document->saveXML($document->documentElement);
+  }
+
+  /**
+   * The intrinsic size of an SVG: its viewBox, or its width and height.
+   *
+   * @return float[]|null
+   *   [width, height], or NULL when the SVG states no usable size.
+   */
+  public static function dimensions(string $svg): ?array {
+    $document = ModelerNotationBase::parseXml($svg);
+    if (!$document) {
+      return NULL;
+    }
+    $root = $document->documentElement;
+    $box = preg_split('/[\s,]+/', trim($root->getAttribute('viewBox')));
+    if (count($box) === 4 && is_numeric($box[2]) && is_numeric($box[3]) && $box[2] > 0 && $box[3] > 0) {
+      return [(float) $box[2], (float) $box[3]];
+    }
+    $width = static::length($root->getAttribute('width'));
+    $height = static::length($root->getAttribute('height'));
+    return $width && $height ? [$width, $height] : NULL;
+  }
+
+  /**
+   * Makes the SVG scale to its viewport (an embed frame) keeping its ratio.
+   */
+  protected function fit(\DOMElement $root): void {
+    if (!$root->hasAttribute('viewBox')) {
+      $width = static::length($root->getAttribute('width'));
+      $height = static::length($root->getAttribute('height'));
+      if (!$width || !$height) {
+        return;
+      }
+      $root->setAttribute('viewBox', "0 0 $width $height");
+    }
+    $root->setAttribute('width', '100%');
+    $root->setAttribute('height', '100%');
+    $root->setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    // Engines set a fixed size in the style attribute as well.
+    $style = preg_replace('/(^|;)\s*(width|height)\s*:[^;]*/i', '$1', $root->getAttribute('style'));
+    $style = trim((string) $style, "; \t");
+    $style === '' ? $root->removeAttribute('style') : $root->setAttribute('style', $style);
+  }
+
+  /**
+   * A length in user units ("120", "120px"), or NULL for relative lengths.
+   */
+  protected static function length(string $value): ?float {
+    return preg_match('/^\s*(\d+(?:\.\d+)?)\s*(px)?\s*$/', $value, $match) && (float) $match[1] > 0 ? (float) $match[1] : NULL;
   }
 
   protected function linkElement(\DOMElement $element, string $uri, AccountInterface $account): void {

@@ -1,0 +1,17 @@
+divengine_diagram_embed_diagram:
+  ckeditor5:
+    plugins:
+      - divengineDiagram.DivengineDiagram
+  drupal:
+    label: Diagram
+    library: divengine_diagram_embed/ckeditor5
+    admin_library: divengine_diagram_embed/ckeditor5.admin
+    class: Drupal\divengine_diagram_embed\Plugin\CKEditor5Plugin\DiagramEmbed
+    toolbar_items:
+      divengineDiagram:
+        label: Diagram
+    elements:
+      - <drupal-diagram>
+      - <drupal-diagram data-diagram-uuid data-align>
+    conditions:
+      filter: divengine_diagram_embed

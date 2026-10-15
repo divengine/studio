@@ -1,0 +1,22 @@
+embed:
+  version: VERSION
+  css:
+    component:
+      css/embed.css: {}
+
+ckeditor5:
+  version: VERSION
+  js:
+    js/ckeditor5.diagram.js: {}
+  css:
+    theme:
+      css/ckeditor5.diagram.css: {}
+  dependencies:
+    - core/ckeditor5
+    - core/drupal
+
+ckeditor5.admin:
+  version: VERSION
+  css:
+    theme:
+      css/ckeditor5.admin.css: {}

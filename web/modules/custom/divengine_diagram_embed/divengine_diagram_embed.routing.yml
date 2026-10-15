@@ -1,0 +1,19 @@
+divengine_diagram_embed.search:
+  path: '/divengine/diagram-embed/search'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_diagram_embed\Controller\DiagramEmbedController::search'
+  requirements:
+    _permission: 'view diagrams'
+  options:
+    no_cache: true
+
+divengine_diagram_embed.lookup:
+  path: '/divengine/diagram-embed/lookup'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_diagram_embed\Controller\DiagramEmbedController::lookup'
+  requirements:
+    _permission: 'view diagrams'
+  options:
+    no_cache: true

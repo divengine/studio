@@ -41,7 +41,9 @@ BPMN and UML are built together so the platform is proven on both notation famil
   extractor.
 - Kernel tests: source validation, link extraction, index rebuild, SVG safety, access.
 
-## Phase 2 — Embedding
+## Phase 2 — Embedding ✅
+
+Done; see [handoff-005](handoff-005.md).
 
 - CKEditor 5 plugin and `<drupal-diagram>` filter; usage table; "Embedded in" on diagrams.
 

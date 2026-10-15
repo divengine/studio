@@ -1,0 +1,13 @@
+{
+  "name": "divengine-diagram-embed-js-tests",
+  "private": true,
+  "description": "Runs the CKEditor 5 diagram plugin in jsdom with the CKEditor build shipped by Drupal core.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --no-warnings"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

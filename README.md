@@ -17,6 +17,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_modeler` | Diagram platform: diagram entity, notation plugins, safe previews, element links |
 | `web/modules/custom/divengine_modeler_bpmn` | BPMN 2.0 notation (bpmn-js) |
 | `web/modules/custom/divengine_modeler_uml` | UML notation (PlantUML in the browser, CodeMirror) |
+| `web/modules/custom/divengine_diagram_embed` | Diagrams in formatted text: CKEditor 5 button, `<drupal-diagram>` filter, usage |
 | `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
@@ -36,8 +37,11 @@ cp web/sites/default/default.settings.php web/sites/default/settings.php
 # configure $databases in settings.php (PostgreSQL), then:
 vendor/bin/drush site:install --existing-config   # or import a database dump
 vendor/bin/drush en divengine_core divengine_artifact divengine_knowledge divengine_traceability \
-  divengine_modeler divengine_modeler_bpmn divengine_modeler_uml
+  divengine_modeler divengine_modeler_bpmn divengine_modeler_uml divengine_diagram_embed
 ```
+
+To embed diagrams, add the "Diagram" button and the "Embed diagrams" filter to a CKEditor 5
+text format (see `web/modules/custom/divengine_diagram_embed/README.md`).
 
 ## Tests
 
@@ -47,10 +51,11 @@ Copy `phpunit.xml.dist` to `phpunit.xml` and set `SIMPLETEST_DB` to your databas
 vendor/bin/phpunit -c phpunit.xml web/modules/custom
 ```
 
-The modeler's JavaScript is tested with Node.js and jsdom, against the vendored engines:
+The JavaScript is tested with Node.js and jsdom, against the vendored engines and the
+CKEditor 5 build of core:
 
 ```bash
-for m in divengine_modeler divengine_modeler_bpmn divengine_modeler_uml; do
+for m in divengine_modeler divengine_modeler_bpmn divengine_modeler_uml divengine_diagram_embed; do
   (cd web/modules/custom/$m/tests/js && npm ci && npm test)
 done
 ```
