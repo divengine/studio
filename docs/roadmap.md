@@ -23,7 +23,9 @@ Make the existing modules a solid base before adding on top.
 - Fix `SIMPLESTET_DB` → `SIMPLETEST_DB` in `phpunit.xml.dist` and docs; align
   `composer.json` license and name.
 
-## Phase 1 — Modeler platform + BPMN + UML (ADR-0004, ADR-0005)
+## Phase 1 — Modeler platform + BPMN + UML (ADR-0004, ADR-0005) ✅
+
+Done; see [handoff-004](handoff-004.md).
 
 BPMN and UML are built together so the platform is proven on both notation families
 (canvas and text) from the start.

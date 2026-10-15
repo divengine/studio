@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted. Implemented in Phase 1 for BPMN and UML (see `docs/handoff-004.md`).
 
 ## Context
 
@@ -44,7 +44,8 @@ taxonomy terms, diagrams.
 ### Link index
 
 A non-revisionable index, `diagram_element_link` (diagram id, revision id, element id,
-target entity type, target id, label snapshot), is rebuilt from the source on every save
+target entity type, target id, label snapshot, broken flag), is rebuilt from the latest
+revision's source on every save
 by the notation plugin's `extractLinks()` (from the document for canvas notations, from
 `element_bindings` plus native link syntax for text notations). The document is the
 truth; the index exists for queries:
@@ -57,7 +58,7 @@ truth; the index exists for queries:
 
 ### Picking a target
 
-From the element's context pad the editor opens a Drupal dialog that:
+From the element's context pad (or the selected element) the editor opens a dialog that:
 
 - searches across entity types the user can view (autocomplete over labels),
 - accepts a pasted URL or path (`/node/42`, `/artifact/7`, `entity:node/42`) and resolves

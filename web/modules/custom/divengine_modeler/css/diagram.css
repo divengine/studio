@@ -1,0 +1,28 @@
+.divengine-diagram-preview {
+  margin: 1rem 0;
+}
+
+.divengine-diagram-preview img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  padding: 0.5rem;
+  border: 1px solid #d3d4d9;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.divengine-diagram-preview__open {
+  font-size: 0.875rem;
+}
+
+.divengine-diagram-preview__status {
+  color: #55565b;
+  font-style: italic;
+}
+
+.divengine-diagram-source {
+  max-height: 30rem;
+  overflow: auto;
+  white-space: pre;
+}

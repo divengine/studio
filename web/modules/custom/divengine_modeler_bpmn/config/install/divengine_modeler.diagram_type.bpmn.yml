@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - divengine_modeler_bpmn
+id: bpmn
+label: 'BPMN process'
+description: 'Business processes, collaborations and choreographies in BPMN 2.0.'
+notation: bpmn
+new_revision: true

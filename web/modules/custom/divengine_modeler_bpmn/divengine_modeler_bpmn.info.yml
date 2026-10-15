@@ -1,0 +1,7 @@
+name: 'Divengine Modeler: BPMN'
+type: module
+description: 'BPMN 2.0 process diagrams edited with bpmn-js, with elements linked to Drupal records.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_modeler

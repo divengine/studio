@@ -1,0 +1,13 @@
+{
+  "name": "divengine-modeler-js-tests",
+  "private": true,
+  "description": "Runs the modeler shell (modeler.js) in jsdom.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --no-warnings"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

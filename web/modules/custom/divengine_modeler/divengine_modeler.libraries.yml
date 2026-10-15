@@ -1,0 +1,17 @@
+modeler:
+  version: VERSION
+  js:
+    js/modeler.js: {}
+  css:
+    component:
+      css/modeler.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+
+diagram:
+  version: VERSION
+  css:
+    component:
+      css/diagram.css: {}

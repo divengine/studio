@@ -1,0 +1,27 @@
+services:
+  plugin.manager.modeler_notation:
+    class: Drupal\divengine_modeler\ModelerNotationManager
+    parent: default_plugin_manager
+
+  divengine_modeler.svg_safety:
+    class: Drupal\divengine_modeler\SvgSafety
+
+  divengine_modeler.link_index:
+    class: Drupal\divengine_modeler\LinkIndex
+    arguments: ['@database', '@entity_type.manager']
+
+  divengine_modeler.entity_resolver:
+    class: Drupal\divengine_modeler\EntityReferenceResolver
+    arguments: ['@entity_type.manager', '@config.factory', '@router.no_access_checks', '@path_alias.manager']
+
+  divengine_modeler.preview_builder:
+    class: Drupal\divengine_modeler\PreviewBuilder
+    arguments: ['@divengine_modeler.link_index', '@divengine_modeler.entity_resolver']
+
+  divengine_modeler.model_saver:
+    class: Drupal\divengine_modeler\DiagramModelSaver
+    arguments: ['@entity_type.manager', '@divengine_modeler.svg_safety', '@datetime.time', '@content_moderation.moderation_information']
+
+  divengine_modeler.backlinks:
+    class: Drupal\divengine_modeler\DiagramBacklinks
+    arguments: ['@divengine_modeler.link_index', '@entity_type.manager', '@current_user']

@@ -1,0 +1,28 @@
+entity.diagram.canonical:
+  route_name: entity.diagram.canonical
+  base_route: entity.diagram.canonical
+  title: 'View'
+
+entity.diagram.modeler:
+  route_name: entity.diagram.modeler
+  base_route: entity.diagram.canonical
+  title: 'Modeler'
+  weight: 5
+
+entity.diagram.edit_form:
+  route_name: entity.diagram.edit_form
+  base_route: entity.diagram.canonical
+  title: 'Edit details'
+  weight: 10
+
+entity.diagram.version_history:
+  route_name: entity.diagram.version_history
+  base_route: entity.diagram.canonical
+  title: 'Revisions'
+  weight: 20
+
+entity.diagram.delete_form:
+  route_name: entity.diagram.delete_form
+  base_route: entity.diagram.canonical
+  title: 'Delete'
+  weight: 30

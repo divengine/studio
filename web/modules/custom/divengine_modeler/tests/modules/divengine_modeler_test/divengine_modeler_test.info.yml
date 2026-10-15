@@ -1,0 +1,7 @@
+name: 'Divengine Modeler test notation'
+type: module
+description: 'A minimal text notation for testing the modeler platform.'
+package: Testing
+core_version_requirement: ^11
+dependencies:
+  - divengine_modeler

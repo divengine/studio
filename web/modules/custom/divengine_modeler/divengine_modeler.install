@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * Install, schema and update functions for Divengine Modeler.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function divengine_modeler_schema(): array {
+  $schema['diagram_element_link'] = [
+    'description' => 'Links from diagram elements to entities, rebuilt from the latest revision of each diagram.',
+    'fields' => [
+      'id' => [
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'diagram_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'revision_id' => [
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'element_id' => [
+        'description' => 'Element ID (canvas notations) or semantic key (text notations).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ],
+      'target_type' => [
+        'type' => 'varchar_ascii',
+        'length' => 32,
+        'not null' => TRUE,
+      ],
+      'target_id' => [
+        'type' => 'varchar_ascii',
+        'length' => 128,
+        'not null' => TRUE,
+      ],
+      'label' => [
+        'description' => 'Label snapshot taken when the link was made.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'broken' => [
+        'description' => 'Whether the target no longer exists.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'diagram' => ['diagram_id'],
+      'target' => ['target_type', 'target_id'],
+    ],
+  ];
+  return $schema;
+}

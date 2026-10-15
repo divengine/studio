@@ -1,0 +1,6 @@
+link_target_types:
+  - artifact
+  - diagram
+  - node
+  - taxonomy_term
+  - media

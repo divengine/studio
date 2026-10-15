@@ -1,0 +1,39 @@
+permission_callbacks:
+  - \Drupal\divengine_modeler\DiagramPermissions::diagramTypePermissions
+
+view diagrams:
+  title: 'View diagrams'
+
+create diagrams:
+  title: 'Create diagrams of any type'
+
+edit own diagrams:
+  title: 'Edit own diagrams of any type'
+
+edit any diagram:
+  title: 'Edit any diagram of any type'
+
+delete own diagrams:
+  title: 'Delete own diagrams of any type'
+
+delete any diagram:
+  title: 'Delete any diagram of any type'
+
+view diagram revisions:
+  title: 'View diagram revisions'
+
+revert diagram revisions:
+  title: 'Revert diagram revisions'
+
+delete diagram revisions:
+  title: 'Delete diagram revisions'
+
+administer diagrams:
+  title: 'Administer diagrams'
+  description: 'Edit, delete and manage every diagram.'
+  restrict access: true
+
+administer diagram types:
+  title: 'Administer diagram types'
+  description: 'Create, edit and delete diagram types.'
+  restrict access: true

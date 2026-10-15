@@ -1,0 +1,76 @@
+entity.diagram.modeler:
+  path: '/diagram/{diagram}/modeler'
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\DiagramModelerController::editor'
+    _title_callback: '\Drupal\divengine_modeler\Controller\DiagramModelerController::editorTitle'
+  requirements:
+    _entity_access: 'diagram.update'
+    diagram: \d+
+  options:
+    parameters:
+      diagram:
+        type: entity:diagram
+        load_latest_revision: true
+
+divengine_modeler.save_model:
+  path: '/diagram/{diagram}/model'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\DiagramModelerController::save'
+  requirements:
+    _entity_access: 'diagram.update'
+    _csrf_request_header_token: 'TRUE'
+    diagram: \d+
+  options:
+    parameters:
+      diagram:
+        type: entity:diagram
+        load_latest_revision: true
+
+divengine_modeler.store_preview:
+  path: '/diagram/{diagram}/preview'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\DiagramModelerController::storePreview'
+  requirements:
+    _entity_access: 'diagram.update'
+    _csrf_request_header_token: 'TRUE'
+    diagram: \d+
+
+divengine_modeler.preview:
+  path: '/diagram/{diagram}/preview/{file}'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\DiagramModelerController::preview'
+  requirements:
+    _entity_access: 'diagram.view'
+    diagram: \d+
+    file: '[0-9a-f]{64}\.svg'
+  options:
+    no_cache: true
+
+divengine_modeler.entity_search:
+  path: '/divengine/modeler/entities'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\EntityLinkController::search'
+  requirements:
+    _permission: 'edit own diagrams+edit any diagram+administer diagrams'
+
+divengine_modeler.entity_resolve:
+  path: '/divengine/modeler/entities/resolve'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\EntityLinkController::resolve'
+  requirements:
+    _permission: 'edit own diagrams+edit any diagram+administer diagrams'
+
+divengine_modeler.entity_go:
+  path: '/divengine/modeler/go'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\divengine_modeler\Controller\EntityLinkController::go'
+  requirements:
+    _permission: 'view diagrams'
+  options:
+    no_cache: true

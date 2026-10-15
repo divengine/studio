@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - divengine_modeler_test
+id: sketch
+label: Sketch
+description: 'Test diagrams.'
+notation: sketch
+new_revision: true

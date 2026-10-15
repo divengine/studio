@@ -1,0 +1,24 @@
+bpmn-js:
+  version: 18.30.1
+  license:
+    name: bpmn.io
+    url: https://bpmn.io/license/
+    gpl-compatible: true
+  js:
+    js/vendor/bpmn-js/bpmn-modeler.production.min.js: { minified: true, preprocess: false }
+  css:
+    component:
+      js/vendor/bpmn-js/assets/diagram-js.css: {}
+      js/vendor/bpmn-js/assets/bpmn-js.css: {}
+      js/vendor/bpmn-js/assets/bpmn-font/css/bpmn.css: {}
+
+editor:
+  version: VERSION
+  js:
+    js/bpmn-notation.js: {}
+  css:
+    component:
+      css/bpmn-notation.css: {}
+  dependencies:
+    - divengine_modeler/modeler
+    - divengine_modeler_bpmn/bpmn-js

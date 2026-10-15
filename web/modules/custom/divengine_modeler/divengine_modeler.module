@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @file
+ * Hooks for Divengine Modeler.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\divengine_modeler\Entity\DiagramType;
+use Drupal\workflows\Entity\Workflow;
+
+/**
+ * Implements hook_ENTITY_TYPE_insert() for diagram_type.
+ *
+ * Every diagram type follows the diagram lifecycle, so a notation module
+ * only ships its bundle.
+ */
+function divengine_modeler_diagram_type_insert(DiagramType $type): void {
+  if ($type->isSyncing()) {
+    return;
+  }
+  $workflow = Workflow::load('diagram_lifecycle');
+  if (!$workflow) {
+    return;
+  }
+  $plugin = $workflow->getTypePlugin();
+  if (!$plugin->appliesToEntityTypeAndBundle('diagram', $type->id())) {
+    $plugin->addEntityTypeAndBundle('diagram', $type->id());
+    $workflow->save();
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ *
+ * Links to a deleted entity are flagged; the diagrams are not rewritten.
+ */
+function divengine_modeler_entity_delete(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal::service('divengine_modeler.link_index')->markBroken($entity->getEntityTypeId(), (string) $entity->id());
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function divengine_modeler_entity_extra_field_info(): array {
+  $extra = [];
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  foreach (array_keys(\Drupal::service('divengine_modeler.entity_resolver')->targetTypes()) as $entity_type_id) {
+    foreach (array_keys($bundle_info->getBundleInfo($entity_type_id)) as $bundle) {
+      $extra[$entity_type_id][$bundle]['display']['diagram_backlinks'] = [
+        'label' => t('Diagrams referencing this record'),
+        'description' => t('Diagrams with an element linked to this record.'),
+        'weight' => 50,
+        'visible' => TRUE,
+      ];
+    }
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function divengine_modeler_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($entity instanceof ContentEntityInterface && !$entity->isNew() && $display->getComponent('diagram_backlinks')) {
+    $build['diagram_backlinks'] = \Drupal::service('divengine_modeler.backlinks')->build($entity);
+  }
+}

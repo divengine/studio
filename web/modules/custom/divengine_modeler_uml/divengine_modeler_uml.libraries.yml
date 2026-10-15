@@ -1,0 +1,38 @@
+plantuml:
+  version: 1.2026.8
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit/
+    gpl-compatible: true
+  js:
+    js/vendor/plantuml/viz-global.js: { minified: true, preprocess: false }
+    js/vendor/plantuml/themes.js: { minified: true, preprocess: false }
+
+codemirror:
+  version: 6.0.2
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit/
+    gpl-compatible: true
+  js:
+    js/vendor/codemirror/codemirror.min.js: { minified: true }
+
+preview:
+  version: VERSION
+  js:
+    js/uml-notation.js: {}
+  dependencies:
+    - divengine_modeler/modeler
+    - divengine_modeler_uml/plantuml
+
+editor:
+  version: VERSION
+  js:
+    js/uml-notation.js: {}
+  css:
+    component:
+      css/uml-notation.css: {}
+  dependencies:
+    - divengine_modeler/modeler
+    - divengine_modeler_uml/plantuml
+    - divengine_modeler_uml/codemirror

@@ -1,0 +1,17 @@
+{
+  "name": "divengine-codemirror-build",
+  "private": true,
+  "description": "Builds the CodeMirror 6 bundle vendored by divengine_modeler_uml.",
+  "license": "MIT",
+  "scripts": {
+    "build": "esbuild entry.js --bundle --minify --format=iife --global-name=DivengineCodeMirror --legal-comments=eof --outfile=../codemirror.min.js"
+  },
+  "devDependencies": {
+    "codemirror": "6.0.2",
+    "@codemirror/commands": "6.11.1",
+    "@codemirror/language": "6.12.4",
+    "@codemirror/state": "6.7.6",
+    "@codemirror/view": "6.43.13",
+    "esbuild": "0.28.2"
+  }
+}

@@ -1,0 +1,11 @@
+entity.diagram.add_page:
+  route_name: entity.diagram.add_page
+  title: 'Add diagram'
+  appears_on:
+    - entity.diagram.collection
+
+entity.diagram_type.add_form:
+  route_name: entity.diagram_type.add_form
+  title: 'Add diagram type'
+  appears_on:
+    - entity.diagram_type.collection

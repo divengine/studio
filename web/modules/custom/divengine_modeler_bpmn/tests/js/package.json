@@ -1,0 +1,13 @@
+{
+  "name": "divengine-modeler-bpmn-js-tests",
+  "private": true,
+  "description": "Runs bpmn-notation.js against the vendored bpmn-js modeler in jsdom.",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "scripts": {
+    "test": "node --test --no-warnings"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  }
+}

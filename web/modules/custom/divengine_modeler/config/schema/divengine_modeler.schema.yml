@@ -1,0 +1,30 @@
+divengine_modeler.settings:
+  type: config_object
+  label: 'Divengine Modeler settings'
+  mapping:
+    link_target_types:
+      type: sequence
+      label: 'Entity types diagram elements can link to'
+      sequence:
+        type: string
+        label: 'Entity type ID'
+
+divengine_modeler.diagram_type.*:
+  type: config_entity
+  label: 'Diagram type'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Machine name'
+    label:
+      type: required_label
+      label: 'Label'
+    description:
+      type: text
+      label: 'Description'
+    notation:
+      type: string
+      label: 'Notation plugin'
+    new_revision:
+      type: boolean
+      label: 'Create a new revision by default'

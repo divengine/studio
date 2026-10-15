@@ -1,0 +1,13 @@
+entity.diagram.collection:
+  title: 'Diagrams'
+  description: 'List diagrams of every notation.'
+  route_name: entity.diagram.collection
+  parent: divengine.admin
+  weight: 20
+
+entity.diagram_type.collection:
+  title: 'Diagram types'
+  description: 'Manage diagram types and their notations.'
+  route_name: entity.diagram_type.collection
+  parent: divengine.admin
+  weight: 25

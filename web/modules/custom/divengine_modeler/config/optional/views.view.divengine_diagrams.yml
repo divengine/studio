@@ -1,0 +1,212 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - content_moderation
+    - divengine_modeler
+    - user
+id: divengine_diagrams
+label: Diagrams
+module: views
+description: 'Diagrams of every notation with their lifecycle state.'
+tag: ''
+base_table: diagram
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Diagrams
+      fields:
+        label:
+          id: label
+          table: diagram
+          field: label
+          entity_type: diagram
+          entity_field: label
+          plugin_id: field
+          label: Name
+          type: string
+          settings:
+            link_to_entity: true
+        search_text:
+          id: search_text
+          table: diagram
+          field: search_text
+          entity_type: diagram
+          entity_field: search_text
+          plugin_id: field
+          label: 'Searchable text'
+          exclude: true
+          type: basic_string
+        type:
+          id: type
+          table: diagram
+          field: type
+          entity_type: diagram
+          entity_field: type
+          plugin_id: field
+          label: Type
+          type: entity_reference_label
+          settings:
+            link: false
+        moderation_state:
+          id: moderation_state
+          table: diagram
+          field: moderation_state
+          entity_type: diagram
+          plugin_id: moderation_state_field
+          label: State
+          type: content_moderation_state
+        uid:
+          id: uid
+          table: diagram
+          field: uid
+          entity_type: diagram
+          entity_field: uid
+          plugin_id: field
+          label: Owner
+          type: entity_reference_label
+          settings:
+            link: false
+        changed:
+          id: changed
+          table: diagram
+          field: changed
+          entity_type: diagram
+          entity_field: changed
+          plugin_id: field
+          label: Changed
+          type: timestamp
+          settings:
+            date_format: short
+        operations:
+          id: operations
+          table: diagram
+          field: operations
+          entity_type: diagram
+          plugin_id: entity_operations
+          label: Operations
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+      access:
+        type: perm
+        options:
+          perm: 'view diagrams'
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No diagrams match.'
+      sorts:
+        changed:
+          id: changed
+          table: diagram
+          field: changed
+          plugin_id: date
+          order: DESC
+      filters:
+        combine:
+          id: combine
+          table: views
+          field: combine
+          plugin_id: combine
+          operator: contains
+          value: ''
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Name or element'
+            identifier: search
+            remember: true
+            multiple: false
+          fields:
+            label: label
+            search_text: search_text
+        type:
+          id: type
+          table: diagram
+          field: type
+          entity_type: diagram
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: Type
+            identifier: type
+            remember: true
+            multiple: false
+        moderation_state:
+          id: moderation_state
+          table: diagram
+          field: moderation_state
+          entity_type: diagram
+          entity_field: moderation_state
+          plugin_id: moderation_state_filter
+          operator: in
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: moderation_state_op
+            label: State
+            identifier: moderation_state
+            remember: true
+            multiple: false
+      style:
+        type: table
+        options:
+          sticky: true
+          empty_table: true
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {  }
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags:
+        - 'config:workflow_list'
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: admin/divengine/diagrams
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_content'
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
+      tags:
+        - 'config:workflow_list'
+

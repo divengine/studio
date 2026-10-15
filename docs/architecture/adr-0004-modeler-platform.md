@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted. Implemented in Phase 1 with BPMN and UML (see `docs/handoff-004.md`).
 
 ## Context
 
@@ -66,19 +66,24 @@ A `ModelerNotation` plugin type (PHP attribute discovery), one plugin per notati
   notations require their start marker (`@startuml`, a Mermaid diagram keyword), cap the
   size (1 MB) and reject external includes and remote images (`!include` of URLs,
   `!includeurl`, remote sprites), so rendering never fetches anything.
-- `extractLinks(string $source): array` — element id → entity URI pairs (ADR-0005).
+- `extractLinks(string $source, array $bindings = []): array` — element id (or semantic
+  key) → entity URI pairs, from the document and, for text notations, the bindings
+  (ADR-0005).
 - `extractSearchText(string $source): string` — names and documentation for search.
+- `clientSettings(DiagramInterface $diagram): array` — extra settings for the editor and
+  preview libraries (for example the engine URL).
 
 The platform finds notations through the plugin manager and never names them.
 
 ### Editing
 
-- A full-screen editor route per diagram, `/diagram/{diagram}/edit-model`, rendered by the
+- A full-screen editor route per diagram, `/diagram/{diagram}/modeler`, rendered by the
   notation's editor library. The library loads lazily, only on that route.
 - Save goes through one platform controller, `POST /diagram/{diagram}/model`, with a CSRF
   token and `update` access. It receives the source and the SVG exported by the engine,
   validates both, writes a new revision and rebuilds the link index in one transaction.
-  A failed SVG export never blocks saving the source.
+  A failed SVG export never blocks saving the source. The editor sends the revision it
+  started from; a newer revision is reported as a conflict unless the user confirms.
 - Text notations use a split editor: a code editor (CodeMirror, MIT) on one side and the
   live render on the other, with the render debounced while typing and errors shown
   inline. Element linking happens on the rendered side (ADR-0005).

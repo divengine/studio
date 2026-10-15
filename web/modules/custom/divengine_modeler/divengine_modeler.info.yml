@@ -1,0 +1,12 @@
+name: 'Divengine Modeler'
+type: module
+description: 'Diagram platform: one diagram entity for every notation, notation plugins, safe SVG previews and links from diagram elements to Drupal entities.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - drupal:user
+  - drupal:content_moderation
+  - drupal:workflows
+  - drupal:views
+configure: entity.diagram_type.collection

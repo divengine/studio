@@ -1,0 +1,7 @@
+name: 'Divengine Modeler: UML'
+type: module
+description: 'UML diagrams written in PlantUML and rendered in the browser, with elements linked to Drupal records.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_modeler
