@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: functional
+label: Functional
+description: ''
+weight: 30
+color: '#2563eb'

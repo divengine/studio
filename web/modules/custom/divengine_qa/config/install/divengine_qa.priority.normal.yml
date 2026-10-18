@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: normal
+label: Normal
+description: ''
+weight: 20
+color: '#3b82f6'

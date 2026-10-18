@@ -1,0 +1,13 @@
+use qa:
+  title: 'Use test management (QA User)'
+  description: 'Read the test plans of visible Developments and the runs assigned to the user.'
+execute qa tests:
+  title: 'Execute tests (QA Tester)'
+  description: 'Create own runs from Active plans, start and execute assigned runs, record results and evidence, add scenarios, skip cases and report QA Issues.'
+manage qa:
+  title: 'Manage test management (QA Lead)'
+  description: 'Design plans, suites, cases and steps; create, cancel, complete and reset runs; assign and reassign Testers; promote scenarios; dashboard and reporting.'
+administer qa:
+  title: 'Administer test management (QA Manager)'
+  description: 'Edit the QA configuration, reopen completed runs and delete QA records.'
+  restrict access: true

@@ -1,0 +1,14 @@
+name: 'Divengine QA'
+type: module
+description: 'Manual test management in a Development: test plans with suites, cases and steps; test runs that freeze a snapshot of the Ready cases; step and execution results with corrections, evidence and QA Issues; dashboard and reports.'
+core_version_requirement: ^11
+package: 'Divengine'
+configure: divengine_qa.admin
+dependencies:
+  - divengine_core
+  - divengine_process
+  - divengine_artifact
+  - divengine_traceability
+  - drupal:file
+  - drupal:options
+  - drupal:datetime

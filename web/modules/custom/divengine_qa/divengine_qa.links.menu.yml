@@ -1,0 +1,48 @@
+divengine_qa.admin:
+  title: 'Test management'
+  description: 'QA configuration: environments, stages, priorities and tags.'
+  route_name: divengine_qa.admin
+  parent: divengine.admin
+  weight: 40
+
+entity.qa_environment.collection:
+  title: 'Environments'
+  description: 'Where tests are executed, with the default URL a run opens.'
+  route_name: entity.qa_environment.collection
+  parent: divengine_qa.admin
+  weight: 0
+
+entity.qa_stage.collection:
+  title: 'Stages'
+  description: 'Test levels: unit, integration, system, regression, acceptance.'
+  route_name: entity.qa_stage.collection
+  parent: divengine_qa.admin
+  weight: 10
+
+entity.qa_priority.collection:
+  title: 'Priorities'
+  description: 'How important a test case is.'
+  route_name: entity.qa_priority.collection
+  parent: divengine_qa.admin
+  weight: 20
+
+entity.qa_tag.collection:
+  title: 'Tags'
+  description: 'Labels for plans, suites and cases.'
+  route_name: entity.qa_tag.collection
+  parent: divengine_qa.admin
+  weight: 30
+
+divengine_qa.studio.plans:
+  title: 'Quality'
+  description: 'Test plans of your developments.'
+  route_name: divengine_qa.plans
+  menu_name: studio
+  weight: 5
+
+divengine_qa.studio.my_runs:
+  title: 'My test runs'
+  description: 'The test runs assigned to you.'
+  route_name: divengine_qa.my_runs
+  menu_name: studio
+  weight: -5

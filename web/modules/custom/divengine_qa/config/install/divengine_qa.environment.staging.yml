@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: staging
+label: Staging
+description: Pre-production copy of the live system.
+weight: 20
+default_test_url: ''

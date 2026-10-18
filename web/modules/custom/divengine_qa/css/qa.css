@@ -1,0 +1,19 @@
+.dv-qa-suite {
+  border-left: 3px solid var(--dv-navy, #1f2a44);
+  padding: 0.25rem 0 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+}
+.dv-qa-suite__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.dv-qa-suite__header h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+.dv-filters {
+  margin-bottom: 1rem;
+}

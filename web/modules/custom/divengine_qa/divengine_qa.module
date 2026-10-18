@@ -1,0 +1,114 @@
+<?php
+
+/**
+ * @file
+ * Test management: hooks that tie the QA records to the Unified Process.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\divengine_qa\QaLogger;
+use Drupal\divengine_qa\QaPermissions;
+
+/**
+ * QA entity types that belong to a Development.
+ */
+const DIVENGINE_QA_SCOPED_TYPES = [
+  'qa_test_plan',
+  'qa_test_suite',
+  'qa_test_case',
+  'qa_test_step',
+  'qa_test_run',
+  'qa_test_execution',
+  'qa_step_result',
+  'qa_result_correction',
+];
+
+/**
+ * QA entity types that belong to a run, seen by Leads and the run's Tester.
+ */
+const DIVENGINE_QA_RUNTIME_TYPES = [
+  'qa_test_run' => 'id',
+  'qa_test_execution' => 'run',
+  'qa_step_result' => 'run',
+  'qa_result_correction' => 'run',
+];
+
+/**
+ * Implements hook_divengine_process_scoped_types_alter().
+ */
+function divengine_qa_divengine_process_scoped_types_alter(array &$types): void {
+  array_push($types, ...DIVENGINE_QA_SCOPED_TYPES);
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ *
+ * A test case verifies requirements and use cases.
+ */
+function divengine_qa_divengine_trace_end_types_alter(array &$types): void {
+  $types[] = 'qa_test_case';
+}
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Lists of runs and of their executions, step results and corrections show
+ * a user who is not a QA Lead only the runs assigned to them.
+ */
+function divengine_qa_query_alter(AlterableInterface $query): void {
+  if (!$query instanceof SelectInterface) {
+    return;
+  }
+  foreach (DIVENGINE_QA_RUNTIME_TYPES as $entity_type_id => $run_field) {
+    if (!$query->hasTag($entity_type_id . '_access')) {
+      continue;
+    }
+    $account = $query->getMetaData('account') ?: \Drupal::currentUser();
+    if (QaPermissions::isLead($account)) {
+      return;
+    }
+    $alias = NULL;
+    foreach ($query->getTables() as $table_alias => $info) {
+      if (($info['table'] ?? NULL) === $entity_type_id) {
+        $alias = $table_alias;
+        break;
+      }
+    }
+    if ($alias === NULL) {
+      return;
+    }
+    if (!QaPermissions::isUser($account) || $account->isAnonymous()) {
+      $query->alwaysFalse();
+      return;
+    }
+    $assigned = \Drupal::database()->select('qa_test_run', 'assigned')
+      ->fields('assigned', ['id'])
+      ->condition('assigned.tester', $account->id());
+    $query->condition("$alias.$run_field", $assigned, 'IN');
+  }
+}
+
+
+/**
+ * Implements hook_entity_insert().
+ */
+function divengine_qa_entity_insert(EntityInterface $entity): void {
+  if (isset(QaLogger::TRACKED[$entity->getEntityTypeId()])) {
+    \Drupal::service('divengine_qa.logger')->track($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ *
+ * The activity of a QA record shows who changed its tracked fields.
+ */
+function divengine_qa_entity_update(EntityInterface $entity): void {
+  if (isset(QaLogger::TRACKED[$entity->getEntityTypeId()])) {
+    \Drupal::service('divengine_qa.logger')->track($entity);
+  }
+}

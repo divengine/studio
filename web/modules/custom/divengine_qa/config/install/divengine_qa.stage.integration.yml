@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: integration
+label: Integration
+description: Components tested together.
+weight: 20

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: negative
+label: Negative
+description: ''
+weight: 40
+color: '#dc2626'

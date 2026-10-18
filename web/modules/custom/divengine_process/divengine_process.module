@@ -35,6 +35,23 @@ const DIVENGINE_PROCESS_SCOPED_TYPES = [
 ];
 
 /**
+ * Entity types whose rows follow the visibility of their Development.
+ *
+ * Modules add theirs (entity types with a "development" base field) with
+ * hook_divengine_process_scoped_types_alter().
+ *
+ * @return string[]
+ */
+function divengine_process_scoped_types(): array {
+  $types = &drupal_static(__FUNCTION__);
+  if ($types === NULL) {
+    $types = DIVENGINE_PROCESS_SCOPED_TYPES;
+    \Drupal::moduleHandler()->alter('divengine_process_scoped_types', $types);
+  }
+  return $types;
+}
+
+/**
  * Implements hook_entity_base_field_info().
  *
  * Artifacts can belong to a Development; business and system model
@@ -101,13 +118,14 @@ function divengine_process_query_alter(AlterableInterface $query): void {
   if (!$query instanceof SelectInterface) {
     return;
   }
-  foreach (DIVENGINE_PROCESS_SCOPED_TYPES as $entity_type_id) {
+  $scoped = divengine_process_scoped_types();
+  foreach ($scoped as $entity_type_id) {
     if ($query->hasTag($entity_type_id . '_access')) {
       \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id);
     }
   }
   if ($query->hasTag('trace_link_access')) {
-    \Drupal::service('divengine_process.visibility')->alterTraceQuery($query, DIVENGINE_PROCESS_SCOPED_TYPES);
+    \Drupal::service('divengine_process.visibility')->alterTraceQuery($query, $scoped);
   }
 }
 

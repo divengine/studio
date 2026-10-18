@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: uat
+label: UAT
+description: User acceptance testing environment.
+weight: 50
+default_test_url: ''

@@ -1,0 +1,215 @@
+divengine_qa.admin:
+  path: '/admin/divengine/qa'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Test management'
+  requirements:
+    _permission: 'administer qa'
+
+divengine_qa.run_action:
+  path: '/qa/run/{qa_test_run}/do/{action}'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaActionController::run'
+  requirements:
+    _entity_access: 'qa_test_run.view'
+    _permission: 'execute qa tests+manage qa+administer qa'
+    action: 'start|complete|cancel|reset|generate'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      qa_test_run:
+        type: 'entity:qa_test_run'
+
+divengine_qa.pass:
+  path: '/qa/pass/{type}/{id}'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaActionController::pass'
+  requirements:
+    _custom_access: '\Drupal\divengine_qa\Controller\QaActionController::recordAccess'
+    type: 'step|execution'
+    id: '\d+'
+    _csrf_token: 'TRUE'
+
+divengine_qa.record_result:
+  path: '/qa/record/{type}/{id}'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\RecordResultForm'
+    _title: 'Record QA Result'
+  requirements:
+    _custom_access: '\Drupal\divengine_qa\Controller\QaActionController::recordAccess'
+    type: 'step|execution'
+    id: '\d+'
+
+divengine_qa.add_evidence:
+  path: '/qa/evidence/{type}/{id}'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\AddEvidenceForm'
+    _title: 'Add evidence'
+  requirements:
+    _custom_access: '\Drupal\divengine_qa\Controller\QaActionController::recordAccess'
+    type: 'step|execution'
+    id: '\d+'
+
+divengine_qa.navigate:
+  path: '/qa/execution/{qa_test_execution}/go/{direction}'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaActionController::navigate'
+  requirements:
+    _entity_access: 'qa_test_execution.view'
+    direction: 'previous|next|pending'
+  options:
+    parameters:
+      qa_test_execution:
+        type: 'entity:qa_test_execution'
+
+divengine_qa.skip_case:
+  path: '/qa/execution/{qa_test_execution}/skip'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\SkipCaseForm'
+    _title: 'Skip Test Case'
+  requirements:
+    _entity_access: 'qa_test_execution.view'
+    _permission: 'execute qa tests+manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_execution:
+        type: 'entity:qa_test_execution'
+
+divengine_qa.promote_scenario:
+  path: '/qa/execution/{qa_test_execution}/promote'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\PromoteScenarioForm'
+    _title: 'Promote to Test Case'
+  requirements:
+    _entity_access: 'qa_test_execution.view'
+    _permission: 'manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_execution:
+        type: 'entity:qa_test_execution'
+
+divengine_qa.add_scenario:
+  path: '/qa/run/{qa_test_run}/scenario'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\AddScenarioForm'
+    _title: 'Add Scenario'
+  requirements:
+    _entity_access: 'qa_test_run.view'
+    _permission: 'execute qa tests+manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_run:
+        type: 'entity:qa_test_run'
+
+divengine_qa.reopen_run:
+  path: '/qa/run/{qa_test_run}/reopen'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\ReopenRunForm'
+    _title: 'Reopen Test Run'
+  requirements:
+    _entity_access: 'qa_test_run.view'
+    _permission: 'administer qa'
+  options:
+    parameters:
+      qa_test_run:
+        type: 'entity:qa_test_run'
+
+divengine_qa.reassign_run:
+  path: '/qa/run/{qa_test_run}/reassign'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\ReassignRunForm'
+    _title: 'Reassign Test Run'
+  requirements:
+    _entity_access: 'qa_test_run.view'
+    _permission: 'manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_run:
+        type: 'entity:qa_test_run'
+
+divengine_qa.assign_runs:
+  path: '/qa/plan/{qa_test_plan}/assign'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\AssignRunsForm'
+    _title: 'Create Runs for Testers'
+  requirements:
+    _entity_access: 'qa_test_plan.view'
+    _permission: 'manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_plan:
+        type: 'entity:qa_test_plan'
+
+divengine_qa.clone_plan:
+  path: '/qa/plan/{qa_test_plan}/clone'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\ClonePlanForm'
+    _title: 'Clone Test Plan'
+  requirements:
+    _entity_access: 'qa_test_plan.view'
+    _permission: 'manage qa+administer qa'
+  options:
+    parameters:
+      qa_test_plan:
+        type: 'entity:qa_test_plan'
+
+divengine_qa.my_run:
+  path: '/qa/my-run'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\CreateMyRunForm'
+    _title: 'New Test Run'
+  requirements:
+    _permission: 'execute qa tests+manage qa+administer qa'
+
+divengine_qa.report_plan:
+  path: '/qa/plan/{qa_test_plan}/report'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaReportController::plan'
+    _title: 'Test Plan report'
+  requirements:
+    _entity_access: 'qa_test_plan.view'
+  options:
+    parameters:
+      qa_test_plan:
+        type: 'entity:qa_test_plan'
+
+divengine_qa.report_run:
+  path: '/qa/run/{qa_test_run}/report'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaReportController::run'
+    _title: 'Test Run report'
+  requirements:
+    _entity_access: 'qa_test_run.view'
+  options:
+    parameters:
+      qa_test_run:
+        type: 'entity:qa_test_run'
+
+divengine_qa.development_quality:
+  path: '/development/{development}/quality'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaPagesController::development'
+    _title_callback: '\Drupal\divengine_qa\Controller\QaPagesController::developmentTitle'
+  requirements:
+    _entity_access: 'development.view'
+    _permission: 'use qa+execute qa tests+manage qa+administer qa'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_qa.plans:
+  path: '/qa/plans'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaPagesController::plans'
+    _title: 'Test plans'
+  requirements:
+    _permission: 'use qa+execute qa tests+manage qa+administer qa'
+
+divengine_qa.my_runs:
+  path: '/qa/my-runs'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaPagesController::myRuns'
+    _title: 'My test runs'
+  requirements:
+    _permission: 'use qa+execute qa tests+manage qa+administer qa'

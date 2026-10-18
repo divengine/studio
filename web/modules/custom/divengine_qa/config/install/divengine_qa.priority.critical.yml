@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: critical
+label: Critical
+description: ''
+weight: 40
+color: '#ef4444'

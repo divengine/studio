@@ -412,7 +412,7 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
     return [
       '#type' => 'component',
       '#component' => 'divengine_core:stat-card',
-      '#props' => array_filter(['label' => (string) $label, 'value' => $value, 'hint' => $hint, 'tone' => $tone, 'url' => $url]),
+      '#props' => array_filter(['label' => (string) $label, 'value' => $value, 'hint' => $hint, 'tone' => $tone, 'url' => $url], fn ($v) => $v !== NULL && $v !== ''),
     ];
   }
 

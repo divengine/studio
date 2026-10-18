@@ -1,0 +1,5 @@
+divengine_qa.development_quality:
+  title: 'Quality'
+  route_name: divengine_qa.development_quality
+  base_route: entity.development.canonical
+  weight: 7

@@ -1,0 +1,19 @@
+services:
+  divengine_qa.logger:
+    class: Drupal\divengine_qa\QaLogger
+    arguments: ['@entity_type.manager']
+  divengine_qa.metrics:
+    class: Drupal\divengine_qa\QaMetrics
+    arguments: ['@entity_type.manager']
+  divengine_qa.snapshot:
+    class: Drupal\divengine_qa\QaSnapshot
+    arguments: ['@entity_type.manager', '@divengine_qa.metrics']
+  divengine_qa.runs:
+    class: Drupal\divengine_qa\QaRunWorkflow
+    arguments: ['@entity_type.manager', '@current_user', '@datetime.time', '@lock', '@divengine_qa.metrics', '@divengine_qa.snapshot', '@divengine_qa.logger']
+  divengine_qa.results:
+    class: Drupal\divengine_qa\QaResultRecorder
+    arguments: ['@entity_type.manager', '@current_user', '@datetime.time', '@divengine_qa.metrics', '@divengine_qa.logger', '@divengine_qa.runs']
+  divengine_qa.design:
+    class: Drupal\divengine_qa\QaDesign
+    arguments: ['@entity_type.manager', '@current_user', '@divengine_qa.logger']

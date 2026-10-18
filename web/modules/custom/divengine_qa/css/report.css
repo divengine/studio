@@ -1,0 +1,50 @@
+.dv-report__kind {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #555;
+  margin-bottom: 0;
+}
+.dv-report__header th {
+  width: 18%;
+  text-align: left;
+}
+.dv-report__note {
+  font-style: italic;
+}
+.dv-report__block {
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.75rem;
+  margin: 0.75rem 0;
+  page-break-inside: avoid;
+}
+.dv-report__block--failed {
+  border-color: #b00020;
+  background: #fdecee;
+}
+.dv-report__heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.dv-report__heading h5 {
+  margin: 0;
+}
+.dv-report__failed td {
+  color: #b00020;
+}
+.dv-report__facts {
+  list-style: none;
+  padding: 0;
+}
+@media print {
+  .dv-report__print,
+  header,
+  nav,
+  footer,
+  .dv-sidebar,
+  .tabs,
+  .messages {
+    display: none !important;
+  }
+}

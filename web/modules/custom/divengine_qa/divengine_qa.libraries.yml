@@ -1,0 +1,14 @@
+qa:
+  css:
+    component:
+      css/qa.css: {}
+
+report:
+  css:
+    component:
+      css/report.css: {}
+  js:
+    js/report.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: smoke
+label: Smoke
+description: ''
+weight: 10
+color: '#0891b2'
