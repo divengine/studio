@@ -1,0 +1,7 @@
+use unified process:
+  title: 'Use the Unified Process'
+  description: 'Work on the Developments the user can see and read the process configuration.'
+administer unified process:
+  title: 'Administer the Unified Process (Process Manager)'
+  description: 'Edit the process configuration and Development Cases, see every Development and delete process records.'
+  restrict access: true

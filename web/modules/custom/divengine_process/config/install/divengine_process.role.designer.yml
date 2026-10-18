@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+id: designer
+label: Designer
+description: Details how components and interfaces realize the use cases within the architecture.
+weight: 40
+disciplines:
+- analysis_design

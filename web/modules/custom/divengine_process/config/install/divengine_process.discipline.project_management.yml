@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: project_management
+label: Project Management
+description: Plan phases and iterations, balance scope, risk and effort, and keep the development on course.
+weight: 80

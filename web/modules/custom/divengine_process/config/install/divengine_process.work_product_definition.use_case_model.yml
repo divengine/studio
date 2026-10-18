@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+id: use_case_model
+label: System Use-Case Model
+description: 'The system actors, the system use cases and their relations: how people and other systems use the software.'
+weight: 20
+discipline: requirements

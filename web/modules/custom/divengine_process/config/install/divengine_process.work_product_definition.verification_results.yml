@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.test
+id: verification_results
+label: Verification Results
+description: The outcome of the verification and the defects it found.
+weight: 80
+discipline: test

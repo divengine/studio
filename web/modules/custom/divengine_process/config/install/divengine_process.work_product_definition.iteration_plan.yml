@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.project_management
+id: iteration_plan
+label: Iteration Plan
+description: Objectives, scope and evaluation criteria of one iteration.
+weight: 90
+discipline: project_management

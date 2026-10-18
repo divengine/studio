@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: requirements
+label: Requirements
+description: 'Find, describe and agree on what the system must do and the qualities it must have: requirements, actors and use cases.'
+weight: 20

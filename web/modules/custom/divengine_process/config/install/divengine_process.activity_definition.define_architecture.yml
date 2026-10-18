@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+  - divengine_process.role.architect
+  - divengine_process.work_product_definition.architecture_description
+  - divengine_process.work_product_definition.supplementary_specification
+  - divengine_process.work_product_definition.use_case_model
+id: define_architecture
+label: Define the Architecture
+description: ''
+weight: 40
+discipline: analysis_design
+responsible_role: architect
+participant_roles: []
+input_definitions:
+- use_case_model
+- supplementary_specification
+output_definitions:
+- architecture_description
+guidance: Choose the structure that addresses the riskiest use cases and quality attributes, and record why.

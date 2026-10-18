@@ -1,0 +1,7 @@
+divengine_process.admin:
+  path: '/admin/divengine/process'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Unified Process'
+  requirements:
+    _permission: 'administer unified process'

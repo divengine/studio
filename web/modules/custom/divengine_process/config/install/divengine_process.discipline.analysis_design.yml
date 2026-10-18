@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: analysis_design
+label: Analysis & Design
+description: 'Turn the requirements into a structure the system can be built on: responsibilities, components, interfaces and architecture.'
+weight: 30

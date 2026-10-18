@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: configuration_change
+label: Configuration & Change Management
+description: Keep versions of the work products under control and decide, record and follow every change request.
+weight: 70

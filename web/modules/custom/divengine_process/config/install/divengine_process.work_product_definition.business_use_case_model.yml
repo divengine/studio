@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_use_case_model
+label: Business Use-Case Model
+description: 'The business actors, business workers and business use cases: what the business accomplishes and for whom, independently of any software.'
+weight: 4
+discipline: business_modeling

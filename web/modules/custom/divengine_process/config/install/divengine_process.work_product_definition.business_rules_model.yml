@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_rules_model
+label: Business Rules Model
+description: The governed set of the business rules of the Development, with their sources.
+weight: 7
+discipline: business_modeling

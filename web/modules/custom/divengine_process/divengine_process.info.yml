@@ -1,0 +1,8 @@
+name: 'Divengine Process'
+type: module
+description: 'Unified Process: process configuration tailored by Development Cases, Developments with their phases, iterations and milestones, the business and system model, activities, work products, change requests and advisory readiness.'
+core_version_requirement: ^11
+package: 'Divengine'
+configure: divengine_process.admin
+dependencies:
+  - divengine_core

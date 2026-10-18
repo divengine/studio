@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.architect
+  - divengine_process.role.business_analyst
+  - divengine_process.work_product_definition.business_context
+  - divengine_process.work_product_definition.business_domain_model
+  - divengine_process.work_product_definition.business_use_case_model
+id: model_business_domain
+label: Model Business Domain
+description: ''
+weight: 6
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles:
+- architect
+input_definitions:
+- business_context
+- business_use_case_model
+output_definitions:
+- business_domain_model
+guidance: Name the business concepts and how they relate, in the business's words, before any table or class exists.

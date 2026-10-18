@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.configuration_change
+id: current_implementation_baseline
+label: Current Implementation Baseline
+description: 'The exact snapshot of the existing system that was examined: repository, branch, commit, date and scope. It identifies the source, it does not copy it; what is recovered from it derives from it.'
+weight: 120
+discipline: configuration_change

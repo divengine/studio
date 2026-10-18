@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.supplementary_specification
+  - divengine_process.work_product_definition.use_case_model
+id: detail_use_cases
+label: Detail Use Cases
+description: ''
+weight: 30
+discipline: requirements
+responsible_role: requirements_analyst
+participant_roles: []
+input_definitions:
+- use_case_model
+output_definitions:
+- use_case_model
+- supplementary_specification
+guidance: Write the main success scenario first, then the alternatives that matter; move shared rules to the supplementary specification.

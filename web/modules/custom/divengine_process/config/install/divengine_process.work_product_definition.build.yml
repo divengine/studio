@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.implementation
+id: build
+label: Build
+description: An executable, integrated version of the system produced by an iteration.
+weight: 60
+discipline: implementation

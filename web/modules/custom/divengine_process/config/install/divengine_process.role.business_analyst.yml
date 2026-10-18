@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_analyst
+label: Business Analyst
+description: Understands the business, its rules and its vocabulary and represents it in the development.
+weight: 10
+disciplines:
+- business_modeling

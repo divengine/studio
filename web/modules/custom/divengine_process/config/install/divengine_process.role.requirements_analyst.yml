@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+id: requirements_analyst
+label: Requirements Analyst
+description: Elicits, writes and keeps the requirements and use cases consistent and agreed.
+weight: 20
+disciplines:
+- requirements

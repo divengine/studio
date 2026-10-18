@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.business_analyst
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.business_context
+  - divengine_process.work_product_definition.business_use_case_model
+id: identify_business_use_cases
+label: Identify Business Use Cases
+description: ''
+weight: 3
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles:
+- requirements_analyst
+input_definitions:
+- business_context
+output_definitions:
+- business_use_case_model
+guidance: Name what the business must accomplish for its actors, as goals, without screens, buttons or APIs.

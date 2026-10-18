@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.test
+  - divengine_process.role.tester
+  - divengine_process.work_product_definition.supplementary_specification
+  - divengine_process.work_product_definition.use_case_model
+  - divengine_process.work_product_definition.verification_plan
+id: plan_verification
+label: Plan Verification
+description: ''
+weight: 70
+discipline: test
+responsible_role: tester
+participant_roles: []
+input_definitions:
+- use_case_model
+- supplementary_specification
+output_definitions:
+- verification_plan
+guidance: Decide what must be verified in the iteration and how passing will be recognized.

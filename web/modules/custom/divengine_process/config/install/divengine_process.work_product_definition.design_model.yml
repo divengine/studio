@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+id: design_model
+label: Design Model
+description: How components, classes and interfaces realize the use cases.
+weight: 50
+discipline: analysis_design

@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: business_modeling
+label: Business Modeling
+description: Understand how the organization works today and how it should work, so the software serves the business and not the other way round.
+weight: 10

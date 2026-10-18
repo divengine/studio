@@ -1,0 +1,48 @@
+divengine_process.admin:
+  title: 'Unified Process'
+  description: 'Process configuration: lifecycle phases, disciplines, process roles, activity and work product definitions and Development Cases.'
+  route_name: divengine_process.admin
+  parent: divengine.admin
+  weight: 30
+
+entity.development_case.collection:
+  title: 'Development Cases'
+  description: 'Tailor the process: what is required, recommended, optional or disabled, per milestone.'
+  route_name: entity.development_case.collection
+  parent: divengine_process.admin
+  weight: 0
+
+entity.process_phase_type.collection:
+  title: 'Lifecycle phase types'
+  description: 'The phases every Development goes through and the milestone that closes each one.'
+  route_name: entity.process_phase_type.collection
+  parent: divengine_process.admin
+  weight: 10
+
+entity.process_discipline.collection:
+  title: 'Disciplines'
+  description: 'Engineering concerns that are active across phases and iterations.'
+  route_name: entity.process_discipline.collection
+  parent: divengine_process.admin
+  weight: 20
+
+entity.process_role.collection:
+  title: 'Process roles'
+  description: 'Roles people play in a Development. Playing a role grants no access.'
+  route_name: entity.process_role.collection
+  parent: divengine_process.admin
+  weight: 30
+
+entity.activity_definition.collection:
+  title: 'Activity definitions'
+  description: 'What an activity means: its discipline, responsible role and expected inputs and outputs.'
+  route_name: entity.activity_definition.collection
+  parent: divengine_process.admin
+  weight: 40
+
+entity.work_product_definition.collection:
+  title: 'Work product definitions'
+  description: 'Kinds of engineering output, such as the Vision or the Software Architecture Description.'
+  route_name: entity.work_product_definition.collection
+  parent: divengine_process.admin
+  weight: 50

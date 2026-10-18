@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.business_analyst
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.business_context
+  - divengine_process.work_product_definition.business_rules_model
+  - divengine_process.work_product_definition.business_use_case_model
+id: capture_business_rules
+label: Capture Business Rules
+description: ''
+weight: 4
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles:
+- requirements_analyst
+input_definitions:
+- business_context
+- business_use_case_model
+output_definitions:
+- business_rules_model
+guidance: State each rule as the business, a contract or a regulation states it, with its source; the code is never the source of a rule.

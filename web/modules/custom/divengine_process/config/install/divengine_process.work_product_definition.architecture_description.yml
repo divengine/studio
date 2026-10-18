@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+id: architecture_description
+label: Software Architecture Description
+description: The significant structure of the system, the decisions behind it and the views that explain it.
+weight: 40
+discipline: analysis_design

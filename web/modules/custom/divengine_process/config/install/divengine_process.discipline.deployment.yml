@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {}
+id: deployment
+label: Deployment
+description: Package, install and release the product and prepare its users to adopt it.
+weight: 60

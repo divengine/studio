@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.business_analyst
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.business_context
+id: understand_business_context
+label: Understand Business Context
+description: ''
+weight: 1
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles:
+- requirements_analyst
+input_definitions: []
+output_definitions:
+- business_context
+guidance: Agree on what part of the business is in scope, which problem or opportunity matters and which words the business uses, before discussing any software.

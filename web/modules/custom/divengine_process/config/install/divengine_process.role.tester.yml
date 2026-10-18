@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.test
+id: tester
+label: Tester
+description: Designs and runs the verification and reports its results.
+weight: 60
+disciplines:
+- test

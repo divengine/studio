@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: inception
+label: Inception
+description: 'Agree on why the development is worth doing: its scope, the main actors and use cases, the critical risks and a first idea of cost and schedule.'
+weight: 10
+milestone_type: lifecycle_objectives

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.implementation
+id: developer
+label: Developer
+description: Implements and integrates the code and verifies it at unit level.
+weight: 50
+disciplines:
+- implementation

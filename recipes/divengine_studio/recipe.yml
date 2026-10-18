@@ -12,8 +12,12 @@ install:
   - divengine_modeler_bpmn
   - divengine_modeler_uml
   - divengine_diagram_embed
+  - divengine_process
   - gin
 config:
+  # Re-applying the recipe to an existing site keeps the configuration the
+  # site already has instead of refusing because it was customized.
+  strict: false
   # Recipes only install simple config from modules; config entities
   # (artifact and diagram types, workflows, trace link types, vocabularies,
   # views) have to be imported explicitly.
@@ -25,6 +29,7 @@ config:
     divengine_modeler_bpmn: '*'
     divengine_modeler_uml: '*'
     divengine_diagram_embed: '*'
+    divengine_process: '*'
   actions:
     system.theme:
       simpleConfigUpdate:
@@ -66,6 +71,7 @@ config:
       grantPermissions:
         - 'access divengine'
         - 'view divengine reports'
+        - 'use unified process'
         - 'view artifact'
         - 'create artifact'
         - 'edit artifact'

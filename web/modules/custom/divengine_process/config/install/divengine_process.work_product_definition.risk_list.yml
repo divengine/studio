@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.project_management
+id: risk_list
+label: Risk List
+description: The known risks, their exposure and how they are being handled.
+weight: 100
+discipline: project_management

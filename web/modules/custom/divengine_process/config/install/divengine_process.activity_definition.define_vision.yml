@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+  - divengine_process.role.business_analyst
+  - divengine_process.role.project_manager
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.vision
+id: define_vision
+label: Define the Vision
+description: ''
+weight: 10
+discipline: requirements
+responsible_role: requirements_analyst
+participant_roles:
+- business_analyst
+- project_manager
+input_definitions: []
+output_definitions:
+- vision
+guidance: Agree with the stakeholders on the problem, the users and the essential capabilities; keep it short enough to be read.

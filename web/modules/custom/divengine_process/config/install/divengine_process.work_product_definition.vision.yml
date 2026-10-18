@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+id: vision
+label: Vision
+description: Why the product exists, for whom, the problem it solves and the key capabilities that define success.
+weight: 10
+discipline: requirements

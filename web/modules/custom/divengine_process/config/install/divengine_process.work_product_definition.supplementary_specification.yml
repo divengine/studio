@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+id: supplementary_specification
+label: Supplementary Specification
+description: Quality attributes, constraints and rules that no single use case captures.
+weight: 30
+discipline: requirements

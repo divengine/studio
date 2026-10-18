@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.deployment
+id: deployment_plan
+label: Deployment Plan
+description: 'How the product reaches its users: releases, installation, migration and support.'
+weight: 110
+discipline: deployment

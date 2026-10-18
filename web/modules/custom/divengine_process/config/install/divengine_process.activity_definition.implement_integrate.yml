@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.implementation
+  - divengine_process.role.developer
+  - divengine_process.work_product_definition.build
+  - divengine_process.work_product_definition.design_model
+id: implement_integrate
+label: Implement and Integrate
+description: ''
+weight: 60
+discipline: implementation
+responsible_role: developer
+participant_roles: []
+input_definitions:
+- design_model
+output_definitions:
+- build
+guidance: Implement, unit-verify and integrate in small increments so each iteration ends with a working build.

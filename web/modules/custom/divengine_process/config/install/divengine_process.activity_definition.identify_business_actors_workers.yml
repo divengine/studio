@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.business_analyst
+  - divengine_process.work_product_definition.business_context
+  - divengine_process.work_product_definition.business_use_case_model
+id: identify_business_actors_workers
+label: Identify Business Actors and Workers
+description: ''
+weight: 2
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles: []
+input_definitions:
+- business_context
+output_definitions:
+- business_use_case_model
+guidance: Separate the parties outside the business from the roles inside it; neither is a user of the software yet.

@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.configuration_change
+id: change_manager
+label: Change Control Manager
+description: Runs the decision process for change requests and keeps baselines under control.
+weight: 80
+disciplines:
+- configuration_change

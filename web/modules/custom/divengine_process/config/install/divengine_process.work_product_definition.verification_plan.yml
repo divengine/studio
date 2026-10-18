@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.test
+id: verification_plan
+label: Verification Plan
+description: What will be verified, how and when, and what counts as passing.
+weight: 70
+discipline: test

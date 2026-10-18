@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_context
+label: Business Context
+description: The organization and processes in scope, the problem or opportunity, the business boundary, its stakeholders and key vocabulary, and the current versus target situation where it matters.
+weight: 2
+discipline: business_modeling

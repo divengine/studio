@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: transition
+label: Transition
+description: 'Put the product in the hands of its users: deploy, adjust, fix what real use reveals and hand it over.'
+weight: 40
+milestone_type: product_release

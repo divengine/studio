@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+  - divengine_process.role.designer
+  - divengine_process.work_product_definition.architecture_description
+  - divengine_process.work_product_definition.design_model
+id: design_components
+label: Design Components
+description: ''
+weight: 50
+discipline: analysis_design
+responsible_role: designer
+participant_roles: []
+input_definitions:
+- architecture_description
+output_definitions:
+- design_model
+guidance: Detail the components and interfaces needed by the use cases of the iteration.

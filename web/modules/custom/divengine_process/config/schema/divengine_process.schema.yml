@@ -1,0 +1,171 @@
+divengine_process.phase_type.*:
+  type: config_entity
+  label: 'Lifecycle phase type'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+    milestone_type:
+      type: string
+      label: 'Closing milestone'
+
+divengine_process.discipline.*:
+  type: config_entity
+  label: 'Discipline'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+
+divengine_process.role.*:
+  type: config_entity
+  label: 'Process role'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+    disciplines:
+      type: sequence
+      label: 'Disciplines'
+      sequence:
+        type: string
+        label: 'Discipline'
+
+divengine_process.work_product_definition.*:
+  type: config_entity
+  label: 'Work product definition'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+    discipline:
+      type: string
+      label: 'Discipline'
+
+divengine_process.activity_definition.*:
+  type: config_entity
+  label: 'Activity definition'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+    discipline:
+      type: string
+      label: 'Discipline'
+    responsible_role:
+      type: string
+      label: 'Responsible role'
+    participant_roles:
+      type: sequence
+      label: 'Participating roles'
+      sequence:
+        type: string
+        label: 'Process role'
+    input_definitions:
+      type: sequence
+      label: 'Expected inputs'
+      sequence:
+        type: string
+        label: 'Work product definition'
+    output_definitions:
+      type: sequence
+      label: 'Expected outputs'
+      sequence:
+        type: string
+        label: 'Work product definition'
+    guidance:
+      type: text
+      label: 'Guidance'
+
+divengine_process.development_case.*:
+  type: config_entity
+  label: 'Development Case'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Name'
+    description:
+      type: text
+      label: 'Description'
+    weight:
+      type: weight
+      label: 'Order'
+    version:
+      type: integer
+      label: 'Version'
+    is_default:
+      type: boolean
+      label: 'Default'
+    lines:
+      type: sequence
+      label: 'Tailoring'
+      sequence:
+        type: mapping
+        label: 'Line'
+        mapping:
+          element_type:
+            type: string
+            label: 'Element type'
+          target:
+            type: string
+            label: 'Element'
+          milestone_type:
+            type: string
+            label: 'Milestone'
+          level:
+            type: string
+            label: 'Level'
+          note:
+            type: label
+            label: 'Note'
+          weight:
+            type: weight
+            label: 'Order'

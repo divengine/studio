@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.test
+  - divengine_process.role.tester
+  - divengine_process.work_product_definition.build
+  - divengine_process.work_product_definition.verification_plan
+  - divengine_process.work_product_definition.verification_results
+id: run_verification
+label: Run Verification
+description: ''
+weight: 80
+discipline: test
+responsible_role: tester
+participant_roles: []
+input_definitions:
+- verification_plan
+- build
+output_definitions:
+- verification_results
+guidance: Execute the planned verification on the build and report results and defects.

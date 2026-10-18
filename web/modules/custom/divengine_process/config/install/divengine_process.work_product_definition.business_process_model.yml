@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_process_model
+label: Business Process Model
+description: How the business work flows where the detail matters, usually as process diagrams kept in Modeler.
+weight: 5
+discipline: business_modeling

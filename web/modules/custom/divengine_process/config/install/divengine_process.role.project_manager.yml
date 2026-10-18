@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.project_management
+id: project_manager
+label: Project Manager
+description: Plans phases and iterations, manages risk and scope and keeps stakeholders informed.
+weight: 70
+disciplines:
+- project_management

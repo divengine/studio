@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.analysis_design
+id: architect
+label: Software Architect
+description: 'Owns the architecture: the key structural and technical decisions and their rationale.'
+weight: 30
+disciplines:
+- analysis_design

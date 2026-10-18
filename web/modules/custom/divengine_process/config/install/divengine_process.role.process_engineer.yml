@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.environment
+id: process_engineer
+label: Process Engineer
+description: Tailors the process to the development (Development Case) and supports the team in applying it.
+weight: 90
+disciplines:
+- environment

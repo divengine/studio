@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+  - divengine_process.role.business_analyst
+  - divengine_process.work_product_definition.business_process_model
+  - divengine_process.work_product_definition.business_use_case_model
+id: model_business_processes
+label: Model Business Processes
+description: ''
+weight: 5
+discipline: business_modeling
+responsible_role: business_analyst
+participant_roles: []
+input_definitions:
+- business_use_case_model
+output_definitions:
+- business_process_model
+guidance: Draw the flow only where order, hand-offs or decisions matter; keep the diagrams in Modeler.

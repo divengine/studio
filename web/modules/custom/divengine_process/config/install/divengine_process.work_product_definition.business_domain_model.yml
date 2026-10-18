@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.business_modeling
+id: business_domain_model
+label: Business Domain Model
+description: The important business concepts and how they relate; its detailed content may live in a linked Modeler artifact.
+weight: 6
+discipline: business_modeling

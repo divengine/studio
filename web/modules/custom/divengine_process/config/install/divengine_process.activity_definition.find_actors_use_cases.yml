@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_process.discipline.requirements
+  - divengine_process.role.requirements_analyst
+  - divengine_process.work_product_definition.use_case_model
+  - divengine_process.work_product_definition.vision
+id: find_actors_use_cases
+label: Find System Actors and Use Cases
+description: ''
+weight: 20
+discipline: requirements
+responsible_role: requirements_analyst
+participant_roles: []
+input_definitions:
+- vision
+output_definitions:
+- use_case_model
+guidance: Identify who uses the software and for which goals; name each system use case after the actor's goal.

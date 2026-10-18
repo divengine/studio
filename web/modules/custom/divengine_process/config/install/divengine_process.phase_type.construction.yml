@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: construction
+label: Construction
+description: Build the remaining functionality on the proven architecture, iteration by iteration, until the product can be used by its first users.
+weight: 30
+milestone_type: initial_operational_capability

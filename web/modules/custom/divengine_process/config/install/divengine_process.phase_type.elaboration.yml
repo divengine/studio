@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: elaboration
+label: Elaboration
+description: Understand most of the requirements and prove an architecture that can carry them, retiring the riskiest technical and business uncertainties.
+weight: 20
+milestone_type: lifecycle_architecture
