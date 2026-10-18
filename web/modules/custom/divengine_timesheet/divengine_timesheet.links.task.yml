@@ -1,0 +1,5 @@
+divengine_timesheet.project:
+  title: 'Timesheets'
+  route_name: divengine_timesheet.project
+  base_route: entity.project.canonical
+  weight: 3

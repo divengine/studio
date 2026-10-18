@@ -151,7 +151,7 @@ class ProjectViewBuilder extends EntityViewBuilder {
       (string) $this->t('Priority') => (string) (ProjectTask::priorities()[$task->get('priority')->value] ?? ''),
       (string) $this->t('Assignees') => implode(', ', array_map(fn ($item) => $item->entity?->getDisplayName(), iterator_to_array($task->get('assignees')))),
       (string) $this->t('Deadline') => $task->get('deadline')->value ? $task->get('deadline')->value . ($task->isOverdue() ? ' · ' . $this->t('overdue') : '') : NULL,
-      (string) $this->t('Estimate') => $task->get('estimate')->value ? $this->t('@h h', ['@h' => (float) $task->get('estimate')->value]) : NULL,
+      (string) $this->t('Allocated') => $task->get('estimate')->value ? $this->t('@h h', ['@h' => (float) $task->get('estimate')->value]) : NULL,
       (string) $this->t('Parent task') => $task->get('parent')->entity?->label(),
     ], $actions) + ['#weight' => -100];
 

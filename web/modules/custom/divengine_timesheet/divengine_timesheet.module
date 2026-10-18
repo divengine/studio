@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Time tracking on projects and tasks.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Lists of timesheet entries return the user's own entries plus, for those
+ * who supervise, everyone's entries on the projects they supervise.
+ */
+function divengine_timesheet_query_alter(AlterableInterface $query): void {
+  if ($query instanceof SelectInterface && $query->hasTag('timesheet_access')) {
+    \Drupal::service('divengine_timesheet.view')->alterQuery($query);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for project_task.
+ */
+function divengine_timesheet_project_task_view(array &$build, EntityInterface $task, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($view_mode === 'full' || $view_mode === 'default') {
+    $build['timesheets'] = \Drupal::service('divengine_timesheet.view')->task($task) + ['#weight' => -55];
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for project.
+ */
+function divengine_timesheet_project_view(array &$build, EntityInterface $project, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($view_mode === 'full' || $view_mode === 'default') {
+    $build['time'] = \Drupal::service('divengine_timesheet.view')->project($project) + ['#weight' => -65];
+  }
+}

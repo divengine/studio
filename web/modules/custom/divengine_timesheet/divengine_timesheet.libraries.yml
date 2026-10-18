@@ -1,0 +1,14 @@
+timesheet:
+  css:
+    component:
+      css/timesheet.css: {}
+
+grid:
+  css:
+    component:
+      css/timesheet.css: {}
+  js:
+    js/grid.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

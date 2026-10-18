@@ -1,0 +1,52 @@
+divengine_timesheet.grid:
+  path: '/my-timesheets'
+  defaults:
+    _form: '\Drupal\divengine_timesheet\Form\TimesheetGridForm'
+    _title: 'My timesheets'
+  requirements:
+    _permission: 'log time+manage timesheets'
+
+divengine_timesheet.report:
+  path: '/timesheets/report'
+  defaults:
+    _controller: '\Drupal\divengine_timesheet\Controller\TimesheetPagesController::report'
+    _title: 'Timesheet report'
+  requirements:
+    _permission: 'log time+manage timesheets'
+
+divengine_timesheet.project:
+  path: '/project/{project}/timesheets'
+  defaults:
+    _controller: '\Drupal\divengine_timesheet\Controller\TimesheetPagesController::project'
+    _title_callback: '\Drupal\divengine_timesheet\Controller\TimesheetPagesController::projectTitle'
+  requirements:
+    _entity_access: 'project.view'
+    _permission: 'log time+manage timesheets'
+  options:
+    parameters:
+      project:
+        type: 'entity:project'
+
+divengine_timesheet.timer_start:
+  path: '/task/{project_task}/timer/start'
+  defaults:
+    _controller: '\Drupal\divengine_timesheet\Controller\TimerController::start'
+  requirements:
+    _custom_access: '\Drupal\divengine_timesheet\Controller\TimerController::access'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      project_task:
+        type: 'entity:project_task'
+
+divengine_timesheet.timer_stop:
+  path: '/task/{project_task}/timer/stop'
+  defaults:
+    _controller: '\Drupal\divengine_timesheet\Controller\TimerController::stop'
+  requirements:
+    _custom_access: '\Drupal\divengine_timesheet\Controller\TimerController::access'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      project_task:
+        type: 'entity:project_task'

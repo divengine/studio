@@ -194,7 +194,8 @@ class ProjectTask extends ContentEntityBase implements EntityChangedInterface, E
     $fields['start_date'] = ProjectFields::date(new TranslatableMarkup('Start date'), -12)->setRevisionable(TRUE);
     $fields['deadline'] = ProjectFields::date(new TranslatableMarkup('Deadline'), -11)->setRevisionable(TRUE);
     $fields['estimate'] = BaseFieldDefinition::create('decimal')
-      ->setLabel(new TranslatableMarkup('Estimate (hours)'))
+      ->setLabel(new TranslatableMarkup('Allocated time (hours)'))
+      ->setDescription(new TranslatableMarkup('How many hours the task is expected to take.'))
       ->setSetting('precision', 8)
       ->setSetting('scale', 2)
       ->setDisplayOptions('form', ['type' => 'number', 'weight' => -10])

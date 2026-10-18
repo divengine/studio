@@ -18,6 +18,7 @@ install:
   - divengine_process
   - divengine_qa
   - divengine_project
+  - divengine_timesheet
   - gin
   - divengine_studio_theme
 config:
@@ -127,6 +128,7 @@ config:
         - 'post comments'
         - 'skip comment approval'
         - 'edit own comments'
+        - 'log time'
         - 'use qa'
     # Verification criteria of divengine_qa, after the cases are imported.
     divengine_process.development_case.standard:
@@ -199,6 +201,8 @@ config:
         - 'access divengine'
         - 'use projects'
         - 'manage projects'
+        - 'log time'
+        - 'manage timesheets'
         - 'view trace links'
         - 'create trace links'
         - 'edit trace links'

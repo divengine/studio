@@ -1,0 +1,9 @@
+name: 'Divengine Timesheet'
+type: module
+description: 'Time tracking on projects and tasks: timesheet entries, allocated versus spent hours, a timer, a weekly grid and reports.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_project
+  - drupal:datetime

@@ -1,0 +1,6 @@
+log time:
+  title: 'Log time'
+  description: 'Record, edit and delete own timesheet entries on visible projects and tasks.'
+manage timesheets:
+  title: 'Manage timesheets'
+  description: 'See and correct the timesheet entries of everyone on the projects the user can see, and use the timesheet reports.'

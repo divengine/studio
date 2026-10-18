@@ -53,15 +53,40 @@ class ProjectVisibility {
       ->condition('p.uid', $uid)
       ->condition('p.manager', $uid)
       ->condition('p.id', $members, 'IN'));
-    $ids = array_map('strval', $query->execute()->fetchCol());
-    // Add the subprojects, level by level.
+    return $this->cache[$uid] = $this->withDescendants(array_map('strval', $query->execute()->fetchCol()));
+  }
+
+  /**
+   * IDs of the projects a user manages: owned or managed, and every
+   * subproject below them.
+   *
+   * @return string[]
+   */
+  public function managedIds(AccountInterface $account): array {
+    $uid = (int) $account->id();
+    if (!$uid) {
+      return [];
+    }
+    $query = $this->database->select('project', 'p')->fields('p', ['id']);
+    $query->condition($query->orConditionGroup()->condition('p.uid', $uid)->condition('p.manager', $uid));
+    return $this->withDescendants(array_map('strval', $query->execute()->fetchCol()));
+  }
+
+  /**
+   * Adds the subprojects of some projects, level by level.
+   *
+   * @param string[] $ids
+   *
+   * @return string[]
+   */
+  public function withDescendants(array $ids): array {
     $frontier = $ids;
     while ($frontier) {
       $children = array_map('strval', $this->database->select('project', 'p')->fields('p', ['id'])->condition('p.parent', $frontier, 'IN')->execute()->fetchCol());
       $frontier = array_values(array_diff($children, $ids));
       $ids = array_merge($ids, $frontier);
     }
-    return $this->cache[$uid] = $ids;
+    return $ids;
   }
 
   public function canSee(AccountInterface $account, int|string|null $project_id): bool {

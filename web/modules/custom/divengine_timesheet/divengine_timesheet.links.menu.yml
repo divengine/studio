@@ -1,0 +1,13 @@
+divengine_timesheet.studio.grid:
+  title: 'My timesheets'
+  description: 'Your week of time, task by task.'
+  route_name: divengine_timesheet.grid
+  menu_name: studio
+  weight: -8
+
+divengine_timesheet.studio.report:
+  title: 'Timesheet report'
+  description: 'Time over a period, by person, project or task.'
+  route_name: divengine_timesheet.report
+  menu_name: studio
+  weight: 2
