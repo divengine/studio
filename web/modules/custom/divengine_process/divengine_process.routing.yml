@@ -79,3 +79,29 @@ divengine_process.development_requirements:
     parameters:
       development:
         type: 'entity:development'
+
+divengine_process.development_process:
+  path: '/development/{development}/process'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\DevelopmentSectionController::section'
+    _title_callback: '\Drupal\divengine_process\Controller\DevelopmentSectionController::title'
+    section: process
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_process.development_changes:
+  path: '/development/{development}/changes'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\DevelopmentSectionController::section'
+    _title_callback: '\Drupal\divengine_process\Controller\DevelopmentSectionController::title'
+    section: changes
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'

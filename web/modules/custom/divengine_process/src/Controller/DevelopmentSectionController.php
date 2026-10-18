@@ -7,16 +7,17 @@ namespace Drupal\divengine_process\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
 use Drupal\divengine_process\Vocabulary;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * A Development's model sections: Business model and Requirements.
+ * The tabs of a Development: business model, requirements, process, changes.
  *
- * Each record type gets a section with its list and an "Add" button that
- * attaches the new record to the Development and returns here.
+ * Each tab lists one section per kind of record, with its list and an "Add"
+ * button that files the new record under the Development and comes back.
  */
 class DevelopmentSectionController extends ControllerBase {
 
@@ -34,54 +35,54 @@ class DevelopmentSectionController extends ControllerBase {
   public function section(DevelopmentInterface $development, string $section): array {
     $build = [
       '#cache' => [
-        'tags' => ['artifact_list', 'config:artifact_type_list'],
+        'tags' => ['artifact_list', 'process_activity_list', 'change_request_list', 'config:artifact_type_list'],
         'contexts' => ['user', 'url.path'],
       ],
-    ];
-    $build['intro'] = [
-      '#type' => 'html_tag',
-      '#tag' => 'p',
-      '#value' => $section === 'business'
-        ? $this->t('The business as it is and as it should be, whether or not software exists: who takes part, what the business must accomplish and the rules it follows.')
-        : $this->t('What the software must do: the people and systems that use it, how they use it and the requirements it must satisfy.'),
-      '#attributes' => ['class' => ['dv-intro']],
+      'intro' => [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $this->intro($section),
+        '#attributes' => ['class' => ['dv-intro']],
+      ],
     ];
     $destination = Url::fromRoute('<current>')->toString();
     $can_add = $development->access('update');
-    foreach (array_keys(array_filter(Vocabulary::scopedArtifactTypes(), fn ($s) => $s === $section)) as $bundle) {
-      $type = $this->entityTypeManager->getStorage('artifact_type')->load($bundle);
-      if (!$type) {
-        continue;
-      }
-      $count = $this->entityTypeManager->getStorage('artifact')->getQuery()
+
+    foreach ($this->sections($section) as $key => $definition) {
+      $count = $this->entityTypeManager->getStorage($definition['entity_type'])->getQuery()
         ->accessCheck(TRUE)
-        ->condition('development', $development->id())
-        ->condition('type', $bundle)
-        ->count()
-        ->execute();
-      $actions = [];
-      $add = Url::fromRoute('entity.artifact.add_form', ['artifact_type' => $bundle], [
+        ->condition('development', $development->id());
+      if (isset($definition['bundle'])) {
+        $count->condition('type', $definition['bundle']);
+      }
+      $add = Url::fromRoute($definition['add_route'], $definition['add_parameters'] ?? [], [
         'query' => ['development' => $development->id(), 'destination' => $destination],
       ]);
+      $actions = NULL;
       if ($can_add && $add->access()) {
-        $actions = Link::fromTextAndUrl($this->t('Add @type', ['@type' => mb_strtolower((string) $type->label())]), $add)->toRenderable()
+        $actions = Link::fromTextAndUrl($definition['add_label'], $add)->toRenderable()
           + ['#attributes' => ['class' => ['button', 'button--small', 'button--primary']]];
       }
-      $build[$bundle] = [
+      $build[$key] = [
         '#type' => 'component',
         '#component' => 'divengine_core:section',
-        '#props' => ['title' => (string) $this->sectionTitle($bundle), 'count' => (string) $count],
+        '#props' => ['title' => (string) $definition['title'], 'count' => (string) $count->count()->execute()],
         '#slots' => array_filter([
           'content' => [
-            'description' => ['#markup' => '<p class="dv-section__description">' . $type->get('description') . '</p>'],
+            'description' => [
+              '#type' => 'html_tag',
+              '#tag' => 'p',
+              '#value' => $definition['description'],
+              '#attributes' => ['class' => ['dv-section__description']],
+            ],
             'list' => [
               '#type' => 'view',
-              '#name' => 'divengine_process_records',
-              '#display_id' => $bundle,
+              '#name' => $definition['view'][0],
+              '#display_id' => $definition['view'][1],
               '#arguments' => [$development->id()],
             ],
           ],
-          'actions' => $actions ?: NULL,
+          'actions' => $actions,
         ]),
       ];
     }
@@ -89,12 +90,79 @@ class DevelopmentSectionController extends ControllerBase {
   }
 
   public function title(DevelopmentInterface $development, string $section): string {
-    return (string) ($section === 'business'
-      ? $this->t('@development: business model', ['@development' => $development->label()])
-      : $this->t('@development: requirements', ['@development' => $development->label()]));
+    return (string) $this->t('@development: @section', [
+      '@development' => $development->label(),
+      '@section' => mb_strtolower((string) $this->tabLabel($section)),
+    ]);
   }
 
-  protected function sectionTitle(string $bundle) {
+  /**
+   * The sections of a tab, keyed by machine name.
+   *
+   * @return array<string, array<string, mixed>>
+   */
+  protected function sections(string $tab): array {
+    $sections = [];
+    foreach (array_keys(array_filter(Vocabulary::scopedArtifactTypes(), fn ($s) => $s === $tab)) as $bundle) {
+      $type = $this->entityTypeManager->getStorage('artifact_type')->load($bundle);
+      if (!$type) {
+        continue;
+      }
+      $sections[$bundle] = [
+        'entity_type' => 'artifact',
+        'bundle' => $bundle,
+        'title' => $this->artifactSectionTitle($bundle),
+        'description' => (string) $type->get('description'),
+        'view' => ['divengine_process_records', $bundle],
+        'add_route' => 'entity.artifact.add_form',
+        'add_parameters' => ['artifact_type' => $bundle],
+        'add_label' => $this->t('Add @type', ['@type' => mb_strtolower((string) $type->label())]),
+      ];
+    }
+    if ($tab === 'process') {
+      $sections = [
+        'activities' => [
+          'entity_type' => 'process_activity',
+          'title' => $this->t('Activities'),
+          'description' => $this->t('The work actually done in this Development, iteration by iteration. Picking a definition proposes the discipline, the responsible role and the outputs to produce.'),
+          'view' => ['divengine_process_activities', 'embed_1'],
+          'add_route' => 'entity.process_activity.add_form',
+          'add_label' => $this->t('Plan an activity'),
+        ],
+      ] + $sections;
+    }
+    if ($tab === 'changes') {
+      $sections['change_requests'] = [
+        'entity_type' => 'change_request',
+        'title' => $this->t('Change requests'),
+        'description' => $this->t('Changes to what was already agreed: triaged, decided with a rationale, scheduled into an iteration, implemented, verified and closed.'),
+        'view' => ['divengine_process_change_requests', 'embed_1'],
+        'add_route' => 'entity.change_request.add_form',
+        'add_label' => $this->t('Submit a change request'),
+      ];
+    }
+    return $sections;
+  }
+
+  protected function intro(string $tab): TranslatableMarkup {
+    return match ($tab) {
+      'business' => $this->t('The business as it is and as it should be, whether or not software exists: who takes part, what the business must accomplish and the rules it follows.'),
+      'requirements' => $this->t('What the software must do: the people and systems that use it, how they use it and the requirements it must satisfy.'),
+      'process' => $this->t('How the Development is carried out: the activities of each iteration and the work products they produce.'),
+      default => $this->t('Every change to what was already agreed goes through a decision with a rationale, and its impact is traced.'),
+    };
+  }
+
+  protected function tabLabel(string $tab): TranslatableMarkup {
+    return match ($tab) {
+      'business' => $this->t('Business model'),
+      'requirements' => $this->t('Requirements'),
+      'process' => $this->t('Process'),
+      default => $this->t('Changes'),
+    };
+  }
+
+  protected function artifactSectionTitle(string $bundle): TranslatableMarkup {
     return match ($bundle) {
       'business_use_case' => $this->t('Business use cases'),
       'business_rule' => $this->t('Business rules'),
@@ -103,7 +171,8 @@ class DevelopmentSectionController extends ControllerBase {
       'requirement' => $this->t('Requirements'),
       'use_case' => $this->t('System use cases'),
       'system_actor' => $this->t('System actors'),
-      default => $bundle,
+      'work_product' => $this->t('Work products'),
+      default => $this->t('Records'),
     };
   }
 

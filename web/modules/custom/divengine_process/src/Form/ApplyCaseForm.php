@@ -7,7 +7,9 @@ namespace Drupal\divengine_process\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\divengine_process\DevelopmentProcess;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Re-applies the Development Case, replacing the Development's policy.
@@ -15,6 +17,12 @@ use Drupal\divengine_process\Entity\DevelopmentInterface;
 class ApplyCaseForm extends ConfirmFormBase {
 
   protected DevelopmentInterface $development;
+
+  public function __construct(protected DevelopmentProcess $process) {}
+
+  public static function create(ContainerInterface $container): static {
+    return new static($container->get('divengine_process.development'));
+  }
 
   public function getFormId(): string {
     return 'divengine_process_apply_case';
@@ -43,7 +51,7 @@ class ApplyCaseForm extends ConfirmFormBase {
 
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     try {
-      \Drupal::service('divengine_process.development')->applyCase($this->development);
+      $this->process->applyCase($this->development);
       $this->messenger()->addStatus($this->development->getRevisionLogMessage());
     }
     catch (\InvalidArgumentException $e) {

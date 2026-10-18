@@ -8,13 +8,25 @@ divengine_process.development_business:
   title: 'Business model'
   route_name: divengine_process.development_business
   base_route: entity.development.canonical
-  weight: 10
+  weight: 1
 
 divengine_process.development_requirements:
   title: 'Requirements'
   route_name: divengine_process.development_requirements
   base_route: entity.development.canonical
-  weight: 20
+  weight: 2
+
+divengine_process.development_process:
+  title: 'Process'
+  route_name: divengine_process.development_process
+  base_route: entity.development.canonical
+  weight: 3
+
+divengine_process.development_changes:
+  title: 'Changes'
+  route_name: divengine_process.development_changes
+  base_route: entity.development.canonical
+  weight: 4
 
 entity.development.edit_form:
   title: 'Edit'
@@ -27,3 +39,25 @@ entity.development.delete_form:
   route_name: entity.development.delete_form
   base_route: entity.development.canonical
   weight: 60
+
+entity.process_activity.canonical:
+  title: 'View'
+  route_name: entity.process_activity.canonical
+  base_route: entity.process_activity.canonical
+
+entity.process_activity.edit_form:
+  title: 'Edit'
+  route_name: entity.process_activity.edit_form
+  base_route: entity.process_activity.canonical
+  weight: 10
+
+entity.change_request.canonical:
+  title: 'View'
+  route_name: entity.change_request.canonical
+  base_route: entity.change_request.canonical
+
+entity.change_request.edit_form:
+  title: 'Edit'
+  route_name: entity.change_request.edit_form
+  base_route: entity.change_request.canonical
+  weight: 10

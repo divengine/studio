@@ -27,6 +27,8 @@ const DIVENGINE_PROCESS_SCOPED_TYPES = [
   'iteration',
   'milestone',
   'role_assignment',
+  'process_activity',
+  'change_request',
   'artifact',
 ];
 

@@ -11,5 +11,6 @@ dependencies:
   - drupal:content_moderation
   - drupal:views
   - drupal:datetime
+  - drupal:link
   - drupal:options
   - drupal:user

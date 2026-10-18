@@ -1,0 +1,176 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - datetime
+  - divengine_core
+  - divengine_process
+  - options
+  - user
+id: divengine_process_change_requests
+label: Development change requests
+module: views
+description: The change requests of a Development.
+tag: divengine
+base_table: change_request
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Development change requests
+      fields:
+        code:
+          id: code
+          table: change_request
+          field: code
+          entity_type: change_request
+          plugin_id: field
+          label: Code
+          entity_field: code
+        name:
+          id: name
+          table: change_request
+          field: name
+          entity_type: change_request
+          plugin_id: field
+          label: Title
+          entity_field: name
+          type: string
+          settings:
+            link_to_entity: true
+        priority:
+          id: priority
+          table: change_request
+          field: priority
+          entity_type: change_request
+          plugin_id: field
+          label: Priority
+          entity_field: priority
+          type: divengine_badge
+          settings:
+            tones:
+              low: neutral
+              medium: info
+              high: warning
+              critical: danger
+        severity:
+          id: severity
+          table: change_request
+          field: severity
+          entity_type: change_request
+          plugin_id: field
+          label: Severity
+          entity_field: severity
+          type: list_default
+          settings: {}
+        state:
+          id: state
+          table: change_request
+          field: state
+          entity_type: change_request
+          plugin_id: field
+          label: State
+          entity_field: state
+          type: divengine_badge
+          settings:
+            tones:
+              submitted: neutral
+              triaged: warning
+              accepted: warning
+              rejected: danger
+              scheduled: info
+              implemented: info
+              verified: success
+              closed: success
+        target_iteration:
+          id: target_iteration
+          table: change_request
+          field: target_iteration
+          entity_type: change_request
+          plugin_id: field
+          label: Target iteration
+          entity_field: target_iteration
+          type: entity_reference_label
+          settings:
+            link: false
+        operations:
+          id: operations
+          table: change_request
+          field: operations
+          entity_type: change_request
+          plugin_id: entity_operations
+          label: ''
+      pager:
+        type: some
+        options:
+          items_per_page: 0
+          offset: 0
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+      access:
+        type: perm
+        options:
+          perm: use unified process
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No change request: submit one when something already agreed has to change.'
+      sorts:
+        code:
+          id: code
+          table: change_request
+          field: code
+          entity_type: change_request
+          entity_field: code
+          plugin_id: standard
+          order: DESC
+      arguments:
+        development:
+          id: development
+          table: change_request
+          field: development
+          entity_type: change_request
+          entity_field: development
+          plugin_id: numeric
+          default_action: not found
+          specify_validation: true
+          validate:
+            type: 'entity:development'
+            fail: not found
+          validate_options:
+            access: true
+            operation: view
+            multiple: 0
+            bundles: {}
+      filters: {}
+      style:
+        type: table
+        options:
+          sticky: false
+          empty_table: false
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {}
+  embed_1:
+    id: embed_1
+    display_title: Embed
+    display_plugin: embed
+    position: 1
+    display_options:
+      display_extenders: {}

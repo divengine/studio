@@ -93,7 +93,8 @@ class Iteration extends ContentEntityBase implements StatefulInterface {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields['development'] = static::developmentFieldDefinition();
     $fields['phase'] = ProcessFields::reference(new TranslatableMarkup('Phase'), 'development_phase', -15, TRUE);
-    $fields['name'] = ProcessFields::string(new TranslatableMarkup('Name'), -18, TRUE);
+    $fields['name'] = ProcessFields::string(new TranslatableMarkup('Name'), -18, TRUE)
+      ->setDisplayOptions('view', ['region' => 'hidden']);
     $fields['weight'] = ProcessFields::weight();
     $fields['state'] = ProcessFields::list(new TranslatableMarkup('State'), 'planned', -12, FALSE);
     $fields['objective'] = ProcessFields::text(new TranslatableMarkup('Objective'), -10);

@@ -6,4 +6,4 @@ services:
     arguments: ['@database', '@entity_type.manager']
   divengine_process.development:
     class: Drupal\divengine_process\DevelopmentProcess
-    arguments: ['@entity_type.manager', '@datetime.time']
+    arguments: ['@entity_type.manager', '@datetime.time', '@entity_field.manager']

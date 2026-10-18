@@ -6,6 +6,7 @@ namespace Drupal\divengine_artifact\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\divengine_core\Form\EntityFormLayout;
 
 /**
  * Form for adding and editing artifacts.
@@ -25,32 +26,7 @@ class ArtifactForm extends ContentEntityForm {
       $form['artifact_key']['#access'] = FALSE;
     }
 
-    // What the record says on the left; how it is classified, planned and
-    // owned on the right: single-value choices and references, the owner,
-    // the state and the revision information.
-    $form['#attributes']['class'][] = 'dv-entity-form';
-    $form['side'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['dv-entity-form__side']],
-      '#weight' => 90,
-      'properties' => ['#type' => 'details', '#title' => $this->t('Properties'), '#open' => TRUE],
-    ];
-    foreach ($artifact->getFieldDefinitions() as $name => $definition) {
-      if (!isset($form[$name]) || ($form[$name]['#access'] ?? TRUE) === FALSE) {
-        continue;
-      }
-      $single_choice = $definition->getFieldStorageDefinition()->getCardinality() === 1
-        && in_array($definition->getType(), ['list_string', 'entity_reference', 'boolean'], TRUE);
-      if ($single_choice || in_array($name, ['uid', 'status', 'moderation_state'], TRUE)) {
-        $form['side']['properties'][$name] = $form[$name];
-        unset($form[$name]);
-      }
-    }
-    if (isset($form['revision_information'])) {
-      $form['revision_information']['#group'] = NULL;
-      $form['side']['revision_information'] = ['#type' => 'details', '#open' => FALSE] + $form['revision_information'];
-      unset($form['revision_information']);
-    }
+    EntityFormLayout::apply($form, $artifact);
     return $form;
   }
 

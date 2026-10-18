@@ -117,6 +117,61 @@ final class Vocabulary {
   }
 
   /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function activityStates(): array {
+    return [
+      'planned' => new TranslatableMarkup('Planned'),
+      'ready' => new TranslatableMarkup('Ready'),
+      'in_progress' => new TranslatableMarkup('In Progress'),
+      'blocked' => new TranslatableMarkup('Blocked'),
+      'completed' => new TranslatableMarkup('Completed'),
+      'skipped' => new TranslatableMarkup('Skipped'),
+    ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function changeRequestStates(): array {
+    return [
+      'submitted' => new TranslatableMarkup('Submitted'),
+      'triaged' => new TranslatableMarkup('Triaged'),
+      'accepted' => new TranslatableMarkup('Accepted'),
+      'rejected' => new TranslatableMarkup('Rejected'),
+      'scheduled' => new TranslatableMarkup('Scheduled'),
+      'implemented' => new TranslatableMarkup('Implemented'),
+      'verified' => new TranslatableMarkup('Verified'),
+      'closed' => new TranslatableMarkup('Closed'),
+    ];
+  }
+
+  /**
+   * Change request priorities: assessed at triage, never "unassessed".
+   *
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function priorities(): array {
+    return [
+      'low' => new TranslatableMarkup('Low'),
+      'medium' => new TranslatableMarkup('Medium'),
+      'high' => new TranslatableMarkup('High'),
+      'critical' => new TranslatableMarkup('Critical'),
+    ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function severities(): array {
+    return [
+      'minor' => new TranslatableMarkup('Minor'),
+      'major' => new TranslatableMarkup('Major'),
+      'critical' => new TranslatableMarkup('Critical'),
+    ];
+  }
+
+  /**
    * Allowed values function for the list fields of process entities.
    *
    * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
@@ -128,6 +183,10 @@ final class Vocabulary {
       'iteration.state' => static::iterationStates(),
       'milestone.state' => static::milestoneStates(),
       'milestone.milestone_type' => static::milestoneTypes(),
+      'process_activity.state' => static::activityStates(),
+      'change_request.state' => static::changeRequestStates(),
+      'change_request.priority' => static::priorities(),
+      'change_request.severity' => static::severities(),
       default => [],
     };
   }
@@ -149,6 +208,7 @@ final class Vocabulary {
       'requirement' => 'requirements',
       'use_case' => 'requirements',
       'system_actor' => 'requirements',
+      'work_product' => 'process',
     ];
   }
 

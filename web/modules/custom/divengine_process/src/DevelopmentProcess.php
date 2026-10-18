@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\divengine_process;
 
 use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\divengine_process\Entity\DevelopmentCase;
@@ -21,6 +22,7 @@ class DevelopmentProcess {
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected TimeInterface $time,
+    protected EntityFieldManagerInterface $entityFieldManager,
   ) {}
 
   /**
@@ -178,7 +180,7 @@ class DevelopmentProcess {
     $query = $storage->getQuery()
       ->accessCheck($access_check)
       ->condition('development', $development->id());
-    if (isset(\Drupal::service('entity_field.manager')->getBaseFieldDefinitions($entity_type_id)['weight'])) {
+    if (isset($this->entityFieldManager->getBaseFieldDefinitions($entity_type_id)['weight'])) {
       $query->sort('weight');
     }
     $query->sort($storage->getEntityType()->getKey('id'));

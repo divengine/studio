@@ -34,6 +34,10 @@ final class Transition {
    *   Entity method run once the entity is saved.
    * @param \Drupal\Core\StringTranslation\TranslatableMarkup|null $confirm
    *   Question to confirm before applying, if any.
+   * @param string|null $field
+   *   A field the user fills in when applying the transition (a block
+   *   reason, a decision rationale, a target iteration); asking for it makes
+   *   the transition go through a confirmation form.
    */
   public function __construct(
     public readonly string $id,
@@ -44,6 +48,7 @@ final class Transition {
     public readonly ?string $effect = NULL,
     public readonly ?string $after = NULL,
     public readonly ?TranslatableMarkup $confirm = NULL,
+    public readonly ?string $field = NULL,
   ) {}
 
 }

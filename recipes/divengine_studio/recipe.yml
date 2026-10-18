@@ -6,6 +6,7 @@ recipes:
 install:
   - workflows
   - content_moderation
+  - link
   - divengine_core
   - divengine_artifact
   - divengine_knowledge
@@ -114,3 +115,6 @@ config:
         - 'use use_case_lifecycle transition review'
         - 'use use_case_lifecycle transition baseline'
         - 'use use_case_lifecycle transition deprecate'
+        - 'use work_product_lifecycle transition draft'
+        - 'use work_product_lifecycle transition submit'
+        - 'use work_product_lifecycle transition baseline'

@@ -6,6 +6,7 @@ namespace Drupal\divengine_process\Lifecycle;
 
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 
 /**
  * Applies lifecycle transitions.
@@ -26,6 +27,23 @@ class LifecycleManager {
   public function available(StatefulInterface $entity): array {
     $state = $entity->getState();
     return array_filter($entity::transitions(), fn (Transition $t): bool => in_array($state, $t->from, TRUE));
+  }
+
+  /**
+   * The URL that applies a transition from a button.
+   *
+   * Transitions that ask for confirmation or for a value open their form;
+   * the others apply in one click. After applying, the user goes back to
+   * $return.
+   */
+  public function url(StatefulInterface $entity, string $transition_id, ?Url $return = NULL): Url {
+    $transition = $entity::transitions()[$transition_id];
+    $route = $transition->confirm || $transition->field ? 'divengine_process.transition_confirm' : 'divengine_process.transition';
+    return Url::fromRoute($route, [
+      'entity_type' => $entity->getEntityTypeId(),
+      'entity' => $entity->id(),
+      'transition' => $transition_id,
+    ], $return ? ['query' => ['destination' => $return->toString()]] : []);
   }
 
   /**

@@ -186,7 +186,7 @@ display:
               low: neutral
               medium: info
               high: danger
-        uid:
+        uid: &id008
           id: uid
           table: artifact
           field: uid
@@ -468,6 +468,62 @@ display:
           operator: in
           value:
             business_worker: business_worker
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  work_product:
+    id: work_product
+    display_title: Work products
+    display_plugin: embed
+    position: 8
+    display_options:
+      display_extenders: {}
+      title: Work products
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        artifact_key: *id001
+        title: *id002
+        field_wp_definition:
+          id: field_wp_definition
+          table: artifact__field_wp_definition
+          field: field_wp_definition
+          entity_type: artifact
+          plugin_id: field
+          label: Definition
+          entity_field: field_wp_definition
+          type: entity_reference_label
+          settings:
+            link: false
+        field_iteration:
+          id: field_iteration
+          table: artifact__field_iteration
+          field: field_iteration
+          entity_type: artifact
+          plugin_id: field
+          label: Iteration
+          entity_field: field_iteration
+          type: entity_reference_label
+          settings:
+            link: false
+        moderation_state: *id004
+        uid: *id008
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            work_product: work_product
       filter_groups:
         operator: AND
         groups:

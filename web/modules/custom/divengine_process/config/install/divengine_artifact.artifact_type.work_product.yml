@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: work_product
+label: Work product
+description: 'A governed engineering output of the Development: its Vision, its architecture description, a build, a verification report.'
+new_revision: true
+key_prefix: WP

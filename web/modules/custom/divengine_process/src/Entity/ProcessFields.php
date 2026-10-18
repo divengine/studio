@@ -101,7 +101,6 @@ final class ProcessFields {
     return BaseFieldDefinition::create('integer')
       ->setLabel(new TranslatableMarkup('Order'))
       ->setDefaultValue($default)
-      ->setDisplayOptions('form', ['type' => 'number', 'weight' => 50])
       ->setDisplayConfigurable('form', TRUE);
   }
 

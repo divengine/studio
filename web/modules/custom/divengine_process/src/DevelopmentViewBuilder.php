@@ -354,13 +354,10 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
     if (!$entity->access('update')) {
       return [];
     }
+    $return = $entity->hasField('development') ? $entity->get('development')->entity?->toUrl() : $entity->toUrl();
     $links = [];
     foreach ($this->lifecycle->available($entity) as $id => $transition) {
-      $links[] = $this->button($transition->label, Url::fromRoute('divengine_process.transition', [
-        'entity_type' => $entity->getEntityTypeId(),
-        'entity' => $entity->id(),
-        'transition' => $id,
-      ]), $primary_first && !$links);
+      $links[] = $this->button($transition->label, $this->lifecycle->url($entity, $id, $return), $primary_first && !$links);
     }
     return $links;
   }

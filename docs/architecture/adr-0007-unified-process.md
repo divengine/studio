@@ -48,13 +48,13 @@ exactly one, so "applied version ≠ current version" means the case changed.
 ### Development structure (content entities)
 
 `development` (code `DEV-0001`), `development_phase`, `iteration`, `milestone`,
-`role_assignment`, `process_activity`, `work_product` (`WP-`), `change_request` (`CR-`).
+`role_assignment`, `process_activity` and `change_request` (`CR-`, revisionable so every
+decision stays in its history). Work products are an artifact type instead (see below).
 Creating a Development creates one phase per active phase type, one milestone per closing
 milestone and applies the default Development Case. The case is **snapshotted** into the
 Development and only changes when someone re-applies it.
 
-Operational lifecycles (Development, iteration, milestone, activity, work product, change
-request) are state fields changed only through transitions with guards, in code: they are
+Operational lifecycles (Development, iteration, milestone, activity, change request) are state fields changed only through transitions with guards, in code: they are
 domain rules (a block needs a reason, an accept needs a rationale, scheduling needs a
 target iteration), not editorial workflows.
 
@@ -91,8 +91,10 @@ Traces point to the logical entity. A **Baseline** record (per Development, opti
 tied to a milestone) stores the exact revision IDs of every artifact and trace link that
 was baselined at that moment; reaching a milestone takes one.
 
-Work products follow the same rule (a revision of the same entity; superseded revisions
-are locked, not only hidden in the UI).
+Work products follow the same rule, which is why they are an artifact type (`work_product`,
+`WP-`) with a Draft → In review → Baselined lifecycle rather than an entity of their own:
+a revision of the same work product replaces CodeIntel's "superseded" record, and
+earlier baselines stay in its revision history.
 
 ### Traces
 
