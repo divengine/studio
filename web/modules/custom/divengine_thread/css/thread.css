@@ -15,3 +15,30 @@
 .dv-attachment__name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dv-attachment__meta { font-size: 0.75rem; color: var(--dv-gray-500, #6b7280); }
 .dv-comment__body .field--name-thread-files, .dv-comment__body .file { font-size: 0.85rem; }
+
+/* The discussion panel at the right of the record (chatter). */
+.dv-with-thread { display: block; }
+.dv-with-thread__main { min-width: 0; }
+@media (min-width: 1360px) {
+  .dv-with-thread {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  .dv-with-thread__panel {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+  .dv-with-thread__panel .dv-thread { margin-top: 0; gap: 1rem; }
+  .dv-with-thread__panel .dv-attachments { grid-template-columns: 1fr; }
+  .dv-with-thread__panel .dv-comment--reply { margin-left: 1.25rem; }
+  .dv-with-thread__panel .dv-comments__form .form-item-comment-body-0-format,
+  .dv-with-thread__panel .dv-comments__form .filter-wrapper { display: none; }
+}
+@media (min-width: 1360px) {
+  .dv-with-thread__panel .dv-section { margin: 0; }
+}

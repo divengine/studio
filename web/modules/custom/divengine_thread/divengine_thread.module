@@ -11,6 +11,7 @@ use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Render\Element;
 
 /**
  * Implements hook_modules_installed().
@@ -67,4 +68,34 @@ function divengine_thread_entity_view(array &$build, EntityInterface $entity, En
     return;
   }
   $build['divengine_thread'] = \Drupal::service('divengine_thread.view')->build($entity, $field) + ['#weight' => 1000];
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ *
+ * Like a chatter, the discussion sits in a panel at the right of the
+ * record on wide screens, and below it on narrow ones.
+ */
+function divengine_thread_entity_view_alter(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display): void {
+  if (!isset($build['divengine_thread'])) {
+    return;
+  }
+  $thread = $build['divengine_thread'];
+  unset($build['divengine_thread']);
+  $main = ['#type' => 'container', '#attributes' => ['class' => ['dv-with-thread__main']]];
+  foreach (Element::children($build, TRUE) as $key) {
+    $main[$key] = $build[$key];
+    unset($build[$key]);
+  }
+  $build['dv_with_thread'] = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['dv-with-thread']],
+    'main' => $main,
+    'thread' => [
+      '#type' => 'html_tag',
+      '#tag' => 'aside',
+      '#attributes' => ['class' => ['dv-with-thread__panel'], 'aria-label' => (string) t('Discussion')],
+      'content' => $thread,
+    ],
+  ];
 }
