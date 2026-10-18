@@ -1,0 +1,6 @@
+divengine_codedocs.sets:
+  title: 'Code docs'
+  description: 'Technical documentation of your codebases.'
+  route_name: divengine_codedocs.sets
+  menu_name: studio
+  weight: 4

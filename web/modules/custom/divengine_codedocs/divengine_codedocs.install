@@ -128,6 +128,7 @@ function divengine_codedocs_schema(): array {
         'symbol_id' => $optional,
         'kind' => $kind,
         'target_key' => $key,
+        'source_key' => $optional_key,
         'display' => $optional_key,
         'external' => $flag,
         'line' => $int,
@@ -138,6 +139,15 @@ function divengine_codedocs_schema(): array {
       ],
       'primary key' => ['id'],
       'indexes' => ['snapshot_kind' => ['sid', 'kind'], 'source' => ['symbol_id'], 'unit' => ['unit_id'], 'target_symbol' => ['target_symbol_id'], 'target_unit' => ['target_unit_id']],
+    ],
+    'divengine_codedoc_batch' => [
+      'description' => 'Accepted upload batches, for safe retries and completeness checks.',
+      'fields' => [
+        'sid' => $ref,
+        'sequence' => ['type' => 'int', 'not null' => TRUE],
+        'digest' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+      ],
+      'primary key' => ['sid', 'sequence'],
     ],
     'divengine_codedoc_endpoint' => [
       'description' => 'A route or an HTTP call found in the code.',
@@ -159,4 +169,16 @@ function divengine_codedocs_schema(): array {
       'indexes' => ['snapshot_kind' => ['sid', 'kind'], 'unit' => ['unit_id'], 'symbol' => ['symbol_id']],
     ],
   ];
+}
+
+/** Adds upload tracking to sites which enabled the initial module skeleton. */
+function divengine_codedocs_update_11001(): void {
+  $schema = \Drupal::database()->schema();
+  $definitions = divengine_codedocs_schema();
+  if (!$schema->tableExists('divengine_codedoc_batch')) {
+    $schema->createTable('divengine_codedoc_batch', $definitions['divengine_codedoc_batch']);
+  }
+  if (!$schema->fieldExists('divengine_codedoc_ref', 'source_key')) {
+    $schema->addField('divengine_codedoc_ref', 'source_key', $definitions['divengine_codedoc_ref']['fields']['source_key']);
+  }
 }

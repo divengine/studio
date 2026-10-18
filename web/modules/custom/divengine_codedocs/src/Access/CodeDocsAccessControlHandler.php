@@ -22,14 +22,14 @@ class CodeDocsAccessControlHandler extends EntityAccessControlHandler {
     $development = $entity->get('development')->entity;
     $visible = $development ? $development->access('view', $account, TRUE) : AccessResult::allowedIfHasPermission($account, 'administer code docs');
     if (!$visible->isAllowed()) {
-      return AccessResult::forbidden()->addCacheableDependency($visible)->addCacheableDependency($entity);
+      return AccessResult::forbidden()->addCacheableDependency($visible)->addCacheableDependency($entity)->cachePerPermissions();
     }
     $admin = $account->hasPermission('administer code docs');
     $manage = $admin || $account->hasPermission('manage code docs');
     $read = $manage || $account->hasPermission('use code docs');
     $snapshot = $entity->getEntityTypeId() === 'codedoc_snapshot';
     $allowed = match ($operation) {
-      'view', 'view label' => $read,
+      'view', 'view label' => $read && (!$snapshot || $entity->isReady()),
       'update' => $manage && !$snapshot,
       'delete' => $admin || ($manage && ($snapshot ? !$entity->isReady() : !$entity->hasHistory(TRUE))),
       default => FALSE,

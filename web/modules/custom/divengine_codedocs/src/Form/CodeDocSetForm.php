@@ -25,6 +25,7 @@ class CodeDocSetForm extends ContentEntityForm {
       $form['development']['#access'] = FALSE;
     }
     if ($entity->hasHistory()) {
+      $form['development']['#disabled'] = TRUE;
       $form['identifier']['widget'][0]['value']['#disabled'] = TRUE;
       $form['identifier']['widget'][0]['value']['#description'] = $this->t('Fixed: the snapshots of this set were published under it.');
     }

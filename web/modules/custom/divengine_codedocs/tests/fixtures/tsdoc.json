@@ -1,0 +1,12 @@
+{
+  "schema": 1, "language": "typescript", "project": "shop-ts", "typescript": "5", "commit": "demo-v1",
+  "modules": [
+    {"key": "src/Shop.tsx", "path": "src/Shop.tsx", "name": "Shop", "kind": "page", "doc": null,
+     "symbols": [{"key": "src/Shop.tsx#Shop", "name": "Shop", "kind": "component", "exported": true, "doc": null, "props": "src/types.ts#Props", "members": [{"key": "src/Shop.tsx#Shop.find", "name": "find", "kind": "method", "params": [{"name": "limit", "type": "number", "default": "0"}]}]}],
+     "imports": [{"source": "./types", "target": "src/types.ts", "external": null, "kind": "static", "names": ["Props"], "typeOnly": true}],
+     "refs": [{"kind": "type", "from": "src/Shop.tsx#Shop", "to": "src/types.ts#Props", "count": 2}],
+     "routes": [{"path": "/shop", "full": "/shop", "component": "src/Shop.tsx#Shop", "wrappers": ["Auth"]}],
+     "http": [{"method": "GET", "path": "/api/products", "from": "src/Shop.tsx#Shop.find", "raw": "'/api/products'"}]},
+    {"key": "src/types.ts", "path": "src/types.ts", "name": "types", "kind": "types", "symbols": [{"key": "src/types.ts#Props", "name": "Props", "kind": "interface", "exported": true, "doc": {"summary": "Shop properties."}}], "imports": [], "refs": [], "routes": [], "http": []}
+  ]
+}

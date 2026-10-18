@@ -8,3 +8,4 @@ dependencies:
   - divengine_process
   - divengine_traceability
   - divengine_source
+  - drupal:basic_auth

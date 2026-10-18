@@ -23,4 +23,6 @@ class CodeDocSetIdentity extends SymfonyConstraint {
 
   public string $fixed = 'The identifier of a documentation set cannot change once it has snapshots: they were published under it. Register another set instead.';
 
+  public string $developmentFixed = 'The Development cannot change once documentation snapshots exist. Register another set instead.';
+
 }

@@ -1,0 +1,19 @@
+divengine_codedocs.development:
+  title: 'Code docs'
+  route_name: divengine_codedocs.development
+  base_route: entity.development.canonical
+  weight: 11
+entity.codedoc_set.canonical:
+  title: 'Overview'
+  route_name: entity.codedoc_set.canonical
+  base_route: entity.codedoc_set.canonical
+divengine_codedocs.import:
+  title: 'Import'
+  route_name: divengine_codedocs.import
+  base_route: entity.codedoc_set.canonical
+  weight: 5
+entity.codedoc_set.edit_form:
+  title: 'Edit'
+  route_name: entity.codedoc_set.edit_form
+  base_route: entity.codedoc_set.canonical
+  weight: 10

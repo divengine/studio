@@ -23,6 +23,9 @@ class CodeDocSetIdentityValidator extends ConstraintValidator {
       if ($original->get('identifier')->value !== $identifier) {
         $this->context->buildViolation($constraint->fixed)->atPath('identifier')->addViolation();
       }
+      if ((string) $original->get('development')->target_id !== (string) $entity->get('development')->target_id) {
+        $this->context->buildViolation($constraint->developmentFixed)->atPath('development')->addViolation();
+      }
     }
   }
 

@@ -1,0 +1,23 @@
+services:
+  divengine_codedocs.adapters:
+    class: Drupal\divengine_codedocs\Contract\AdapterManager
+    tags:
+      - { name: service_collector, tag: divengine_codedocs.adapter, call: addAdapter }
+  divengine_codedocs.adapter.contract:
+    class: Drupal\divengine_codedocs\Contract\Adapter\ContractAdapter
+    tags:
+      - { name: divengine_codedocs.adapter, priority: 10 }
+  divengine_codedocs.adapter.javadoc:
+    class: Drupal\divengine_codedocs\Contract\Adapter\JavadocAdapter
+    tags:
+      - { name: divengine_codedocs.adapter }
+  divengine_codedocs.adapter.tsdoc:
+    class: Drupal\divengine_codedocs\Contract\Adapter\TypeScriptAdapter
+    tags:
+      - { name: divengine_codedocs.adapter }
+  divengine_codedocs.index:
+    class: Drupal\divengine_codedocs\CodeDocIndex
+    arguments: ['@database']
+  divengine_codedocs.importer:
+    class: Drupal\divengine_codedocs\SnapshotImporter
+    arguments: ['@database', '@entity_type.manager', '@divengine_codedocs.adapters', '@divengine_codedocs.index', '@current_user', '@lock']

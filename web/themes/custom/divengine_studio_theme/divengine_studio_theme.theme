@@ -21,6 +21,7 @@ const DIVENGINE_STUDIO_THEME_NAV_ICONS = [
   'divengine_articles.index' => 'knowledge',
   'divengine_source.repositories' => 'code',
   'divengine_database.databases' => 'database',
+  'divengine_codedocs.sets' => 'code',
   'divengine_qa.dashboard' => 'dashboard',
   'divengine_qa.plans' => 'quality',
   'divengine_qa.issues' => 'issues',

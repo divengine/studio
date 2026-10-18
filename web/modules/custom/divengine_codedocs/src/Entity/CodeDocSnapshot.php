@@ -25,6 +25,7 @@ use Drupal\divengine_codedocs\Access\CodeDocsAccessControlHandler;
   label_singular: new TranslatableMarkup('documentation snapshot'),
   label_plural: new TranslatableMarkup('documentation snapshots'),
   handlers: [
+    'view_builder' => 'Drupal\divengine_codedocs\CodeDocSetViewBuilder',
     'views_data' => 'Drupal\views\EntityViewsData',
     'access' => CodeDocsAccessControlHandler::class,
     'form' => [

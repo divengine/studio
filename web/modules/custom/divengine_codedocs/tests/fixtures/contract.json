@@ -1,0 +1,31 @@
+{
+  "contract": "divengine.codedocs",
+  "contract_version": "1.0",
+  "project": "shop-php",
+  "language": "php",
+  "producer": "example-php-extractor",
+  "commit": "demo-v1",
+  "units": [
+    {
+      "key": "src/Shop.php",
+      "kind": "file",
+      "path": "src/Shop.php",
+      "symbols": [
+        {
+          "key": "Shop",
+          "kind": "class",
+          "name": "Shop",
+          "exported": true,
+          "doc": {"summary": "A neutral shop example."},
+          "members": [
+            {"key": "Shop::find(string)", "kind": "method", "name": "find", "visibility": "public", "signature": "find(string $id): Product", "line": 12,
+             "params": [{"name": "id", "type": "string", "doc": "Product identifier."}],
+             "refs": [{"kind": "return", "target": "Product"}],
+             "doc": {"summary": "Find a product.", "tags": [{"kind": "return", "text": "The matching product."}]}}
+          ]
+        }
+      ]
+    },
+    {"key": "src/Product.php", "kind": "file", "symbols": [{"key": "Product", "kind": "class", "name": "Product", "exported": true}]}
+  ]
+}

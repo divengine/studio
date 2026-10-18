@@ -1,0 +1,68 @@
+divengine_codedocs.sets:
+  path: '/docs'
+  defaults:
+    _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsController::sets'
+    _title: 'Code docs'
+  requirements:
+    _permission: 'use code docs+manage code docs+administer code docs'
+
+divengine_codedocs.development:
+  path: '/development/{development}/docs'
+  defaults:
+    _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsController::development'
+    _title: 'Code docs'
+  requirements:
+    _entity_access: 'development.view'
+    _permission: 'use code docs+manage code docs+administer code docs'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_codedocs.import:
+  path: '/docs/{codedoc_set}/import'
+  defaults:
+    _form: '\Drupal\divengine_codedocs\Form\ImportSnapshotForm'
+    _title: 'Import code documentation'
+  requirements:
+    _entity_access: 'codedoc_set.update'
+  options:
+    parameters:
+      codedoc_set:
+        type: 'entity:codedoc_set'
+
+divengine_codedocs.symbol:
+  path: '/docs/snapshot/{codedoc_snapshot}/symbol/{symbol}'
+  defaults:
+    _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsController::symbol'
+    _title: 'Symbol'
+  requirements:
+    _entity_access: 'codedoc_snapshot.view'
+    symbol: '\d+'
+  options:
+    parameters:
+      codedoc_snapshot:
+        type: 'entity:codedoc_snapshot'
+
+divengine_codedocs.api.write:
+  path: '/api/divengine/codedocs/{operation}'
+  defaults:
+    _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsApiController::write'
+  methods: [POST]
+  requirements:
+    operation: 'import|begin|chunk|finalize|discard'
+    _permission: 'publish code docs+manage code docs+administer code docs'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']
+
+divengine_codedocs.api.read:
+  path: '/api/divengine/codedocs/{operation}'
+  defaults:
+    _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsApiController::read'
+  methods: [GET]
+  requirements:
+    operation: 'sets|snapshots|units|symbols|symbol|refs|endpoints|diff'
+    _permission: 'use code docs+manage code docs+administer code docs'
+  options:
+    _auth: ['basic_auth', 'cookie']

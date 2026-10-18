@@ -1,0 +1,13 @@
+{
+  "schema": 1, "language": "java", "project": "shop-java", "commit": "demo-v1",
+  "packages": [{"key": "shop", "name": "shop", "doc": {"summary": "Shop API."}}],
+  "types": [
+    {"key": "shop.Shop", "package": "shop", "name": "Shop", "kind": "class", "visibility": "public", "file": "shop/Shop.java", "line": 4,
+     "doc": {"summary": "A shop."},
+     "interfaces": [{"kind": "declared", "display": "Catalog", "qualifiedName": "shop.Catalog", "internal": true}],
+     "annotations": [{"name": "Deprecated", "type": {"kind": "declared", "qualifiedName": "java.lang.Deprecated", "internal": false}, "values": {"since": "1.0"}}],
+     "fields": [{"key": "shop.Shop#LIMIT", "name": "LIMIT", "visibility": "public", "static": true, "final": true, "constantValue": "0", "type": {"kind": "primitive", "display": "int"}}],
+     "executables": [{"key": "shop.Shop#find(java.lang.String)", "name": "find", "kind": "method", "visibility": "public", "parameters": [{"name": "id", "type": {"kind": "declared", "display": "String", "qualifiedName": "java.lang.String", "internal": false}, "doc": "Identifier."}], "returnType": {"kind": "declared", "display": "Catalog", "qualifiedName": "shop.Catalog", "internal": true}, "doc": {"summary": "Find an item."}}]},
+    {"key": "shop.Catalog", "package": "shop", "name": "Catalog", "kind": "interface", "visibility": "public", "fields": [], "executables": []}
+  ]
+}

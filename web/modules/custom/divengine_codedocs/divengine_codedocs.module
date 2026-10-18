@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Language-neutral code documentation for Developments.
+ */
+
+declare(strict_types=1);
+
+/** Implements hook_divengine_process_scoped_types_alter(). */
+function divengine_codedocs_divengine_process_scoped_types_alter(array &$types): void {
+  array_push($types, 'codedoc_set', 'codedoc_snapshot');
+}
+
+/** Implements hook_divengine_code_fields_alter(). */
+function divengine_codedocs_divengine_code_fields_alter(array &$fields): void {
+  $fields['codedoc_set'] = 'code';
+}
+
+/** Implements hook_divengine_trace_end_types_alter(). */
+function divengine_codedocs_divengine_trace_end_types_alter(array &$types): void {
+  $types[] = 'codedoc_set';
+}
