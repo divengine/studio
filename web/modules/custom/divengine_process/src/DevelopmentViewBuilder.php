@@ -14,6 +14,7 @@ use Drupal\Core\Url;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
 use Drupal\divengine_process\Lifecycle\LifecycleManager;
 use Drupal\divengine_process\Lifecycle\StatefulInterface;
+use Drupal\divengine_process\Readiness\ReadinessEvaluator;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -34,12 +35,18 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
 
   protected EntityTypeManagerInterface $entityTypeManager;
 
+  protected ReadinessEvaluator $readiness;
+
+  protected TraceabilityGaps $gaps;
+
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $instance = parent::createInstance($container, $entity_type);
     $instance->lifecycle = $container->get('divengine_process.lifecycle');
     $instance->process = $container->get('divengine_process.development');
     $instance->dateFormatter = $container->get('date.formatter');
     $instance->entityTypeManager = $container->get('entity_type.manager');
+    $instance->readiness = $container->get('divengine_process.readiness');
+    $instance->gaps = $container->get('divengine_process.gaps');
     return $instance;
   }
 
@@ -55,6 +62,10 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
         'iteration_list',
         'milestone_list',
         'role_assignment_list',
+        'artifact_list',
+        'process_activity_list',
+        'change_request_list',
+        'trace_link_list',
         'config:development_case_list',
       ]);
       $build[$id]['#cache']['contexts'][] = 'user';
@@ -74,6 +85,7 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
     $build['status'] = $this->statusBar($development, $can_edit) + ['#weight' => -100];
     $build['lifecycle'] = $this->stepper($development, $phases, $milestones) + ['#weight' => -90];
     $build['cards'] = $this->cards($development, $milestones, $assignments) + ['#weight' => -80];
+    $build['facts'] = $this->facts($development) + ['#weight' => -60];
 
     if ($development->isCaseOutdated()) {
       $build['outdated'] = [
@@ -174,6 +186,15 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
   protected function cards(DevelopmentInterface $development, array $milestones, array $assignments): array {
     $cards = ['#type' => 'container', '#attributes' => ['class' => ['dv-cards']]];
 
+    $missing = $this->readiness->missingCount($this->readiness->evaluate($development));
+    $cards['readiness'] = $this->card(
+      $this->t('Readiness'),
+      $missing ? (string) $this->formatPlural($missing, '1 required criterion missing', '@count required criteria missing') : (string) $this->t('Required criteria met'),
+      (string) $this->t('Advisory: see what is missing'),
+      $missing ? 'danger' : 'success',
+      Url::fromRoute('divengine_process.development_readiness', ['development' => $development->id()])->toString(),
+    );
+
     $next = NULL;
     foreach ($milestones as $milestone) {
       if ($milestone->getState() !== 'reached') {
@@ -272,16 +293,18 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
       if ($milestone->access('update')) {
         $actions[] = $this->button($this->t('Edit'), $milestone->toUrl('edit-form'));
       }
+      $missing = $this->readiness->missingCount($this->readiness->evaluate($milestone->getDevelopment(), $milestone->getMilestoneType()));
       $rows[] = [
         ['data' => ['#plain_text' => $milestone->label()]],
         ['data' => ['#plain_text' => $milestone->get('phase')->entity?->label() ?? '']],
         ['data' => ['#plain_text' => (string) ($milestone->get('date_planned')->value ?? '')]],
         ['data' => ['#plain_text' => (string) ($milestone->get('date_reached')->value ?? '')]],
+        ['data' => $missing ? $this->badgeElement($this->formatPlural($missing, '1 missing', '@count missing'), 'danger') : $this->badgeElement($this->t('Ready'), 'success')],
         ['data' => $this->badge($milestone)],
         ['data' => $this->actionsContainer($actions)],
       ];
     }
-    return $this->section($this->t('Milestones'), count($milestones), $this->table([$this->t('Milestone'), $this->t('Closes'), $this->t('Planned'), $this->t('Reached'), $this->t('State'), ''], $rows, $this->t('No milestone.')));
+    return $this->section($this->t('Milestones'), count($milestones), $this->table([$this->t('Milestone'), $this->t('Closes'), $this->t('Planned'), $this->t('Reached'), $this->t('Readiness'), $this->t('State'), ''], $rows, $this->t('No milestone.')));
   }
 
   protected function phases(array $phases): array {
@@ -385,11 +408,104 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
     ];
   }
 
-  protected function card(string|\Stringable $label, string $value, string $hint = '', string $tone = 'neutral'): array {
+  protected function card(string|\Stringable $label, string $value, string $hint = '', string $tone = 'neutral', string $url = ''): array {
     return [
       '#type' => 'component',
       '#component' => 'divengine_core:stat-card',
-      '#props' => ['label' => (string) $label, 'value' => $value, 'hint' => $hint, 'tone' => $tone],
+      '#props' => array_filter(['label' => (string) $label, 'value' => $value, 'hint' => $hint, 'tone' => $tone, 'url' => $url]),
+    ];
+  }
+
+  /**
+   * The Overview panels: facts about the work, the model and the changes.
+   */
+  protected function facts(DevelopmentInterface $development): array {
+    $tab = fn (string $route) => Url::fromRoute($route, ['development' => $development->id()])->toString();
+    $state = fn ($artifact) => (string) $artifact->get('moderation_state')->value;
+    $current = fn (string $bundle) => array_filter($this->gaps->artifacts($development, $bundle), fn ($a) => $state($a) !== 'deprecated');
+    $count_in = fn (array $records, array $states) => count(array_filter($records, fn ($a) => in_array($state($a), $states, TRUE)));
+    $grid = ['#type' => 'container', '#attributes' => ['class' => ['dv-facts']]];
+
+    // Activities.
+    $activities = $this->process->children($development, 'process_activity');
+    $rows = [
+      ['label' => (string) $this->t('In progress'), 'value' => (string) count(array_filter($activities, fn ($a) => $a->getState() === 'in_progress'))],
+      ['label' => (string) $this->t('Blocked'), 'value' => (string) count(array_filter($activities, fn ($a) => $a->getState() === 'blocked')), 'tone' => 'danger'],
+    ];
+    foreach (array_slice(array_filter($activities, fn ($a) => $a->getState() === 'blocked'), 0, 5) as $blocked) {
+      $rows[] = ['label' => $blocked->label(), 'value' => (string) $blocked->get('block_reason')->value, 'url' => $blocked->toUrl()->toString(), 'tone' => 'danger'];
+    }
+    $grid['activities'] = $this->panel($this->t('Activities'), $this->hideZero($rows), $tab('divengine_process.development_process'));
+
+    // Missing required work products, over the whole Development.
+    $rows = [];
+    foreach ($this->readiness->evaluate($development) as $item) {
+      if ($item['code'] === 'work_products_baselined') {
+        foreach ($item['reasons'] as $reason) {
+          $rows[] = ['label' => html_entity_decode($reason, ENT_QUOTES)];
+        }
+      }
+    }
+    $grid['work_products'] = $this->panel($this->t('Missing required work products'), $rows, $tab('divengine_process.development_process'));
+
+    // Business model.
+    $buc = $current('business_use_case');
+    $rules = $current('business_rule');
+    $grid['business'] = $this->panel($this->t('Business model'), $this->hideZero([
+      ['label' => (string) $this->t('Business actors'), 'value' => (string) count($this->gaps->artifacts($development, 'business_actor'))],
+      ['label' => (string) $this->t('Business workers'), 'value' => (string) count($this->gaps->artifacts($development, 'business_worker'))],
+      ['label' => (string) $this->t('Business use cases'), 'value' => (string) count($buc)],
+      ['label' => (string) $this->t('Business use cases not reviewed'), 'value' => (string) $count_in($buc, ['draft', 'outlined', 'detailed']), 'tone' => 'warning'],
+      ['label' => (string) $this->t('Business rules'), 'value' => (string) count($rules)],
+      ['label' => (string) $this->t('Business rules not approved'), 'value' => (string) $count_in($rules, ['draft', 'proposed']), 'tone' => 'warning'],
+    ]), $tab('divengine_process.development_business'));
+
+    // System use cases by state.
+    $use_cases = $this->gaps->artifacts($development, 'use_case');
+    $rows = [];
+    foreach (['draft' => $this->t('Identified'), 'outlined' => $this->t('Outlined'), 'detailed' => $this->t('Detailed'), 'reviewed' => $this->t('Reviewed'), 'published' => $this->t('Baselined'), 'deprecated' => $this->t('Deprecated')] as $key => $label) {
+      $rows[] = ['label' => (string) $label, 'value' => (string) $count_in($use_cases, [$key])];
+    }
+    $grid['use_cases'] = $this->panel($this->t('System use cases by state'), $this->hideZero($rows), $tab('divengine_process.development_requirements'));
+
+    // Change requests.
+    $changes = array_filter($this->process->children($development, 'change_request'), fn ($c) => $c->get('status')->value);
+    $in = fn (array $states) => (string) count(array_filter($changes, fn ($c) => in_array($c->getState(), $states, TRUE)));
+    $grid['changes'] = $this->panel($this->t('Change requests'), $this->hideZero([
+      ['label' => (string) $this->t('Open'), 'value' => $in(['submitted', 'triaged', 'accepted', 'scheduled', 'implemented'])],
+      ['label' => (string) $this->t('To decide'), 'value' => $in(['submitted', 'triaged']), 'tone' => 'warning'],
+      ['label' => (string) $this->t('Accepted, not scheduled'), 'value' => $in(['accepted']), 'tone' => 'warning'],
+    ]), $tab('divengine_process.development_changes'));
+
+    // Traceability gaps.
+    $grid['gaps'] = $this->panel($this->t('Traceability gaps'), $this->hideZero([
+      ['label' => (string) $this->t('Approved requirements not refined downstream'), 'value' => (string) count($this->gaps->requirementsNotRefined($development)), 'tone' => 'danger'],
+      ['label' => (string) $this->t('Change requests without impact analysis'), 'value' => (string) count($this->gaps->changeRequestsWithoutImpact($development)), 'tone' => 'danger'],
+    ]), $tab('divengine_process.development_requirements'));
+
+    return $grid;
+  }
+
+  /**
+   * Leaves out rows whose value is zero; label-only rows stay.
+   */
+  protected function hideZero(array $rows): array {
+    return array_values(array_filter($rows, fn (array $row) => !isset($row['value']) || ($row['value'] !== '0' && $row['value'] !== '')));
+  }
+
+  protected function panel(string|\Stringable $title, array $rows, string $more_url): array {
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:section',
+      '#props' => ['title' => (string) $title],
+      '#slots' => [
+        'content' => [
+          '#type' => 'component',
+          '#component' => 'divengine_core:fact-list',
+          '#props' => ['rows' => $rows, 'empty' => (string) $this->t('Nothing to report.')],
+        ],
+        'actions' => Link::fromTextAndUrl($this->t('Open'), Url::fromUserInput($more_url))->toRenderable() + ['#attributes' => ['class' => ['button', 'button--small']]],
+      ],
     ];
   }
 

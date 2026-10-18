@@ -86,8 +86,26 @@ class Milestone extends ContentEntityBase implements StatefulInterface {
     return (string) $this->get('milestone_type')->value;
   }
 
+  /**
+   * Records the date and, as an auditable note, any unmet requirement.
+   *
+   * Readiness is advisory: reaching is allowed, and what was missing when
+   * it was reached stays in the notes.
+   */
   public function recordReachedDate(): void {
-    $this->set('date_reached', date('Y-m-d', \Drupal::time()->getRequestTime()));
+    $today = date('Y-m-d', \Drupal::time()->getRequestTime());
+    $this->set('date_reached', $today);
+    $development = $this->getDevelopment();
+    if (!$development) {
+      return;
+    }
+    $readiness = \Drupal::service('divengine_process.readiness');
+    $missing = $readiness->missingCount($readiness->evaluate($development, $this->getMilestoneType()));
+    if ($missing) {
+      $note = (string) \Drupal::translation()->formatPlural($missing, 'Reached on @date with 1 required readiness criterion not met.', 'Reached on @date with @count required readiness criteria not met.', ['@date' => $today]);
+      $notes = trim((string) $this->get('notes')->value);
+      $this->set('notes', $notes === '' ? $note : $notes . "\n" . $note);
+    }
   }
 
   public function clearReachedDate(): void {

@@ -1,0 +1,12 @@
+{% if rows %}
+  <dl{{ attributes.addClass('dv-fact-list') }}>
+    {% for row in rows %}
+      <div class="dv-fact-list__row dv-fact-list__row--{{ row.tone|default('neutral') }}">
+        <dt>{% if row.url %}<a href="{{ row.url }}">{{ row.label }}</a>{% else %}{{ row.label }}{% endif %}</dt>
+        {% if row.value is not empty %}<dd>{{ row.value }}</dd>{% endif %}
+      </div>
+    {% endfor %}
+  </dl>
+{% else %}
+  <p{{ attributes.addClass('dv-fact-list', 'dv-fact-list--empty') }}>{{ empty|default('Nothing to report.'|t) }}</p>
+{% endif %}

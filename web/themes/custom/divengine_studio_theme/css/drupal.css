@@ -45,3 +45,8 @@
 .field__label { font-size: var(--dv-font-size-xs); text-transform: uppercase; letter-spacing: 0.04em; color: var(--dv-gray-600); font-weight: 700; }
 .field--label-inline { display: flex; gap: var(--dv-space-2); }
 .field--label-inline .field__label::after { content: ":"; }
+.dv-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: var(--dv-space-4); margin: 0 0 var(--dv-space-5); align-items: start; }
+.dv-facts .dv-section { margin: 0; }
+.dv-intro { max-width: 60rem; color: var(--dv-gray-700); }
+.dv-section__description { margin-top: 0; color: var(--dv-gray-600); }
+.dv-section .item-list ul { margin: 0; padding-left: var(--dv-space-4); }

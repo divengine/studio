@@ -10,3 +10,9 @@ services:
   divengine_process.gaps:
     class: Drupal\divengine_process\TraceabilityGaps
     arguments: ['@entity_type.manager']
+  plugin.manager.divengine_readiness:
+    class: Drupal\divengine_process\Readiness\ReadinessCriterionManager
+    parent: default_plugin_manager
+  divengine_process.readiness:
+    class: Drupal\divengine_process\Readiness\ReadinessEvaluator
+    arguments: ['@plugin.manager.divengine_readiness', '@divengine_process.development']

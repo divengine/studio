@@ -60,3 +60,10 @@ divengine_process.studio.developments:
   route_name: entity.development.collection
   menu_name: studio
   weight: 0
+
+divengine_process.studio.my_work:
+  title: 'My work'
+  description: 'Your activities, the iterations in progress and the changes to decide.'
+  route_name: divengine_process.my_work
+  menu_name: studio
+  weight: -10

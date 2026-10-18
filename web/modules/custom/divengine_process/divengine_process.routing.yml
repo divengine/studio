@@ -105,3 +105,23 @@ divengine_process.development_changes:
     parameters:
       development:
         type: 'entity:development'
+
+divengine_process.development_readiness:
+  path: '/development/{development}/readiness'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\ReadinessController::page'
+    _title_callback: '\Drupal\divengine_process\Controller\ReadinessController::title'
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_process.my_work:
+  path: '/my-work'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\MyWorkController::page'
+    _title: 'My work'
+  requirements:
+    _permission: 'use unified process+administer unified process'

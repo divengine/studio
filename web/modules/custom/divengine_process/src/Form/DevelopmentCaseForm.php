@@ -7,7 +7,9 @@ namespace Drupal\divengine_process\Form;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\divengine_process\Entity\DevelopmentCase;
+use Drupal\divengine_process\Readiness\ReadinessCriterionManager;
 use Drupal\divengine_process\Vocabulary;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for Development Cases and their tailoring lines.
@@ -16,6 +18,14 @@ use Drupal\divengine_process\Vocabulary;
  * "element_type:target".
  */
 class DevelopmentCaseForm extends ProcessConfigForm {
+
+  protected ReadinessCriterionManager $criteria;
+
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->criteria = $container->get('plugin.manager.divengine_readiness');
+    return $instance;
+  }
 
   public function form(array $form, FormStateInterface $form_state): array {
     $form = parent::form($form, $form_state);
@@ -212,21 +222,12 @@ class DevelopmentCaseForm extends ProcessConfigForm {
   }
 
   /**
-   * Readiness criteria that can be chosen.
+   * Readiness criteria that can be chosen, from the criterion plugins.
    *
    * @return array<string, string>
    */
   protected function readinessCriteria(): array {
-    $criteria = [];
-    foreach ($this->entityTypeManager->getStorage('development_case')->loadMultiple() as $case) {
-      foreach ($case->getLines() as $line) {
-        if ($line['element_type'] === 'readiness' && $line['target'] !== '') {
-          $criteria[$line['target']] = $line['target'];
-        }
-      }
-    }
-    ksort($criteria);
-    return $criteria;
+    return $this->criteria->options();
   }
 
 }

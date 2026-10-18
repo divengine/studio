@@ -1,0 +1,25 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Fact list
+status: stable
+description: 'Label and value rows summarizing one aspect of a record; facts, never a score.'
+props:
+  type: object
+  properties:
+    rows:
+      type: array
+      title: Rows
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          value:
+            type: string
+          url:
+            type: string
+          tone:
+            type: string
+            enum: [neutral, info, success, warning, danger]
+    empty:
+      type: string
+      title: Text when there are no rows

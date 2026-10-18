@@ -20,6 +20,7 @@ class HomeController extends ControllerBase {
    * Workspace pages in order of preference.
    */
   const LANDING_ROUTES = [
+    'divengine_process.my_work',
     'entity.development.collection',
     'entity.artifact.collection',
     'entity.diagram.collection',

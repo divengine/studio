@@ -1,0 +1,15 @@
+.dv-fact-list { margin: 0; }
+.dv-fact-list__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--dv-space-3, 0.75rem);
+  padding: var(--dv-space-2, 0.5rem) 0;
+  border-bottom: 1px solid var(--dv-gray-100, #f2f3f5);
+}
+.dv-fact-list__row:last-child { border-bottom: 0; }
+.dv-fact-list__row dt { min-width: 0; }
+.dv-fact-list__row dd { margin: 0; font-weight: 700; text-align: right; white-space: nowrap; }
+.dv-fact-list__row--danger dd { color: var(--dv-danger, #a3261b); }
+.dv-fact-list__row--warning dd { color: var(--dv-warning, #8a5a00); }
+.dv-fact-list__row--success dd { color: var(--dv-success, #22663f); }
+.dv-fact-list--empty { margin: 0; color: var(--dv-gray-600, #5b6270); }

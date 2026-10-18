@@ -28,6 +28,12 @@ divengine_process.development_changes:
   base_route: entity.development.canonical
   weight: 4
 
+divengine_process.development_readiness:
+  title: 'Readiness'
+  route_name: divengine_process.development_readiness
+  base_route: entity.development.canonical
+  weight: 5
+
 entity.development.edit_form:
   title: 'Edit'
   route_name: entity.development.edit_form
