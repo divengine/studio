@@ -32,6 +32,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
 | `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
 | `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
+| `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
 

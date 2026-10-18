@@ -38,3 +38,8 @@ Clients send `Authorization: Basic base64(token)`.
 ## Related Modules
 
 - divengine_artifact, divengine_modeler, divengine_traceability (read through JSON:API)
+- divengine_codedocs exposes `codedocs_sets`, `codedocs_snapshots`, `codedocs_units`,
+  `codedocs_symbols`, `codedocs_symbol`, `codedocs_endpoints` and `codedocs_diff`.
+  The MCP recipe and setup grant the agent `use code docs`; add the account to the
+  Developments whose documentation it should read. See the Code Docs module README
+  and `scripts/codedocs-demo/README.md` for reproducible PHP and TypeScript examples.

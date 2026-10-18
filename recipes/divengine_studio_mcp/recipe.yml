@@ -41,6 +41,9 @@ config:
           database:
             enabled: true
             config: {}
+          codedocs:
+            enabled: true
+            config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:
@@ -60,3 +63,4 @@ config:
         - 'use unified process'
         - 'use source code'
         - 'use database schemas'
+        - 'use code docs'

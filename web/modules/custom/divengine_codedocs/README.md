@@ -155,6 +155,11 @@ Source links appear when an indexed repository ref matches the documented commit
 
 When Drupal MCP is enabled, the `codedocs` plugin exposes sets, snapshots, units,
 symbols, symbol details, endpoints and diffs with the connected user's access.
+Installation and updates enable its configuration when missing and grant the MCP
+agent role read access; existing explicit plugin settings and authentication are
+preserved. The MCP recipe and `divengine:mcp-setup` also include this integration.
+See `scripts/codedocs-demo/README.md` for runnable PHP/TypeScript examples,
+extraction/import scripts, real MCP reads and authenticated screenshot capture.
 
 ## Development checks
 

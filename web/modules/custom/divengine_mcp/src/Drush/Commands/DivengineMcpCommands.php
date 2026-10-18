@@ -50,6 +50,14 @@ final class DivengineMcpCommands extends DrushCommands {
     }
 
     $account = $this->ensureAccount($options['user']);
+    if (\Drupal::moduleHandler()->moduleExists('divengine_codedocs')) {
+      $role = $this->entityTypeManager->getStorage('user_role')->load(static::ROLE);
+      $role->grantPermission('use code docs')->save();
+      $settings = $this->configFactory->getEditable('mcp.settings');
+      if ($settings->get('plugins.codedocs') === NULL) {
+        $settings->set('plugins.codedocs', ['enabled' => TRUE, 'config' => []])->save();
+      }
+    }
     $token_file = $options['token-file'] ?: dirname(DRUPAL_ROOT) . '/private/divengine-mcp.token';
     $this->ensureToken($token_file, (bool) $options['regenerate']);
     $this->ensureKey($token_file);

@@ -7,6 +7,25 @@
 
 declare(strict_types=1);
 
+/** Implements hook_install(). */
+function divengine_codedocs_install(): void {
+  divengine_codedocs_enable_mcp();
+}
+
+/** Integrates with an existing MCP installation without changing its auth. */
+function divengine_codedocs_enable_mcp(): void {
+  if (!\Drupal::moduleHandler()->moduleExists('mcp')) {
+    return;
+  }
+  $config = \Drupal::configFactory()->getEditable('mcp.settings');
+  if ($config->get('plugins.codedocs') === NULL) {
+    $config->set('plugins.codedocs', ['enabled' => TRUE, 'config' => []])->save();
+  }
+  if ($role = \Drupal::entityTypeManager()->getStorage('user_role')->load('mcp_agent')) {
+    $role->grantPermission('use code docs')->save();
+  }
+}
+
 /**
  * Implements hook_schema().
  *
@@ -181,4 +200,9 @@ function divengine_codedocs_update_11001(): void {
   if (!$schema->fieldExists('divengine_codedoc_ref', 'source_key')) {
     $schema->addField('divengine_codedoc_ref', 'source_key', $definitions['divengine_codedoc_ref']['fields']['source_key']);
   }
+}
+
+/** Makes Code Docs readable through MCP on existing Studio installations. */
+function divengine_codedocs_update_11002(): void {
+  divengine_codedocs_enable_mcp();
 }
