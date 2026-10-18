@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Theme hooks of the Divengine Studio workspace theme.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Icons of the Studio menu, by the route each entry opens.
+ */
+const DIVENGINE_STUDIO_THEME_NAV_ICONS = [
+  'divengine_process.my_work' => 'work',
+  'divengine_project.my_tasks' => 'tasks',
+  'divengine_timesheet.grid' => 'timesheets',
+  'divengine_qa.my_runs' => 'runs',
+  'entity.development.collection' => 'developments',
+  'divengine_project.projects' => 'projects',
+  'divengine_timesheet.report' => 'report',
+  'divengine_articles.index' => 'knowledge',
+  'divengine_qa.dashboard' => 'dashboard',
+  'divengine_qa.plans' => 'quality',
+  'divengine_qa.issues' => 'issues',
+  'entity.artifact.collection' => 'artifacts',
+  'entity.diagram.collection' => 'diagrams',
+  'entity.trace_link.collection' => 'traceability',
+  'divengine.admin' => 'configuration',
+];
+
+/**
+ * Implements hook_preprocess_HOOK() for menu__studio.
+ *
+ * Each entry of the sidebar gets the class of its icon.
+ */
+function divengine_studio_theme_preprocess_menu__studio(array &$variables): void {
+  foreach ($variables['items'] as &$item) {
+    $route = $item['url']->isRouted() ? $item['url']->getRouteName() : '';
+    $item['attributes']->addClass('dv-nav--' . (DIVENGINE_STUDIO_THEME_NAV_ICONS[$route] ?? 'default'));
+  }
+}

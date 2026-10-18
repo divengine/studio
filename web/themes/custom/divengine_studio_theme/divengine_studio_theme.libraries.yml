@@ -8,6 +8,7 @@ global:
       css/layout.css: {}
     component:
       css/navigation.css: {}
+      css/icons.css: {}
       css/drupal.css: {}
   js:
     js/sidebar.js: {}

@@ -1,0 +1,27 @@
+/* Sidebar menu icons: one line icon per Studio section (see icons/). */
+.dv-sidebar li[class*="dv-nav--"] > a { display: flex; align-items: center; gap: 0.6rem; }
+.dv-sidebar li[class*="dv-nav--"] > a::before {
+  content: "";
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  background-color: currentColor;
+  opacity: 0.85;
+  -webkit-mask: url(../icons/default.svg) center / contain no-repeat;
+  mask: url(../icons/default.svg) center / contain no-repeat;
+}
+.dv-sidebar li.dv-nav--artifacts > a::before { -webkit-mask-image: url(../icons/artifacts.svg); mask-image: url(../icons/artifacts.svg); }
+.dv-sidebar li.dv-nav--configuration > a::before { -webkit-mask-image: url(../icons/configuration.svg); mask-image: url(../icons/configuration.svg); }
+.dv-sidebar li.dv-nav--dashboard > a::before { -webkit-mask-image: url(../icons/dashboard.svg); mask-image: url(../icons/dashboard.svg); }
+.dv-sidebar li.dv-nav--developments > a::before { -webkit-mask-image: url(../icons/developments.svg); mask-image: url(../icons/developments.svg); }
+.dv-sidebar li.dv-nav--diagrams > a::before { -webkit-mask-image: url(../icons/diagrams.svg); mask-image: url(../icons/diagrams.svg); }
+.dv-sidebar li.dv-nav--issues > a::before { -webkit-mask-image: url(../icons/issues.svg); mask-image: url(../icons/issues.svg); }
+.dv-sidebar li.dv-nav--knowledge > a::before { -webkit-mask-image: url(../icons/knowledge.svg); mask-image: url(../icons/knowledge.svg); }
+.dv-sidebar li.dv-nav--projects > a::before { -webkit-mask-image: url(../icons/projects.svg); mask-image: url(../icons/projects.svg); }
+.dv-sidebar li.dv-nav--quality > a::before { -webkit-mask-image: url(../icons/quality.svg); mask-image: url(../icons/quality.svg); }
+.dv-sidebar li.dv-nav--report > a::before { -webkit-mask-image: url(../icons/report.svg); mask-image: url(../icons/report.svg); }
+.dv-sidebar li.dv-nav--runs > a::before { -webkit-mask-image: url(../icons/runs.svg); mask-image: url(../icons/runs.svg); }
+.dv-sidebar li.dv-nav--tasks > a::before { -webkit-mask-image: url(../icons/tasks.svg); mask-image: url(../icons/tasks.svg); }
+.dv-sidebar li.dv-nav--timesheets > a::before { -webkit-mask-image: url(../icons/timesheets.svg); mask-image: url(../icons/timesheets.svg); }
+.dv-sidebar li.dv-nav--traceability > a::before { -webkit-mask-image: url(../icons/traceability.svg); mask-image: url(../icons/traceability.svg); }
+.dv-sidebar li.dv-nav--work > a::before { -webkit-mask-image: url(../icons/work.svg); mask-image: url(../icons/work.svg); }
