@@ -9,7 +9,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\divengine_database\Entity\SchemaDatabase;
 use Drupal\divengine_database\Entity\SchemaSnapshot;
-use Drupal\divengine_database\PageElementsTrait;
+use Drupal\divengine_core\PageElementsTrait;
 use Drupal\divengine_database\SchemaFacts;
 use Drupal\divengine_database\SnapshotImporter;
 use Drupal\divengine_process\Entity\DevelopmentInterface;

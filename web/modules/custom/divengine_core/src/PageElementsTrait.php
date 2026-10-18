@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Drupal\divengine_database;
+namespace Drupal\divengine_core;
 
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 
 /**
- * The Studio building blocks the database pages are made of.
+ * The Studio building blocks pages are made of: SDC components of
+ * divengine_core and small helpers around them.
  */
 trait PageElementsTrait {
 

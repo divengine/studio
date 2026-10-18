@@ -1,0 +1,162 @@
+<?php
+
+/**
+ * @file
+ * Schema of the code documentation: the facts of each snapshot.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ *
+ * One model for every language. A unit is a container (package, module,
+ * namespace, file); a symbol is anything declared in it (class, function,
+ * component, field, method…), members being symbols with a parent; params
+ * are parameters, type parameters and components; tags are doc tags;
+ * references are typed edges from a unit or a symbol to a target key,
+ * resolved inside the snapshot when it is finalized; endpoints are routes
+ * and HTTP calls found in the code.
+ */
+function divengine_codedocs_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $ref = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE];
+  $optional = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $key = ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''];
+  $optional_key = ['type' => 'varchar', 'length' => 1024, 'not null' => FALSE];
+  $name = ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''];
+  $kind = ['type' => 'varchar_ascii', 'length' => 32, 'not null' => TRUE, 'default' => ''];
+  $short = ['type' => 'varchar', 'length' => 128, 'not null' => FALSE];
+  $flag = ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0];
+  $int = ['type' => 'int', 'not null' => FALSE];
+  $text = ['type' => 'text', 'size' => 'big', 'not null' => FALSE];
+  return [
+    'divengine_codedoc_unit' => [
+      'description' => 'A container of a snapshot: package, module, namespace or file.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'unit_key' => $key,
+        'kind' => $kind,
+        'name' => $key,
+        'path' => $optional_key,
+        'parent_key' => $optional_key,
+        'language' => $kind,
+        'category' => $kind,
+        'is_test' => $flag,
+        'lines' => $int,
+        'doc_summary' => $text,
+        'doc_description' => $text,
+        'extra' => $text,
+        'fingerprint' => ['type' => 'varchar_ascii', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+      ],
+      'primary key' => ['id'],
+      // Key lengths are prefixes on MySQL and ignored on PostgreSQL.
+      'indexes' => ['snapshot_key' => ['sid', ['unit_key', 191]]],
+    ],
+    'divengine_codedoc_symbol' => [
+      'description' => 'Anything declared in a unit; members have a parent symbol.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'unit_id' => $ref,
+        'parent_id' => $optional,
+        'parent_key' => $optional_key,
+        'symbol_key' => $key,
+        'kind' => $kind,
+        'name' => $name,
+        'qualified_name' => $optional_key,
+        'visibility' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => FALSE],
+        'modifiers' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'signature' => $text,
+        'type_text' => $text,
+        'value' => $text,
+        'file' => $optional_key,
+        'line' => $int,
+        'end_line' => $int,
+        'exported' => $flag,
+        'generated' => $flag,
+        'deprecated' => $flag,
+        'documented' => $flag,
+        'doc_summary' => $text,
+        'doc_description' => $text,
+        'extra' => $text,
+        'fingerprint' => ['type' => 'varchar_ascii', 'length' => 40, 'not null' => TRUE, 'default' => ''],
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['unit' => ['unit_id'], 'parent' => ['parent_id'], 'snapshot_name' => ['sid', 'name'], 'snapshot_key' => ['sid', ['symbol_key', 191]], 'snapshot_qualified' => ['sid', ['qualified_name', 191]]],
+    ],
+    'divengine_codedoc_param' => [
+      'description' => 'A parameter, type parameter or component of a symbol.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'symbol_id' => $ref,
+        'position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'kind' => $kind,
+        'name' => $key,
+        'type_text' => $text,
+        'optional' => $flag,
+        'rest' => $flag,
+        'default_value' => $text,
+        'doc' => $text,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['symbol' => ['symbol_id']],
+    ],
+    'divengine_codedoc_tag' => [
+      'description' => 'A doc tag (@param, @return, @throws, @see…) of a unit or a symbol.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'unit_id' => $optional,
+        'symbol_id' => $optional,
+        'position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'kind' => $kind,
+        'name' => $short,
+        'text' => $text,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['symbol' => ['symbol_id'], 'unit' => ['unit_id']],
+    ],
+    'divengine_codedoc_ref' => [
+      'description' => 'A typed edge from a unit or symbol to a target, resolved inside the snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'unit_id' => $ref,
+        'symbol_id' => $optional,
+        'kind' => $kind,
+        'target_key' => $key,
+        'display' => $optional_key,
+        'external' => $flag,
+        'line' => $int,
+        'count' => ['type' => 'int', 'not null' => TRUE, 'default' => 1],
+        'detail' => $text,
+        'target_symbol_id' => $optional,
+        'target_unit_id' => $optional,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot_kind' => ['sid', 'kind'], 'source' => ['symbol_id'], 'unit' => ['unit_id'], 'target_symbol' => ['target_symbol_id'], 'target_unit' => ['target_unit_id']],
+    ],
+    'divengine_codedoc_endpoint' => [
+      'description' => 'A route or an HTTP call found in the code.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'unit_id' => $ref,
+        'symbol_id' => $optional,
+        'symbol_key' => $optional_key,
+        'kind' => $kind,
+        'method' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => FALSE],
+        'path' => $optional_key,
+        'full_path' => $optional_key,
+        'raw' => $text,
+        'line' => $int,
+        'detail' => $text,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot_kind' => ['sid', 'kind'], 'unit' => ['unit_id'], 'symbol' => ['symbol_id']],
+    ],
+  ];
+}

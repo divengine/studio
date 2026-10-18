@@ -1,0 +1,13 @@
+use code docs:
+  title: 'Read code docs'
+  description: 'Read the code documentation of the Developments the user can see.'
+manage code docs:
+  title: 'Manage code docs'
+  description: 'Register documentation sets and import snapshots into them.'
+publish code docs:
+  title: 'Publish code docs'
+  description: 'Push documentation snapshots through the HTTP API, e.g. for an extractor account in CI. Grants nothing else.'
+administer code docs:
+  title: 'Administer code docs'
+  description: 'Delete documentation sets and snapshots with history.'
+  restrict access: true

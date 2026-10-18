@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_database;
 
+use Drupal\divengine_core\PageElementsTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;

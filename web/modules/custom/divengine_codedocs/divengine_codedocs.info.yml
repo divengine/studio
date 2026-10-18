@@ -1,0 +1,10 @@
+name: 'Divengine Code Docs'
+type: module
+description: 'Technical documentation extracted from code, for any language, in one common model: units, symbols, members, parameters, doc tags, references and endpoints. Fed by extractors through a normalized contract (Javadoc and TypeScript extractors included), browsable, comparable between snapshots, linked to the code and readable by AI agents.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_process
+  - divengine_traceability
+  - divengine_source
