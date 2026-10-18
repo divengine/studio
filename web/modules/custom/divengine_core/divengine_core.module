@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Hooks of Divengine Core.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_form_FORM_ID_alter() for user_login_form.
+ *
+ * Logging in opens the Studio workspace, not the user profile, unless the
+ * login was asked for a specific page.
+ */
+function divengine_core_form_user_login_form_alter(array &$form, FormStateInterface $form_state): void {
+  $form['#submit'][] = 'divengine_core_user_login_redirect';
+}
+
+/**
+ * Submit handler: go to the front page (the workspace) after logging in.
+ */
+function divengine_core_user_login_redirect(array &$form, FormStateInterface $form_state): void {
+  if (!\Drupal::request()->query->has('destination')) {
+    $form_state->setRedirectUrl(Url::fromRoute('<front>'));
+  }
+}

@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Entries of a configuration overview page, as cards.
+ *
+ * Available variables:
+ * - content: List of entries, each with title, url and description.
+ */
+#}
+{% if content %}
+  <div class="dv-admin-cards">
+    {% for item in content %}
+      <a href="{{ item.url }}" class="dv-admin-card">
+        <span class="dv-admin-card__title">{{ item.title }}</span>
+        {% if item.description %}
+          <span class="dv-admin-card__description">{{ item.description }}</span>
+        {% endif %}
+      </a>
+    {% endfor %}
+  </div>
+{% endif %}

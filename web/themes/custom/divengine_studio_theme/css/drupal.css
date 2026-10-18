@@ -96,3 +96,19 @@
 .dv-comment__body p:last-child { margin-bottom: 0; }
 .dv-comment__links ul { display: flex; gap: 0.75rem; margin: 0.4rem 0 0; padding: 0; list-style: none; font-size: 0.8rem; }
 .dv-comments__form h2 { display: none; }
+
+/* Configuration overview pages: one card per entry. */
+.dv-admin-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: var(--dv-space-3, 0.75rem); }
+.dv-admin-card {
+  display: block;
+  padding: var(--dv-space-4, 1rem);
+  text-decoration: none;
+  color: inherit;
+  background: var(--dv-white, #fff);
+  border: 1px solid var(--dv-gray-200, #e5e7eb);
+  border-left: 4px solid var(--dv-navy, #335999);
+  border-radius: var(--dv-radius, 6px);
+}
+.dv-admin-card:hover, .dv-admin-card:focus { border-color: var(--dv-navy, #335999); }
+.dv-admin-card__title { display: block; font-weight: 700; color: var(--dv-navy, #335999); }
+.dv-admin-card__description { display: block; margin-top: 0.3rem; font-size: var(--dv-font-size-xs, 0.8rem); color: var(--dv-gray-500, #6b7280); }
