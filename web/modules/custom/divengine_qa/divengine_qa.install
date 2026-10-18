@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Install, update and requirements of Divengine QA.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_requirements().
+ *
+ * Test evidence is stored in the private file system: it is served only to
+ * those who may see the execution it belongs to.
+ */
+function divengine_qa_requirements(string $phase): array {
+  if (!in_array($phase, ['install', 'runtime'], TRUE)) {
+    return [];
+  }
+  $private = \Drupal::service('stream_wrapper_manager')->isValidScheme('private');
+  return [
+    'divengine_qa_private_files' => [
+      'title' => new TranslatableMarkup('QA evidence storage'),
+      'value' => $private ? new TranslatableMarkup('Private file system') : new TranslatableMarkup('Not configured'),
+      'description' => $private ? NULL : new TranslatableMarkup("Test evidence is stored privately. Set <code>\$settings['file_private_path']</code> in settings.php (for example <code>../private/files</code>) before installing Divengine QA."),
+      'severity' => $private ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_install().
+ *
+ * The Standard and Existing System Development Cases recommend the
+ * verification criteria. Developments using them see their case as
+ * outdated and re-apply it explicitly.
+ */
+function divengine_qa_install(bool $is_syncing): void {
+  if ($is_syncing) {
+    return;
+  }
+  $lines = [
+    ['target' => 'requirements_verified', 'milestone_type' => 'initial_operational_capability'],
+    ['target' => 'use_cases_verified', 'milestone_type' => 'product_release'],
+    ['target' => 'change_requests_evidenced', 'milestone_type' => ''],
+  ];
+  $storage = \Drupal::entityTypeManager()->getStorage('development_case');
+  foreach ($storage->loadMultiple(['standard', 'brownfield']) as $case) {
+    $current = $case->get('lines') ?: [];
+    $targets = array_map(fn ($line) => $line['element_type'] . ':' . $line['target'], $current);
+    $weight = $current ? max(array_column($current, 'weight')) + 1 : 0;
+    foreach ($lines as $line) {
+      if (!in_array('readiness:' . $line['target'], $targets, TRUE)) {
+        $current[] = ['element_type' => 'readiness', 'target' => $line['target'], 'milestone_type' => $line['milestone_type'], 'level' => 'recommended', 'note' => '', 'weight' => $weight++];
+      }
+    }
+    $case->set('lines', $current)->save();
+  }
+}

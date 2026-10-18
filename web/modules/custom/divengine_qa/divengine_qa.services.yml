@@ -23,3 +23,6 @@ services:
   divengine_qa.dashboard:
     class: Drupal\divengine_qa\QaDashboard
     arguments: ['@entity_type.manager']
+  divengine_qa.verification:
+    class: Drupal\divengine_qa\QaVerification
+    arguments: ['@entity_type.manager', '@current_user']

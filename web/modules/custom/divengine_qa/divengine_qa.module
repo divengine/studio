@@ -9,9 +9,12 @@ declare(strict_types=1);
 
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\divengine_qa\QaLogger;
 use Drupal\divengine_qa\QaPermissions;
+use Drupal\divengine_qa\QaVerification;
+use Drupal\divengine_qa\QaVocabulary;
 
 /**
  * QA entity types that belong to a Development.
@@ -48,11 +51,12 @@ function divengine_qa_divengine_process_scoped_types_alter(array &$types): void 
 /**
  * Implements hook_divengine_trace_end_types_alter().
  *
- * A test case verifies requirements and use cases; a QA Issue can be
- * traced to what it affects.
+ * Test plans, suites, cases and runs verify requirements, use cases,
+ * change requests and work products; a QA Issue can be traced to what it
+ * affects.
  */
 function divengine_qa_divengine_trace_end_types_alter(array &$types): void {
-  array_push($types, 'qa_test_case', 'qa_issue');
+  array_push($types, 'qa_test_plan', 'qa_test_suite', 'qa_test_case', 'qa_test_run', 'qa_issue');
 }
 
 /**
@@ -113,4 +117,62 @@ function divengine_qa_entity_update(EntityInterface $entity): void {
   if (isset(QaLogger::TRACKED[$entity->getEntityTypeId()])) {
     \Drupal::service('divengine_qa.logger')->track($entity);
   }
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function divengine_qa_entity_type_alter(array &$entity_types): void {
+  if (isset($entity_types['trace_link'])) {
+    $entity_types['trace_link']->addConstraint('QaVerificationTrace');
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * Requirements, use cases, change requests and work products show their
+ * verification, derived from the results of the tests that verify them.
+ */
+function divengine_qa_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($view_mode !== 'full' || !QaVerification::isVerifiable($entity) || !QaPermissions::isUser(\Drupal::currentUser())) {
+    return;
+  }
+  $verification = \Drupal::service('divengine_qa.verification')->verification($entity);
+  $tone = match ($verification['status']) {
+    'passed' => 'success',
+    'failed' => 'danger',
+    'partial' => 'warning',
+    default => 'neutral',
+  };
+  $rows = [];
+  foreach ($verification['tests'] as $test) {
+    $results = \Drupal::service('divengine_qa.verification')->results($test);
+    $status = QaVerification::status($results);
+    $rows[] = [
+      ['data' => $test->toLink()->toRenderable()],
+      ['data' => ['#plain_text' => (string) $test->getEntityType()->getSingularLabel()]],
+      ['data' => ['#plain_text' => implode(', ', array_map(fn ($pair) => $pair[0]->label() . ': ' . (QaVocabulary::lastResults()[$pair[1]] ?? $pair[1]), $results))]],
+      ['data' => ['#type' => 'component', '#component' => 'divengine_core:badge', '#props' => ['label' => (string) QaVerification::statuses()[$status], 'tone' => $status === 'passed' ? 'success' : ($status === 'failed' ? 'danger' : 'neutral')]]],
+    ];
+  }
+  $build['dv_qa_verification'] = [
+    '#type' => 'component',
+    '#component' => 'divengine_core:section',
+    '#props' => ['title' => (string) t('Verification'), 'count' => (string) count($rows), 'description' => (string) t('Derived from the results of the tests that verify this record.')],
+    '#slots' => [
+      'actions' => ['#type' => 'component', '#component' => 'divengine_core:badge', '#props' => ['label' => (string) QaVerification::statuses()[$verification['status']], 'tone' => $tone]],
+      'content' => [
+        '#type' => 'table',
+        '#header' => [t('Verified by'), t('Kind'), t('Results'), t('Status')],
+        '#rows' => $rows,
+        '#empty' => t('No test verifies this record. Add a "Verifies" trace from a test plan, suite, case or run.'),
+      ],
+    ],
+    '#weight' => 90,
+    '#cache' => [
+      'tags' => ['trace_link_list', 'qa_test_case_list', 'qa_test_run_list', 'qa_test_execution_list'],
+      'contexts' => ['user'],
+    ],
+  ];
 }
