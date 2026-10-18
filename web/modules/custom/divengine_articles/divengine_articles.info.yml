@@ -11,3 +11,4 @@ dependencies:
   - drupal:node
   - drupal:text
   - drupal:taxonomy
+  - drupal:menu_ui

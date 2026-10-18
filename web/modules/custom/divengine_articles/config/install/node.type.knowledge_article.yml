@@ -1,6 +1,12 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
 name: 'Knowledge article'
 type: knowledge_article
 description: 'A page of the knowledge base: how something works, a guide, a decision explained. Articles nest under other articles.'

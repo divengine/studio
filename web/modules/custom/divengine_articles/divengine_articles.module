@@ -147,4 +147,7 @@ function divengine_articles_form_node_form_alter(array &$form, \Drupal\Core\Form
   }
   $form['kb_development']['#states'] = ['visible' => [':input[name="kb_parent[0][target_id]"]' => ['value' => '']]];
   $form['kb_development']['widget']['#description'] = t('A sub-article belongs to the Development of its parent.');
+  // The same two columns as every Studio form: content left, properties
+  // right.
+  \Drupal\divengine_core\Form\EntityFormLayout::apply($form, $node, ['kb_parent', 'kb_development', 'kb_topics', 'kb_weight', 'status'], ['body']);
 }

@@ -53,6 +53,10 @@ config:
     # attaches them to the diagram lifecycle; attach them here.
     workflows.workflow.diagram_lifecycle:
       addDiagramTypes: '*'
+    # Articles are written in the Studio theme, like every other record.
+    node.settings:
+      simpleConfigUpdate:
+        use_admin_theme: false
     system.site:
       simpleConfigUpdate:
         name: 'Divengine Studio'
