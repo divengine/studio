@@ -1,0 +1,24 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Stepper
+status: stable
+description: 'The lifecycle at a glance: ordered steps that are done, current or upcoming, each with an optional note.'
+props:
+  type: object
+  required:
+    - steps
+  properties:
+    steps:
+      type: array
+      title: Steps
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          state:
+            type: string
+            enum: [done, current, upcoming]
+          note:
+            type: string
+          url:
+            type: string

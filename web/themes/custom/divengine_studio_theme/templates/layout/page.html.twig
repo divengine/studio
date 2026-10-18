@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * The Studio workspace: navigation sidebar, top bar and content.
+ *
+ * Anonymous visitors (the log in page) get a centered card without the
+ * sidebar.
+ */
+#}
+{% set anonymous = not logged_in %}
+<div class="dv-app{{ anonymous ? ' dv-app--anonymous' }}" data-dv-app>
+  {% if anonymous %}
+    <div class="dv-brand--large">
+      <img src="{{ file_url(directory ~ '/logo.svg') }}" alt="{{ 'Divengine Studio'|t }}" width="72" height="72">
+    </div>
+  {% else %}
+    <aside class="dv-sidebar" id="dv-sidebar" aria-label="{{ 'Studio navigation'|t }}">
+      {{ page.sidebar }}
+    </aside>
+  {% endif %}
+
+  <div class="dv-main">
+    {% if not anonymous %}
+      <header class="dv-topbar">
+        <button type="button" class="dv-topbar__toggle button button--small" aria-controls="dv-sidebar" aria-expanded="false" data-dv-sidebar-toggle>{{ 'Menu'|t }}</button>
+        {{ page.breadcrumb }}
+        <div class="dv-topbar__header">{{ page.header }}</div>
+      </header>
+    {% endif %}
+
+    <main class="dv-content" id="main-content" tabindex="-1">
+      {{ page.highlighted }}
+      {{ page.help }}
+      {{ page.content }}
+    </main>
+
+    {% if page.footer %}
+      <footer class="dv-footer">{{ page.footer }}</footer>
+    {% endif %}
+  </div>
+</div>

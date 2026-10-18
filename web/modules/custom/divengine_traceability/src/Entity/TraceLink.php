@@ -75,7 +75,7 @@ use Drupal\user\EntityOwnerTrait;
     'revision' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/view',
     'revision-revert-form' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/revert',
     'revision-delete-form' => '/trace-link/{trace_link}/revisions/{trace_link_revision}/delete',
-    'collection' => '/admin/divengine/trace-links',
+    'collection' => '/traces',
   ],
 )]
 class TraceLink extends ContentEntityBase implements TraceLinkInterface {

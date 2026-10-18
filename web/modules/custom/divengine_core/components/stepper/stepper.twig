@@ -1,0 +1,11 @@
+<ol{{ attributes.addClass('dv-stepper') }}>
+  {% for step in steps %}
+    <li class="dv-stepper__step dv-stepper__step--{{ step.state|default('upcoming') }}"{% if step.state == 'current' %} aria-current="step"{% endif %}>
+      <span class="dv-stepper__marker" aria-hidden="true">{{ loop.index }}</span>
+      <span class="dv-stepper__text">
+        {% if step.url %}<a class="dv-stepper__label" href="{{ step.url }}">{{ step.label }}</a>{% else %}<span class="dv-stepper__label">{{ step.label }}</span>{% endif %}
+        {% if step.note %}<span class="dv-stepper__note">{{ step.note }}</span>{% endif %}
+      </span>
+    </li>
+  {% endfor %}
+</ol>

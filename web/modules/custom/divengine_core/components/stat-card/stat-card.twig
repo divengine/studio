@@ -1,0 +1,6 @@
+{% set tag = url ? 'a' : 'div' %}
+<{{ tag }}{{ attributes.addClass('dv-stat-card', 'dv-stat-card--' ~ (tone|default('neutral'))) }}{% if url %} href="{{ url }}"{% endif %}>
+  <span class="dv-stat-card__label">{{ label }}</span>
+  <span class="dv-stat-card__value">{{ value }}</span>
+  {% if hint %}<span class="dv-stat-card__hint">{{ hint }}</span>{% endif %}
+</{{ tag }}>

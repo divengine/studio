@@ -4,19 +4,44 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_process;
 
-use Drupal\Component\Render\MarkupInterface;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Datetime\DateFormatterInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Link;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
+use Drupal\divengine_process\Lifecycle\LifecycleManager;
 use Drupal\divengine_process\Lifecycle\StatefulInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Shows a Development with its phases, milestones, iterations, roles and
- * process snapshot, and the actions that move it forward.
+ * Shows a Development as a workspace page.
+ *
+ * Status bar, lifecycle stepper and fact cards first, then the fields
+ * (objective, notes, members), then its iterations, team, milestones,
+ * phases and process snapshot. Everything is built from the Studio
+ * components of divengine_core, so any theme can restyle it.
  */
 class DevelopmentViewBuilder extends EntityViewBuilder {
+
+  protected LifecycleManager $lifecycle;
+
+  protected DevelopmentProcess $process;
+
+  protected DateFormatterInterface $dateFormatter;
+
+  protected EntityTypeManagerInterface $entityTypeManager;
+
+  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
+    $instance = parent::createInstance($container, $entity_type);
+    $instance->lifecycle = $container->get('divengine_process.lifecycle');
+    $instance->process = $container->get('divengine_process.development');
+    $instance->dateFormatter = $container->get('date.formatter');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
+    return $instance;
+  }
 
   public function buildComponents(array &$build, array $entities, array $displays, $view_mode): void {
     parent::buildComponents($build, $entities, $displays, $view_mode);
@@ -24,7 +49,7 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
       return;
     }
     foreach ($entities as $id => $development) {
-      $build[$id]['process'] = $this->buildProcess($development);
+      $build[$id] += $this->buildWorkspace($development);
       $build[$id]['#cache']['tags'] = array_merge($build[$id]['#cache']['tags'] ?? [], [
         'development_phase_list',
         'iteration_list',
@@ -37,218 +62,374 @@ class DevelopmentViewBuilder extends EntityViewBuilder {
   }
 
   /**
-   * The process sections of one Development.
+   * The workspace sections of one Development.
    */
-  protected function buildProcess(DevelopmentInterface $development): array {
-    /** @var \Drupal\divengine_process\DevelopmentProcess $process */
-    $process = \Drupal::service('divengine_process.development');
+  protected function buildWorkspace(DevelopmentInterface $development): array {
     $can_edit = $development->access('update');
+    $phases = $this->process->phases($development);
+    $milestones = $this->process->children($development, 'milestone');
+    $iterations = $this->process->children($development, 'iteration');
+    $assignments = $this->process->children($development, 'role_assignment');
 
-    $section = [
-      '#weight' => 100,
-    ];
-
-    $actions = $this->transitionLinks($development);
-    if ($can_edit) {
-      if ($development->getCase()) {
-        $actions[] = Link::fromTextAndUrl($this->t('Apply Development Case'), Url::fromRoute('divengine_process.apply_case', ['development' => $development->id()]))->toRenderable();
-      }
-      $actions[] = Link::fromTextAndUrl($this->t('Add missing standard phases'), Url::fromRoute('divengine_process.ensure_phases', ['development' => $development->id()]))->toRenderable();
-    }
-    $section['actions'] = $this->buttons($actions, -10);
+    $build['status'] = $this->statusBar($development, $can_edit) + ['#weight' => -100];
+    $build['lifecycle'] = $this->stepper($development, $phases, $milestones) + ['#weight' => -90];
+    $build['cards'] = $this->cards($development, $milestones, $assignments) + ['#weight' => -80];
 
     if ($development->isCaseOutdated()) {
-      $section['outdated'] = [
+      $build['outdated'] = [
         '#theme' => 'status_messages',
         '#message_list' => ['warning' => [$this->t('The Development Case changed after it was applied. This Development keeps its snapshot until you re-apply the case.')]],
-        '#weight' => -9,
+        '#status_headings' => ['warning' => $this->t('Warning message')],
+        '#weight' => -70,
       ];
     }
 
-    $date = fn (EntityInterface $e, string $field): string => (string) ($e->get($field)->value ?? '');
+    $build['columns'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['dv-columns']],
+      '#weight' => 100,
+      'iterations' => $this->iterations($development, $iterations, $can_edit),
+      'team' => $this->team($development, $assignments, $can_edit),
+    ];
+    $build['milestones'] = $this->milestones($milestones) + ['#weight' => 110];
+    $build['phases'] = $this->phases($phases) + ['#weight' => 120];
+    $build['policy'] = $this->policy($development) + ['#weight' => 130];
+    return $build;
+  }
 
-    $rows = [];
-    foreach ($process->phases($development) as $phase) {
-      $rows[] = [
-        $phase->label(),
-        Vocabulary::phaseStates()[$phase->get('state')->value] ?? '',
-        $date($phase, 'date_start'),
-        $date($phase, 'date_end'),
-        $phase->access('update') ? Link::fromTextAndUrl($this->t('Edit'), $phase->toUrl('edit-form'))->toString() : '',
-      ];
+  protected function statusBar(DevelopmentInterface $development, bool $can_edit): array {
+    $facts = [];
+    $add = function (TranslatableMarkup $label, ?string $value) use (&$facts): void {
+      if ($value !== NULL && $value !== '') {
+        $facts[] = ['label' => (string) $label, 'value' => $value];
+      }
+    };
+    $add($this->t('Responsible'), $development->get('responsible')->entity?->getDisplayName());
+    $add($this->t('Phase'), $development->get('current_phase')->entity?->label());
+    $add($this->t('Iteration'), $development->get('current_iteration')->entity?->label());
+    $start = $development->get('date_start')->value;
+    $end = $development->get('date_end')->value;
+    if ($start || $end) {
+      $add($this->t('Dates'), ($start ?: '…') . ' → ' . ($end ?: '…'));
     }
-    $section['phases'] = $this->table($this->t('Phases'), [$this->t('Phase'), $this->t('State'), $this->t('Start'), $this->t('End'), ''], $rows, 0);
 
-    $rows = [];
-    foreach ($process->children($development, 'milestone') as $milestone) {
-      /** @var \Drupal\divengine_process\Entity\Milestone $milestone */
-      $rows[] = [
-        $milestone->label(),
-        $milestone->get('phase')->entity?->label() ?? '',
-        $date($milestone, 'date_planned'),
-        $date($milestone, 'date_reached'),
-        $milestone->getStateLabel(),
-        \Drupal::service('renderer')->render($this->buttons($this->transitionLinks($milestone, TRUE), 0)),
-      ];
+    $actions = $this->transitionLinks($development, TRUE);
+    if ($can_edit) {
+      $actions[] = $this->button($this->t('Edit'), $development->toUrl('edit-form'));
     }
-    $section['milestones'] = $this->table($this->t('Milestones'), [$this->t('Milestone'), $this->t('Phase'), $this->t('Planned'), $this->t('Reached'), $this->t('State'), ''], $rows, 10);
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:status-bar',
+      '#props' => ['code' => $development->getCode(), 'facts' => $facts],
+      '#slots' => array_filter([
+        'badge' => $this->badge($development),
+        'actions' => $actions ? $this->actionsContainer($actions) : NULL,
+      ]),
+    ];
+  }
 
+  /**
+   * @param \Drupal\divengine_process\Entity\DevelopmentPhase[] $phases
+   * @param \Drupal\divengine_process\Entity\Milestone[] $milestones
+   */
+  protected function stepper(DevelopmentInterface $development, array $phases, array $milestones): array {
+    $current = (string) $development->get('current_phase')->target_id;
+    $closing = [];
+    foreach ($milestones as $milestone) {
+      $closing[(string) $milestone->get('phase')->target_id] = $milestone;
+    }
+    $steps = [];
+    $passed_current = FALSE;
+    foreach ($phases as $id => $phase) {
+      $is_current = (string) $id === $current;
+      // Phases before the current one are behind; a phase marked done is
+      // done wherever it is.
+      $state = match (TRUE) {
+        $is_current => 'current',
+        $phase->get('state')->value === 'done', !$passed_current && $current !== '' => 'done',
+        default => 'upcoming',
+      };
+      if ($is_current) {
+        $passed_current = TRUE;
+      }
+      $note = '';
+      if ($milestone = $closing[(string) $id] ?? NULL) {
+        $note = $milestone->getState() === 'reached'
+          ? (string) $this->t('@milestone reached', ['@milestone' => $milestone->label()])
+          : $milestone->label();
+      }
+      $steps[] = ['label' => $phase->label(), 'state' => $state, 'note' => $note];
+    }
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:stepper',
+      '#props' => ['steps' => $steps],
+    ];
+  }
+
+  /**
+   * @param \Drupal\divengine_process\Entity\Milestone[] $milestones
+   * @param \Drupal\Core\Entity\ContentEntityInterface[] $assignments
+   */
+  protected function cards(DevelopmentInterface $development, array $milestones, array $assignments): array {
+    $cards = ['#type' => 'container', '#attributes' => ['class' => ['dv-cards']]];
+
+    $next = NULL;
+    foreach ($milestones as $milestone) {
+      if ($milestone->getState() !== 'reached') {
+        $next = $milestone;
+        break;
+      }
+    }
+    $cards['milestone'] = $this->card(
+      $this->t('Next milestone'),
+      $next ? $next->label() : (string) $this->t('All reached'),
+      $next && $next->get('date_planned')->value ? (string) $this->t('Planned for @date', ['@date' => $next->get('date_planned')->value]) : '',
+      $next ? 'info' : 'success',
+    );
+
+    $iteration = $development->get('current_iteration')->entity;
+    $cards['iteration'] = $this->card(
+      $this->t('Current iteration'),
+      $iteration ? $iteration->label() : (string) $this->t('None started'),
+      $iteration ? (string) $this->t('In @phase', ['@phase' => $iteration->get('phase')->entity?->label() ?? '']) : (string) $this->t('Plan one and start it.'),
+      $iteration ? 'info' : 'warning',
+    );
+
+    $people = [];
+    foreach ($assignments as $assignment) {
+      $people[$assignment->get('user')->target_id] = TRUE;
+    }
+    $cards['team'] = $this->card(
+      $this->t('Team'),
+      (string) $this->formatPlural(count($people), '1 person', '@count people'),
+      (string) $this->formatPlural(count($assignments), '1 role assignment', '@count role assignments'),
+    );
+
+    $case = $development->getCase();
+    $cards['process'] = $this->card(
+      $this->t('Process'),
+      $case ? $case->label() : (string) $this->t('No case'),
+      $development->isCaseOutdated()
+        ? (string) $this->t('Case changed: re-apply it')
+        : ($case ? (string) $this->t('Version @version', ['@version' => $development->getCaseVersion()]) : ''),
+      $development->isCaseOutdated() ? 'warning' : 'neutral',
+    );
+    return $cards;
+  }
+
+  protected function iterations(DevelopmentInterface $development, array $iterations, bool $can_edit): array {
     $rows = [];
-    foreach ($process->children($development, 'iteration') as $iteration) {
+    foreach ($iterations as $iteration) {
       /** @var \Drupal\divengine_process\Entity\Iteration $iteration */
-      $links = $this->transitionLinks($iteration);
+      $actions = $this->transitionLinks($iteration);
       if ($iteration->access('update')) {
-        $links[] = Link::fromTextAndUrl($this->t('Edit'), $iteration->toUrl('edit-form'))->toRenderable();
+        $actions[] = $this->button($this->t('Edit'), $iteration->toUrl('edit-form'));
       }
       $rows[] = [
-        $iteration->label(),
-        $iteration->get('phase')->entity?->label() ?? '',
-        $iteration->getStateLabel(),
-        $date($iteration, 'date_start'),
-        $date($iteration, 'date_end'),
-        \Drupal::service('renderer')->render($this->buttons($links, 0)),
+        ['data' => ['#plain_text' => $iteration->label()]],
+        ['data' => ['#plain_text' => $iteration->get('phase')->entity?->label() ?? '']],
+        ['data' => $this->badge($iteration)],
+        ['data' => $this->actionsContainer($actions)],
       ];
     }
-    $section['iterations'] = $this->table($this->t('Iterations'), [$this->t('Iteration'), $this->t('Phase'), $this->t('State'), $this->t('Start'), $this->t('End'), ''], $rows, 20);
-    if ($can_edit) {
-      $section['iterations_add'] = $this->buttons([
-        Link::fromTextAndUrl($this->t('Add iteration'), Url::fromRoute('entity.iteration.add_form', [], ['query' => ['development' => $development->id()]]))->toRenderable(),
-      ], 21);
-    }
+    $actions = $can_edit
+      ? [$this->button($this->t('Add iteration'), Url::fromRoute('entity.iteration.add_form', [], ['query' => ['development' => $development->id()]]), TRUE)]
+      : [];
+    return $this->section($this->t('Iterations'), count($iterations), $this->table([$this->t('Iteration'), $this->t('Phase'), $this->t('State'), ''], $rows, $this->t('No iteration yet: plan the first one.')), $actions);
+  }
 
+  protected function team(DevelopmentInterface $development, array $assignments, bool $can_edit): array {
     $rows = [];
-    foreach ($process->children($development, 'role_assignment') as $assignment) {
-      $links = [];
+    foreach ($assignments as $assignment) {
+      $actions = [];
       if ($assignment->access('update')) {
-        $links[] = Link::fromTextAndUrl($this->t('Edit'), $assignment->toUrl('edit-form'))->toRenderable();
+        $actions[] = $this->button($this->t('Edit'), $assignment->toUrl('edit-form'));
       }
       if ($assignment->access('delete')) {
-        $links[] = Link::fromTextAndUrl($this->t('Remove'), $assignment->toUrl('delete-form'))->toRenderable();
+        $actions[] = $this->button($this->t('Remove'), $assignment->toUrl('delete-form'));
       }
       $rows[] = [
-        $assignment->get('process_role')->entity?->label() ?? '',
-        $assignment->get('user')->entity?->getDisplayName() ?? '',
-        $assignment->get('is_primary')->value ? $this->t('Primary') : '',
-        $date($assignment, 'date_from'),
-        $date($assignment, 'date_to'),
-        \Drupal::service('renderer')->render($this->buttons($links, 0)),
+        ['data' => ['#plain_text' => $assignment->get('process_role')->entity?->label() ?? '']],
+        ['data' => ['#plain_text' => $assignment->get('user')->entity?->getDisplayName() ?? '']],
+        ['data' => $assignment->get('is_primary')->value ? $this->badgeElement($this->t('Primary'), 'info') : []],
+        ['data' => $this->actionsContainer($actions)],
       ];
     }
-    $section['roles'] = $this->table($this->t('Process roles'), [$this->t('Role'), $this->t('User'), '', $this->t('From'), $this->t('To'), ''], $rows, 30);
-    if ($can_edit) {
-      $section['roles_add'] = $this->buttons([
-        Link::fromTextAndUrl($this->t('Assign a role'), Url::fromRoute('entity.role_assignment.add_form', [], ['query' => ['development' => $development->id()]]))->toRenderable(),
-      ], 31);
-    }
+    $actions = $can_edit
+      ? [$this->button($this->t('Assign a role'), Url::fromRoute('entity.role_assignment.add_form', [], ['query' => ['development' => $development->id()]]), TRUE)]
+      : [];
+    return $this->section($this->t('Team'), count($assignments), $this->table([$this->t('Role'), $this->t('Person'), '', ''], $rows, $this->t('Nobody plays a process role yet.')), $actions);
+  }
 
-    $section['policy'] = $this->policy($development, 40);
-    return $section;
+  /**
+   * @param \Drupal\divengine_process\Entity\Milestone[] $milestones
+   */
+  protected function milestones(array $milestones): array {
+    $rows = [];
+    foreach ($milestones as $milestone) {
+      $actions = $this->transitionLinks($milestone);
+      if ($milestone->access('update')) {
+        $actions[] = $this->button($this->t('Edit'), $milestone->toUrl('edit-form'));
+      }
+      $rows[] = [
+        ['data' => ['#plain_text' => $milestone->label()]],
+        ['data' => ['#plain_text' => $milestone->get('phase')->entity?->label() ?? '']],
+        ['data' => ['#plain_text' => (string) ($milestone->get('date_planned')->value ?? '')]],
+        ['data' => ['#plain_text' => (string) ($milestone->get('date_reached')->value ?? '')]],
+        ['data' => $this->badge($milestone)],
+        ['data' => $this->actionsContainer($actions)],
+      ];
+    }
+    return $this->section($this->t('Milestones'), count($milestones), $this->table([$this->t('Milestone'), $this->t('Closes'), $this->t('Planned'), $this->t('Reached'), $this->t('State'), ''], $rows, $this->t('No milestone.')));
+  }
+
+  protected function phases(array $phases): array {
+    $rows = [];
+    foreach ($phases as $phase) {
+      $rows[] = [
+        ['data' => ['#plain_text' => $phase->label()]],
+        ['data' => $this->badgeElement(Vocabulary::phaseStates()[$phase->get('state')->value] ?? '', $phase->get('state')->value === 'active' ? 'info' : 'neutral')],
+        ['data' => ['#plain_text' => (string) ($phase->get('date_start')->value ?? '')]],
+        ['data' => ['#plain_text' => (string) ($phase->get('date_end')->value ?? '')]],
+        ['data' => $phase->access('update') ? $this->actionsContainer([$this->button($this->t('Edit'), $phase->toUrl('edit-form'))]) : []],
+      ];
+    }
+    return $this->section($this->t('Phases'), count($phases), $this->table([$this->t('Phase'), $this->t('State'), $this->t('Start'), $this->t('End'), ''], $rows, $this->t('No phase.')));
   }
 
   /**
    * The process snapshot: case, applied version and lines.
    */
-  protected function policy(DevelopmentInterface $development, int $weight): array {
+  protected function policy(DevelopmentInterface $development): array {
     $case = $development->getCase();
     $applied = $development->get('case_applied')->value;
-    $summary = $case
-      ? $this->t('Case %case, version @version applied on @date (current version: @current).', [
-        '%case' => $case->label(),
-        '@version' => $development->getCaseVersion() ?? '-',
-        '@date' => $applied ? \Drupal::service('date.formatter')->format((int) $applied, 'short') : '-',
-        '@current' => $case->getVersion(),
-      ])
-      : $this->t('No Development Case.');
-
     $types = Vocabulary::caseElementTypes();
     $levels = Vocabulary::levels();
-    $milestones = Vocabulary::milestoneTypes();
+    $milestone_types = Vocabulary::milestoneTypes();
     $entity_types = Vocabulary::caseElementEntityTypes();
     $rows = [];
     foreach ($development->getPolicy() as $line) {
       $label = $line['target'];
-      if (isset($entity_types[$line['element_type']]) && ($target = \Drupal::entityTypeManager()->getStorage($entity_types[$line['element_type']])->load($line['target']))) {
+      if (isset($entity_types[$line['element_type']]) && ($target = $this->entityTypeManager->getStorage($entity_types[$line['element_type']])->load($line['target']))) {
         $label = $target->label();
       }
       $rows[] = [
-        $types[$line['element_type']] ?? $line['element_type'],
-        $label,
-        $line['milestone_type'] ? ($milestones[$line['milestone_type']] ?? $line['milestone_type']) : $this->t('Every milestone'),
-        $levels[$line['level']] ?? $line['level'],
-        $line['note'],
+        ['data' => ['#plain_text' => (string) ($types[$line['element_type']] ?? $line['element_type'])]],
+        ['data' => ['#plain_text' => (string) $label]],
+        ['data' => ['#plain_text' => (string) ($line['milestone_type'] ? ($milestone_types[$line['milestone_type']] ?? $line['milestone_type']) : $this->t('Every milestone'))]],
+        ['data' => $this->badgeElement($levels[$line['level']] ?? $line['level'], $line['level'] === 'required' ? 'info' : 'neutral')],
       ];
     }
-    return [
-      '#type' => 'details',
-      '#title' => $this->t('Process (Development Case snapshot)'),
-      '#weight' => $weight,
+
+    $actions = [];
+    if ($case && $development->access('update')) {
+      $actions[] = $this->button($this->t('Apply Development Case'), Url::fromRoute('divengine_process.apply_case', ['development' => $development->id()]));
+      $actions[] = $this->button($this->t('Add missing phases'), Url::fromRoute('divengine_process.ensure_phases', ['development' => $development->id()]));
+    }
+    $summary = $case
+      ? $this->t('%case, version @version, applied on @date.', [
+        '%case' => $case->label(),
+        '@version' => $development->getCaseVersion() ?? '-',
+        '@date' => $applied ? $this->dateFormatter->format((int) $applied, 'short') : '-',
+      ])
+      : $this->t('No Development Case: choose one when editing the Development.');
+
+    return $this->section($this->t('Process'), count($rows), [
       'summary' => ['#markup' => '<p>' . $summary . '</p>'],
       'lines' => [
-        '#type' => 'table',
-        '#header' => [$this->t('Element type'), $this->t('Element'), $this->t('Milestone'), $this->t('Level'), $this->t('Note')],
-        '#rows' => $rows,
-        '#empty' => $this->t('No policy: apply a Development Case.'),
+        '#type' => 'details',
+        '#title' => $this->t('Tailoring snapshot'),
+        'table' => $this->table([$this->t('Element type'), $this->t('Element'), $this->t('Milestone'), $this->t('Level')], $rows, $this->t('No policy: apply a Development Case.')),
       ],
-    ];
+    ], $actions);
   }
 
   /**
-   * Links to the transitions the user may apply now.
+   * Buttons for the transitions the user may apply now.
    *
    * @return array[]
    */
-  protected function transitionLinks(StatefulInterface $entity, bool $small = FALSE): array {
+  protected function transitionLinks(StatefulInterface $entity, bool $primary_first = FALSE): array {
     if (!$entity->access('update')) {
       return [];
     }
     $links = [];
-    foreach (\Drupal::service('divengine_process.lifecycle')->available($entity) as $id => $transition) {
-      $url = Url::fromRoute('divengine_process.transition', [
+    foreach ($this->lifecycle->available($entity) as $id => $transition) {
+      $links[] = $this->button($transition->label, Url::fromRoute('divengine_process.transition', [
         'entity_type' => $entity->getEntityTypeId(),
         'entity' => $entity->id(),
         'transition' => $id,
-      ]);
-      $links[] = Link::fromTextAndUrl($transition->label, $url)->toRenderable();
+      ]), $primary_first && !$links);
     }
     return $links;
   }
 
   /**
-   * Renders links as a row of small buttons.
+   * The state of a record as a badge.
    */
-  protected function buttons(array $links, int $weight): array {
-    foreach ($links as &$link) {
-      $link['#attributes']['class'][] = 'button';
-      $link['#attributes']['class'][] = 'button--small';
-    }
+  protected function badge(StatefulInterface $entity): array {
+    $state = $entity->getState();
+    $tone = match ($state) {
+      'active', 'reached' => 'success',
+      'on_hold' => 'warning',
+      'cancelled' => 'danger',
+      'closed', 'done' => 'info',
+      default => 'neutral',
+    };
+    return $this->badgeElement($entity::stateLabels()[$state] ?? $state, $tone);
+  }
+
+  protected function badgeElement(string|\Stringable $label, string $tone = 'neutral'): array {
     return [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['divengine-process-actions']],
-      '#weight' => $weight,
-      'links' => $links,
+      '#type' => 'component',
+      '#component' => 'divengine_core:badge',
+      '#props' => ['label' => (string) $label, 'tone' => $tone],
     ];
   }
 
-  protected function table($caption, array $header, array $rows, int $weight): array {
-    foreach ($rows as &$row) {
-      foreach ($row as &$cell) {
-        // Links, rendered buttons and translations are safe markup; values
-        // typed by users are plain text.
-        if ($cell instanceof MarkupInterface) {
-          $cell = ['data' => ['#markup' => $cell]];
-        }
-        elseif (is_string($cell)) {
-          $cell = ['data' => ['#plain_text' => $cell]];
-        }
-      }
-    }
+  protected function card(string|\Stringable $label, string $value, string $hint = '', string $tone = 'neutral'): array {
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:stat-card',
+      '#props' => ['label' => (string) $label, 'value' => $value, 'hint' => $hint, 'tone' => $tone],
+    ];
+  }
+
+  protected function section(string|\Stringable $title, int $count, array $content, array $actions = []): array {
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:section',
+      '#props' => ['title' => (string) $title, 'count' => (string) $count],
+      '#slots' => array_filter([
+        'content' => $content,
+        'actions' => $actions ? $this->actionsContainer($actions) : NULL,
+      ]),
+    ];
+  }
+
+  protected function table(array $header, array $rows, string|\Stringable $empty): array {
     return [
       '#type' => 'table',
-      '#caption' => $caption,
       '#header' => $header,
       '#rows' => $rows,
-      '#empty' => $this->t('None.'),
-      '#weight' => $weight,
+      '#empty' => $empty,
+    ];
+  }
+
+  protected function button(string|\Stringable $label, Url $url, bool $primary = FALSE): array {
+    $classes = ['button', 'button--small'];
+    if ($primary) {
+      $classes[] = 'button--primary';
+    }
+    return Link::fromTextAndUrl($label, $url)->toRenderable() + ['#attributes' => ['class' => $classes]];
+  }
+
+  protected function actionsContainer(array $actions): array {
+    return [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['divengine-process-actions']],
+      'actions' => $actions,
     ];
   }
 

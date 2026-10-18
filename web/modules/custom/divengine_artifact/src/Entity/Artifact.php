@@ -79,7 +79,7 @@ use Drupal\user\EntityOwnerTrait;
     'revision' => '/artifact/{artifact}/revisions/{artifact_revision}/view',
     'revision-revert-form' => '/artifact/{artifact}/revisions/{artifact_revision}/revert',
     'revision-delete-form' => '/artifact/{artifact}/revisions/{artifact_revision}/delete',
-    'collection' => '/admin/divengine/artifacts',
+    'collection' => '/artifacts',
   ],
 )]
 class Artifact extends ContentEntityBase implements ArtifactInterface {

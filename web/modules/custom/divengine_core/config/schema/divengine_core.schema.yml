@@ -1,0 +1,10 @@
+field.formatter.settings.divengine_badge:
+  type: mapping
+  label: 'Badge formatter settings'
+  mapping:
+    tones:
+      type: sequence
+      label: 'Tone per value'
+      sequence:
+        type: string
+        label: 'Tone'

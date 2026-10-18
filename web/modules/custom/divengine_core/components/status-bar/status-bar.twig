@@ -1,0 +1,14 @@
+<div{{ attributes.addClass('dv-status-bar') }}>
+  <div class="dv-status-bar__identity">
+    {% if code %}<span class="dv-status-bar__code">{{ code }}</span>{% endif %}
+    {% block badge %}{% endblock %}
+  </div>
+  {% if facts %}
+    <dl class="dv-status-bar__facts">
+      {% for fact in facts %}
+        <div class="dv-status-bar__fact"><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>
+      {% endfor %}
+    </dl>
+  {% endif %}
+  <div class="dv-status-bar__actions">{% block actions %}{% endblock %}</div>
+</div>

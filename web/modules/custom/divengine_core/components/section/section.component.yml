@@ -1,0 +1,18 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Section
+status: stable
+description: 'A titled block of a record page, with optional actions next to the title.'
+props:
+  type: object
+  properties:
+    title:
+      type: string
+      title: Title
+    count:
+      type: string
+      title: Count shown next to the title
+slots:
+  content:
+    title: Content
+  actions:
+    title: Actions

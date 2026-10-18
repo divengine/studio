@@ -1,0 +1,26 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Stat card
+status: stable
+description: 'A fact at a glance: a label, a value and a hint, optionally linking to the details. Never a score.'
+props:
+  type: object
+  required:
+    - label
+  properties:
+    label:
+      type: string
+      title: Label
+    value:
+      type: string
+      title: Value
+    hint:
+      type: string
+      title: Hint
+    url:
+      type: string
+      title: Link
+    tone:
+      type: string
+      title: Tone
+      enum: [neutral, info, success, warning, danger]
+      default: neutral

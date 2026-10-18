@@ -40,7 +40,7 @@ each notation is a separate module (`divengine_modeler_bpmn`, `divengine_modeler
   (`divengine_modeler.settings:link_target_types`, by default artifact, diagram, node,
   taxonomy term, media) and resolution of pasted paths, local URLs or entity URIs, always
   limited to what the user can view.
-- **Listing**: Views `divengine_diagrams` at `/admin/divengine/diagrams` (search by name or
+- **Listing**: Views `divengine_diagrams` at `/diagrams` (search by name or
   element text, type and state filters).
 
 ## Permissions

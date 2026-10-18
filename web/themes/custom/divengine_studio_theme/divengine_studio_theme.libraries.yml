@@ -1,0 +1,16 @@
+global:
+  version: VERSION
+  css:
+    base:
+      css/tokens.css: {}
+      css/base.css: {}
+    layout:
+      css/layout.css: {}
+    component:
+      css/navigation.css: {}
+      css/drupal.css: {}
+  js:
+    js/sidebar.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

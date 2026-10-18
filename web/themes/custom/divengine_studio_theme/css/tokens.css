@@ -1,0 +1,54 @@
+/**
+ * Divengine identity: navy, black, gray and white; Verdana.
+ *
+ * Components read these custom properties, so this file is the single place
+ * to change the look.
+ */
+:root {
+  --dv-navy: #13294b;
+  --dv-navy-700: #0d1d36;
+  --dv-navy-300: #8ea2c3;
+  --dv-navy-200: #b9c5d9;
+  --dv-navy-50: #eef2f8;
+  --dv-black: #111111;
+  --dv-white: #ffffff;
+  --dv-gray-900: #1f2329;
+  --dv-gray-700: #3f4550;
+  --dv-gray-600: #5b6270;
+  --dv-gray-400: #9aa1ac;
+  --dv-gray-300: #d5d8dd;
+  --dv-gray-200: #e4e6ea;
+  --dv-gray-100: #f2f3f5;
+  --dv-gray-50: #f7f8fa;
+
+  /* Semantic tones, kept muted so navy stays the only accent. */
+  --dv-success: #22663f;
+  --dv-success-bg: #ecf6f0;
+  --dv-success-border: #b5dcc4;
+  --dv-warning: #8a5a00;
+  --dv-warning-bg: #fdf5e3;
+  --dv-warning-border: #ecd29a;
+  --dv-danger: #a3261b;
+  --dv-danger-bg: #fcefed;
+  --dv-danger-border: #efbdb7;
+
+  --dv-font: Verdana, Geneva, "DejaVu Sans", sans-serif;
+  --dv-font-mono: "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  --dv-font-size-xs: 0.6875rem;
+  --dv-font-size-sm: 0.8125rem;
+  --dv-font-size-md: 0.9375rem;
+  --dv-font-size-lg: 1.25rem;
+  --dv-font-size-xl: 1.625rem;
+
+  --dv-space-1: 0.25rem;
+  --dv-space-2: 0.5rem;
+  --dv-space-3: 0.75rem;
+  --dv-space-4: 1rem;
+  --dv-space-5: 1.5rem;
+  --dv-space-6: 2rem;
+
+  --dv-radius: 6px;
+  --dv-radius-pill: 999px;
+  --dv-shadow: 0 1px 3px rgb(17 17 17 / 10%);
+  --dv-sidebar-width: 15rem;
+}

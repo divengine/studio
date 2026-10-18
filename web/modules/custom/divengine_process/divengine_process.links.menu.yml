@@ -53,3 +53,10 @@ entity.development.collection:
   route_name: entity.development.collection
   parent: divengine.admin
   weight: 1
+
+divengine_process.studio.developments:
+  title: 'Developments'
+  description: 'The developments you work on.'
+  route_name: entity.development.collection
+  menu_name: studio
+  weight: 0

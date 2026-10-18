@@ -79,15 +79,15 @@ use Drupal\user\EntityOwnerTrait;
     'ProcessUniqueFields' => ['fields' => ['code'], 'message' => 'This code is already in use.'],
   ],
   links: [
-    'canonical' => '/process/development/{development}',
-    'add-form' => '/process/development/add',
-    'edit-form' => '/process/development/{development}/edit',
-    'delete-form' => '/process/development/{development}/delete',
-    'collection' => '/process/developments',
-    'version-history' => '/process/development/{development}/revisions',
-    'revision' => '/process/development/{development}/revisions/{development_revision}/view',
-    'revision-revert-form' => '/process/development/{development}/revisions/{development_revision}/revert',
-    'revision-delete-form' => '/process/development/{development}/revisions/{development_revision}/delete',
+    'canonical' => '/development/{development}',
+    'add-form' => '/development/add',
+    'edit-form' => '/development/{development}/edit',
+    'delete-form' => '/development/{development}/delete',
+    'collection' => '/developments',
+    'version-history' => '/development/{development}/revisions',
+    'revision' => '/development/{development}/revisions/{development_revision}/view',
+    'revision-revert-form' => '/development/{development}/revisions/{development_revision}/revert',
+    'revision-delete-form' => '/development/{development}/revisions/{development_revision}/delete',
   ],
 )]
 class Development extends ContentEntityBase implements DevelopmentInterface {
@@ -148,15 +148,22 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
     return $this->get('policy')->first()?->getValue()['lines'] ?? [];
   }
 
+  /**
+   * Default value callback: the default Development Case.
+   *
+   * @return array<int, array<string, string>>
+   */
+  public static function getDefaultCase(): array {
+    $case = DevelopmentCase::loadDefault();
+    return $case ? [['target_id' => $case->id()]] : [];
+  }
+
   public function preSave(EntityStorageInterface $storage): void {
     parent::preSave($storage);
     $this->set('name', trim((string) $this->get('name')->value));
     if ($this->isNew()) {
       if ($this->getCode() === '') {
         $this->set('code', \Drupal::service('divengine_process.sequence')->next('DEV'));
-      }
-      if ($this->get('case')->isEmpty() && ($case = DevelopmentCase::loadDefault())) {
-        $this->set('case', $case->id());
       }
     }
   }
@@ -180,24 +187,32 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
       ->setLabel(new TranslatableMarkup('Code'))
       ->setDescription(new TranslatableMarkup('Assigned on creation, e.g. DEV-0001.'))
       ->setSetting('max_length', 32)
-      ->setDisplayOptions('view', ['label' => 'inline', 'type' => 'string', 'weight' => -30])
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['name'] = ProcessFields::string(new TranslatableMarkup('Name'), -25, TRUE)->setRevisionable(TRUE);
+    $fields['name'] = ProcessFields::string(new TranslatableMarkup('Name'), -25, TRUE)
+      ->setDisplayOptions('view', ['region' => 'hidden'])
+      ->setRevisionable(TRUE);
 
     $fields['responsible'] = ProcessFields::user(new TranslatableMarkup('Responsible'), -20)
       ->setDescription(new TranslatableMarkup('Accountable for this Development.'))
       ->setDefaultValueCallback(static::class . '::getDefaultEntityOwner')
+      ->setDisplayOptions('view', ['region' => 'hidden'])
       ->setRevisionable(TRUE);
 
     $fields['members'] = ProcessFields::user(new TranslatableMarkup('Members'), -19, TRUE)
       ->setDescription(new TranslatableMarkup('Who else sees and works on this Development and everything in it. Process roles grant no access; membership does.'))
       ->setRevisionable(TRUE);
 
-    $fields['state'] = ProcessFields::list(new TranslatableMarkup('State'), 'planned', -18, FALSE)->setRevisionable(TRUE);
+    $fields['state'] = ProcessFields::list(new TranslatableMarkup('State'), 'planned', -18, FALSE)
+      ->setDisplayOptions('view', ['region' => 'hidden'])
+      ->setRevisionable(TRUE);
 
-    $fields['date_start'] = ProcessFields::date(new TranslatableMarkup('Start date'), -15)->setRevisionable(TRUE);
-    $fields['date_end'] = ProcessFields::date(new TranslatableMarkup('End date'), -14)->setRevisionable(TRUE);
+    $fields['date_start'] = ProcessFields::date(new TranslatableMarkup('Start date'), -15)
+      ->setDisplayOptions('view', ['region' => 'hidden'])
+      ->setRevisionable(TRUE);
+    $fields['date_end'] = ProcessFields::date(new TranslatableMarkup('End date'), -14)
+      ->setDisplayOptions('view', ['region' => 'hidden'])
+      ->setRevisionable(TRUE);
 
     $fields['objective'] = ProcessFields::text(new TranslatableMarkup('Objective'), -10)
       ->setDescription(new TranslatableMarkup('What this Development must achieve.'))
@@ -208,17 +223,17 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
       ->setLabel(new TranslatableMarkup('Current phase'))
       ->setSetting('target_type', 'development_phase')
       ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', ['label' => 'inline', 'type' => 'entity_reference_label', 'weight' => -17, 'settings' => ['link' => FALSE]])
       ->setDisplayConfigurable('view', TRUE);
     $fields['current_iteration'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(new TranslatableMarkup('Current iteration'))
       ->setSetting('target_type', 'iteration')
       ->setRevisionable(TRUE)
-      ->setDisplayOptions('view', ['label' => 'inline', 'type' => 'entity_reference_label', 'weight' => -16])
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['case'] = ProcessFields::reference(new TranslatableMarkup('Development Case'), 'development_case', -5)
       ->setDescription(new TranslatableMarkup('The tailoring this Development follows. Changing it takes effect when the case is applied.'))
+      ->setDefaultValueCallback(static::class . '::getDefaultCase')
+      ->setDisplayOptions('view', ['region' => 'hidden'])
       ->setRevisionable(TRUE);
     $fields['case_version'] = BaseFieldDefinition::create('integer')
       ->setLabel(new TranslatableMarkup('Applied version'))

@@ -86,7 +86,7 @@ use Drupal\views\EntityViewsData;
     'revision' => '/diagram/{diagram}/revisions/{diagram_revision}/view',
     'revision-revert-form' => '/diagram/{diagram}/revisions/{diagram_revision}/revert',
     'revision-delete-form' => '/diagram/{diagram}/revisions/{diagram_revision}/delete',
-    'collection' => '/admin/divengine/diagrams',
+    'collection' => '/diagrams',
   ],
 )]
 class Diagram extends ContentEntityBase implements DiagramInterface {

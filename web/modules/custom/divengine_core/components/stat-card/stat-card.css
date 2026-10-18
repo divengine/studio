@@ -1,0 +1,25 @@
+.dv-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--dv-space-1, 0.25rem);
+  padding: var(--dv-space-4, 1rem);
+  border: 1px solid var(--dv-gray-200, #e4e6ea);
+  border-left: 4px solid var(--dv-stat-accent, var(--dv-gray-300, #d5d8dd));
+  border-radius: var(--dv-radius, 6px);
+  background: var(--dv-white, #fff);
+  color: inherit;
+  text-decoration: none;
+}
+a.dv-stat-card:hover, a.dv-stat-card:focus { border-color: var(--dv-navy, #13294b); box-shadow: var(--dv-shadow, 0 1px 3px rgb(0 0 0 / 8%)); }
+.dv-stat-card__label {
+  font-size: var(--dv-font-size-xs, 0.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dv-gray-600, #5b6270);
+}
+.dv-stat-card__value { font-size: var(--dv-font-size-lg, 1.25rem); font-weight: 700; color: var(--dv-black, #111); }
+.dv-stat-card__hint { font-size: var(--dv-font-size-sm, 0.875rem); color: var(--dv-gray-600, #5b6270); }
+.dv-stat-card--info { --dv-stat-accent: var(--dv-navy, #13294b); }
+.dv-stat-card--success { --dv-stat-accent: var(--dv-success, #22663f); }
+.dv-stat-card--warning { --dv-stat-accent: var(--dv-warning, #b7791f); }
+.dv-stat-card--danger { --dv-stat-accent: var(--dv-danger, #a3261b); }

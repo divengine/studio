@@ -11,3 +11,10 @@ entity.artifact_type.collection:
   route_name: entity.artifact_type.collection
   parent: divengine.admin
   weight: 10
+
+divengine_artifact.studio.artifacts:
+  title: 'Artifacts'
+  description: 'Requirements, decisions, risks, test cases and other engineering records.'
+  route_name: entity.artifact.collection
+  menu_name: studio
+  weight: 10

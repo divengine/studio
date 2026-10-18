@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+id: studio
+label: 'Studio'
+description: 'Main navigation of the Divengine Studio workspace.'
+locked: true

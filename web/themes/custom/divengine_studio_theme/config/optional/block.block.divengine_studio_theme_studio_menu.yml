@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - system.menu.studio
+  module:
+  - system
+  theme:
+  - divengine_studio_theme
+id: divengine_studio_theme_studio_menu
+theme: divengine_studio_theme
+region: sidebar
+weight: -10
+provider: null
+plugin: system_menu_block:studio
+settings:
+  id: system_menu_block:studio
+  label: Workspace
+  label_display: visible
+  provider: system
+  level: 1
+  depth: 1
+  expand_all_items: false
+visibility: {}

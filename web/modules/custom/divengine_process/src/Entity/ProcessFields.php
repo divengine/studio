@@ -56,7 +56,7 @@ final class ProcessFields {
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
       ->setCardinality($multiple ? FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED : 1)
-      ->setDisplayOptions('form', ['type' => 'entity_reference_autocomplete', 'weight' => $weight])
+      ->setDisplayOptions('form', ['type' => $multiple ? 'entity_reference_autocomplete_tags' : 'entity_reference_autocomplete', 'weight' => $weight])
       ->setDisplayOptions('view', ['label' => 'inline', 'type' => 'entity_reference_label', 'weight' => $weight, 'settings' => ['link' => FALSE]])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);

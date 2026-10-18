@@ -1,0 +1,41 @@
+.dv-stepper {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: var(--dv-space-2, 0.5rem);
+  padding: 0;
+  margin: 0 0 var(--dv-space-5, 1.5rem);
+  list-style: none;
+  counter-reset: none;
+}
+.dv-stepper__step {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--dv-space-2, 0.5rem);
+  padding: var(--dv-space-3, 0.75rem);
+  border-top: 4px solid var(--dv-gray-200, #e4e6ea);
+  background: var(--dv-white, #fff);
+}
+.dv-stepper__marker {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--dv-gray-300, #d5d8dd);
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: var(--dv-font-size-sm, 0.875rem);
+  color: var(--dv-gray-600, #5b6270);
+  background: var(--dv-white, #fff);
+}
+.dv-stepper__text { display: flex; flex-direction: column; min-width: 0; }
+.dv-stepper__label { font-weight: 700; color: var(--dv-black, #111); text-decoration: none; }
+.dv-stepper__note { font-size: var(--dv-font-size-xs, 0.75rem); color: var(--dv-gray-600, #5b6270); }
+.dv-stepper__step--done { border-top-color: var(--dv-navy-300, #8ea2c3); }
+.dv-stepper__step--done .dv-stepper__marker { border-color: var(--dv-navy-300, #8ea2c3); color: var(--dv-navy, #13294b); }
+.dv-stepper__step--current { border-top-color: var(--dv-navy, #13294b); background: var(--dv-navy-50, #eef2f8); }
+.dv-stepper__step--current .dv-stepper__marker { border-color: var(--dv-navy, #13294b); color: var(--dv-white, #fff); background: var(--dv-navy, #13294b); }
+@media (max-width: 48rem) {
+  .dv-stepper { grid-auto-flow: row; }
+}

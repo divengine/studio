@@ -1,0 +1,17 @@
+.dv-badge {
+  display: inline-block;
+  padding: 0.15em 0.6em;
+  border: 1px solid var(--dv-badge-border, currentColor);
+  border-radius: var(--dv-radius-pill, 999px);
+  font-size: var(--dv-font-size-xs, 0.75rem);
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+  color: var(--dv-badge-color, #333);
+  background: var(--dv-badge-bg, #f2f2f2);
+}
+.dv-badge--neutral { --dv-badge-color: var(--dv-gray-700, #444); --dv-badge-bg: var(--dv-gray-100, #f2f3f5); --dv-badge-border: var(--dv-gray-300, #d5d8dd); }
+.dv-badge--info { --dv-badge-color: var(--dv-navy, #13294b); --dv-badge-bg: var(--dv-navy-50, #eef2f8); --dv-badge-border: var(--dv-navy-200, #b9c5d9); }
+.dv-badge--success { --dv-badge-color: var(--dv-success, #22663f); --dv-badge-bg: var(--dv-success-bg, #ecf6f0); --dv-badge-border: var(--dv-success-border, #b5dcc4); }
+.dv-badge--warning { --dv-badge-color: var(--dv-warning, #8a5a00); --dv-badge-bg: var(--dv-warning-bg, #fdf5e3); --dv-badge-border: var(--dv-warning-border, #ecd29a); }
+.dv-badge--danger { --dv-badge-color: var(--dv-danger, #a3261b); --dv-badge-bg: var(--dv-danger-bg, #fcefed); --dv-badge-border: var(--dv-danger-border, #efbdb7); }

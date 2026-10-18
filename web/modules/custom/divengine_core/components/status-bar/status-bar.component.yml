@@ -1,0 +1,25 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Status bar
+status: stable
+description: 'The line under a record title: its code, state, key facts and the actions that move it forward.'
+props:
+  type: object
+  properties:
+    code:
+      type: string
+      title: Code
+    facts:
+      type: array
+      title: Facts
+      items:
+        type: object
+        properties:
+          label:
+            type: string
+          value:
+            type: string
+slots:
+  badge:
+    title: State badge
+  actions:
+    title: Actions

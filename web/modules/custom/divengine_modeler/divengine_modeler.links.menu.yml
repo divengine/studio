@@ -11,3 +11,10 @@ entity.diagram_type.collection:
   route_name: entity.diagram_type.collection
   parent: divengine.admin
   weight: 25
+
+divengine_modeler.studio.diagrams:
+  title: 'Diagrams'
+  description: 'BPMN, UML and other diagrams.'
+  route_name: entity.diagram.collection
+  menu_name: studio
+  weight: 20

@@ -1,0 +1,17 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/HEAD/core/assets/schemas/v1/metadata.schema.json
+name: Badge
+status: stable
+description: 'A short status or level label, e.g. "Active" or "Required".'
+props:
+  type: object
+  required:
+    - label
+  properties:
+    label:
+      type: string
+      title: Label
+    tone:
+      type: string
+      title: Tone
+      enum: [neutral, info, success, warning, danger]
+      default: neutral

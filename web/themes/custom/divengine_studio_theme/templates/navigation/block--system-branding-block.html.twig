@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Divengine Studio brand in the sidebar: the [[]] mark and the site name.
+ */
+#}
+<div{{ attributes.addClass('dv-brand') }}>
+  <a href="{{ path('<front>') }}" rel="home" class="dv-brand__link">
+    {% if site_logo %}
+      <img src="{{ site_logo }}" alt="" class="dv-brand__logo" width="36" height="36">
+    {% endif %}
+    {% if site_name %}
+      <span class="dv-brand__name">{{ site_name }}</span>
+    {% endif %}
+  </a>
+</div>

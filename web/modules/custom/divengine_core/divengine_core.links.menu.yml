@@ -4,3 +4,10 @@ divengine.admin:
   route_name: divengine.admin
   parent: system.admin
   weight: 100
+
+divengine_core.studio.configuration:
+  title: 'Configuration'
+  description: 'Types, process configuration and settings.'
+  route_name: divengine.admin
+  menu_name: studio
+  weight: 90

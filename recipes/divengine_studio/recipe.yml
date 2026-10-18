@@ -14,6 +14,7 @@ install:
   - divengine_diagram_embed
   - divengine_process
   - gin
+  - divengine_studio_theme
 config:
   # Re-applying the recipe to an existing site keeps the configuration the
   # site already has instead of refusing because it was customized.
@@ -30,10 +31,17 @@ config:
     divengine_modeler_uml: '*'
     divengine_diagram_embed: '*'
     divengine_process: '*'
+    divengine_core: '*'
+    divengine_studio_theme: '*'
   actions:
     system.theme:
       simpleConfigUpdate:
         admin: gin
+        default: divengine_studio_theme
+    system.site:
+      simpleConfigUpdate:
+        name: 'Divengine Studio'
+        page.front: /developments
     # The filter goes first: the CKEditor 5 "Diagram" button requires it.
     filter.format.basic_html:
       setFilterConfigs:

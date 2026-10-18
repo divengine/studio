@@ -31,7 +31,7 @@ divengine_process.transition_confirm:
         type: 'entity:{entity_type}'
 
 divengine_process.apply_case:
-  path: '/process/development/{development}/apply-case'
+  path: '/development/{development}/apply-case'
   defaults:
     _form: '\Drupal\divengine_process\Form\ApplyCaseForm'
     _title: 'Apply Development Case'
@@ -43,7 +43,7 @@ divengine_process.apply_case:
         type: 'entity:development'
 
 divengine_process.ensure_phases:
-  path: '/process/development/{development}/ensure-phases'
+  path: '/development/{development}/ensure-phases'
   defaults:
     _controller: '\Drupal\divengine_process\Controller\ProcessController::ensurePhases'
   requirements:

@@ -1,0 +1,194 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - divengine_core
+    - divengine_process
+    - options
+    - user
+id: divengine_developments
+label: Developments
+module: views
+description: 'The Developments the user sees, with their state and current phase.'
+tag: ''
+base_table: development
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Developments
+      fields:
+        code:
+          id: code
+          table: development
+          field: code
+          entity_type: development
+          entity_field: code
+          plugin_id: field
+          label: Code
+        name:
+          id: name
+          table: development
+          field: name
+          entity_type: development
+          entity_field: name
+          plugin_id: field
+          label: Name
+          type: string
+          settings:
+            link_to_entity: true
+        state:
+          id: state
+          table: development
+          field: state
+          entity_type: development
+          entity_field: state
+          plugin_id: field
+          label: State
+          type: divengine_badge
+          settings:
+            tones:
+              planned: neutral
+              active: success
+              on_hold: warning
+              closed: info
+              cancelled: danger
+        current_phase:
+          id: current_phase
+          table: development
+          field: current_phase
+          entity_type: development
+          entity_field: current_phase
+          plugin_id: field
+          label: 'Current phase'
+          type: entity_reference_label
+          settings:
+            link: false
+        responsible:
+          id: responsible
+          table: development
+          field: responsible
+          entity_type: development
+          entity_field: responsible
+          plugin_id: field
+          label: Responsible
+          type: entity_reference_label
+          settings:
+            link: false
+        date_end:
+          id: date_end
+          table: development
+          field: date_end
+          entity_type: development
+          entity_field: date_end
+          plugin_id: field
+          label: 'Ends'
+          type: datetime_default
+          settings:
+            format_type: html_date
+        operations:
+          id: operations
+          table: development
+          field: operations
+          entity_type: development
+          plugin_id: entity_operations
+          label: ''
+      pager:
+        type: full
+        options:
+          items_per_page: 50
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Filter
+          reset_button: true
+      access:
+        type: perm
+        options:
+          perm: 'use unified process'
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No Development matches. A Development is one governed software effort: <a href="/development/add">create one</a> to get its phases, milestones and process.'
+      sorts:
+        code:
+          id: code
+          table: development
+          field: code
+          entity_type: development
+          entity_field: code
+          plugin_id: standard
+          order: DESC
+      filters:
+        combine:
+          id: combine
+          table: views
+          field: combine
+          plugin_id: combine
+          operator: contains
+          value: ''
+          exposed: true
+          expose:
+            operator_id: combine_op
+            label: 'Code or name'
+            identifier: search
+            remember: true
+            multiple: false
+          fields:
+            code: code
+            name: name
+        state:
+          id: state
+          table: development
+          field: state
+          entity_type: development
+          entity_field: state
+          plugin_id: list_field
+          operator: or
+          value: {  }
+          exposed: true
+          expose:
+            operator_id: state_op
+            label: State
+            identifier: state
+            remember: true
+            multiple: false
+        status:
+          id: status
+          table: development
+          field: status
+          entity_type: development
+          entity_field: status
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+      style:
+        type: table
+        options:
+          sticky: true
+          empty_table: false
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {  }
+  page_1:
+    id: page_1
+    display_title: Page
+    display_plugin: page
+    position: 1
+    display_options:
+      display_extenders: {  }
+      path: developments

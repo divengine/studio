@@ -1,0 +1,17 @@
+name: 'Divengine Studio'
+type: theme
+description: 'The Divengine Studio workspace: a sidebar with projects and navigation, record pages built from the Studio components, in the Divengine identity (navy, black, gray and white; Verdana).'
+package: 'Divengine'
+core_version_requirement: ^11
+base theme: false
+logo: logo.svg
+libraries:
+  - divengine_studio_theme/global
+regions:
+  sidebar: 'Sidebar'
+  header: 'Header'
+  breadcrumb: 'Breadcrumb'
+  highlighted: 'Highlighted'
+  help: 'Help'
+  content: 'Content'
+  footer: 'Footer'

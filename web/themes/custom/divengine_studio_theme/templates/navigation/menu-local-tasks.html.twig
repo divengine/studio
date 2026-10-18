@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Primary and secondary tabs of a page.
+ */
+#}
+{% if primary %}
+  <nav class="dv-tabs" aria-label="{{ 'Primary tabs'|t }}">
+    <ul class="tabs">{{ primary }}</ul>
+  </nav>
+{% endif %}
+{% if secondary %}
+  <nav class="dv-tabs dv-tabs--secondary" aria-label="{{ 'Secondary tabs'|t }}">
+    <ul class="tabs tabs--secondary">{{ secondary }}</ul>
+  </nav>
+{% endif %}
