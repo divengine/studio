@@ -90,11 +90,31 @@ class DatabaseController extends ControllerBase {
       $build['comment'] = ['#type' => 'html_tag', '#tag' => 'p', '#value' => $row->comment, '#attributes' => ['class' => ['dv-intro']], '#weight' => -90];
     }
 
+    $foreign = $implied = $unique = [];
+    foreach ($facts['references'] as $fk) {
+      foreach ($fk->pairs ?? [] as $pair) {
+        $fk->implied ? $implied[$pair[0]] = TRUE : $foreign[$pair[0]] = TRUE;
+      }
+    }
+    foreach ($facts['indexes'] as $index) {
+      if ($index->unique && count($index->columns) === 1 && $index->name !== 'PRIMARY') {
+        $unique[$index->columns[0]] = TRUE;
+      }
+    }
     $rows = [];
     foreach ($facts['columns'] as $column) {
       $keys = [];
       if ($column->pk_position) {
         $keys[] = $this->badge($this->t('PK @n', ['@n' => $column->pk_position]), 'warning');
+      }
+      if (isset($foreign[$column->name])) {
+        $keys[] = $this->badge($this->t('FK'), 'info');
+      }
+      elseif (isset($implied[$column->name])) {
+        $keys[] = $this->badge($this->t('implied FK'), 'neutral');
+      }
+      if (isset($unique[$column->name])) {
+        $keys[] = $this->badge($this->t('unique'), 'success');
       }
       if ($column->auto_increment) {
         $keys[] = $this->badge($this->t('auto'), 'neutral');

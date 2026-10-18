@@ -22,6 +22,10 @@ install:
   - divengine_thread
   - divengine_articles
   - divengine_source
+  - divengine_database
+  # Analyzers push database snapshots with HTTP Basic (only on routes that
+  # accept it).
+  - basic_auth
   - gin
   - divengine_studio_theme
 config:
@@ -166,6 +170,7 @@ config:
         - 'view knowledge_article revisions'
         - 'revert knowledge_article revisions'
         - 'use source code'
+        - 'use database schemas'
         - 'use qa'
     # Verification criteria of divengine_qa, after the cases are imported.
     divengine_process.development_case.standard:
@@ -254,6 +259,7 @@ config:
         - 'log time'
         - 'manage timesheets'
         - 'use source code'
+        - 'use database schemas'
         - 'view trace links'
         - 'create trace links'
         - 'edit trace links'
@@ -261,6 +267,13 @@ config:
         - 'post comments'
         - 'skip comment approval'
         - 'edit own comments'
+    # Database analyzer: a service account for CI that only pushes schema
+    # snapshots (it must be a member of the Developments it feeds).
+    user.role.database_analyzer:
+      createIfNotExists:
+        label: 'Database analyzer'
+      grantPermissions:
+        - 'import database snapshots'
     # Studio Manager: everything in Studio's business logic (records,
     # process, QA, projects, timesheets, knowledge and their configuration),
     # without Drupal site administration nor the administration theme.
@@ -270,6 +283,8 @@ config:
       grantPermissions:
         - 'use source code'
         - 'manage source code'
+        - 'use database schemas'
+        - 'manage database schemas'
         - 'access comments'
         - 'access content'
         - 'access divengine'

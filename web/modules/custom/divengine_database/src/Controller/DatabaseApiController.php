@@ -111,6 +111,9 @@ class DatabaseApiController extends ControllerBase {
   /**
    * Receives a snapshot from an analyzer.
    *
+   * Analyzer accounts (HTTP Basic, "Import database snapshots") push into
+   * the databases of the Developments they are members of.
+   *
    * The body is the Divengine contract (JSON) or any format an adapter
    * knows (SchemaSpy XML). Query: database (code, by default the payload's
    * identifier), revision, format, force.
@@ -122,6 +125,7 @@ class DatabaseApiController extends ControllerBase {
         throw new ContractException('Send the snapshot in the request body.');
       }
       $payload = $this->adapters->toContract($content, (string) $request->query->get('format', 'auto'));
+      $this->importer->validate($payload);
       $code = (string) $request->query->get('database', '');
       if ($code !== '') {
         $found = $this->entityTypeManager->getStorage('schema_database')->loadByProperties(['code' => mb_strtoupper($code)]);
@@ -130,9 +134,8 @@ class DatabaseApiController extends ControllerBase {
       else {
         $database = $this->importer->databaseFor((string) ($payload['database']['code'] ?? ''));
       }
-      $development = $database->getDevelopment();
-      if (!$development || !$development->access('view')) {
-        return new JsonResponse(['message' => 'You cannot import into this database.'], 403);
+      if (!$this->importer->mayImport($database, $this->currentUser())) {
+        return new JsonResponse(['message' => sprintf('You cannot import into %s: managers need to see its Development, analyzer accounts must be members of it.', $database->label())], 403);
       }
       $result = $this->importer->import($payload, $database, ['revision' => $request->query->get('revision'), 'force' => (bool) $request->query->get('force')]);
     }

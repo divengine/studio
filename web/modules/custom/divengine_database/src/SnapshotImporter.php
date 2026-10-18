@@ -146,17 +146,41 @@ class SnapshotImporter {
   }
 
   /**
+   * Whether an account may push snapshots into a database: managers who see
+   * its Development, or analyzer accounts that are members of it.
+   */
+  public function mayImport(SchemaDatabase $database, AccountInterface $account): bool {
+    $development = $database->getDevelopment();
+    if (!$development) {
+      return $account->hasPermission('administer database schemas');
+    }
+    if ($account->hasPermission('administer database schemas') || $account->hasPermission('manage database schemas')) {
+      return $development->access('view', $account);
+    }
+    if (!$account->hasPermission('import database snapshots')) {
+      return FALSE;
+    }
+    $people = array_merge(array_column($development->get('members')->getValue(), 'target_id'), [$development->get('responsible')->target_id]);
+    return in_array((string) $account->id(), array_map('strval', $people), TRUE);
+  }
+
+  /**
    * The database registered under an identifier.
    */
   public function databaseFor(string $identifier): SchemaDatabase {
-    $found = $identifier === '' ? [] : $this->entityTypeManager->getStorage('schema_database')->loadByProperties(['identifier' => $identifier]);
+    if ($identifier === '') {
+      throw new ContractException('The snapshot does not name its database (database.code): choose the database to import into.');
+    }
+    $found = $this->entityTypeManager->getStorage('schema_database')->loadByProperties(['identifier' => $identifier]);
     return reset($found) ?: throw new ContractException(sprintf('No database is registered with the identifier "%s". Register it in a Development first, or choose the database to import into.', $identifier));
   }
 
   /**
    * Structural checks: what the facts need to be written consistently.
+   *
+   * @throws \Drupal\divengine_database\Contract\ContractException
    */
-  protected function validate(array $payload): void {
+  public function validate(array $payload): void {
     if (($payload['contract_version'] ?? NULL) !== Canonical::CONTRACT_VERSION) {
       throw new ContractException(sprintf('Unsupported contract_version %s (expected "%s").', json_encode($payload['contract_version'] ?? NULL), Canonical::CONTRACT_VERSION));
     }

@@ -49,6 +49,7 @@ final class DatabaseCommands extends DrushCommands {
     }
     try {
       $payload = $this->adapters->toContract($content, (string) $options['format'], $file);
+      $this->importer->validate($payload);
       $database = $this->database($payload, $options);
       $result = $this->importer->import($payload, $database, ['revision' => $options['revision'], 'force' => (bool) $options['force']]);
     }

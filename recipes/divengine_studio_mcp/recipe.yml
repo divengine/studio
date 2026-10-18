@@ -36,6 +36,11 @@ config:
           code:
             enabled: true
             config: {}
+          # Database schemas of the Developments the agent can see
+          # (divengine_database).
+          database:
+            enabled: true
+            config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:
@@ -54,3 +59,4 @@ config:
         - 'view trace link revisions'
         - 'use unified process'
         - 'use source code'
+        - 'use database schemas'

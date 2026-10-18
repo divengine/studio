@@ -38,3 +38,21 @@
   min-height: calc(100vh - 14rem);
   overflow: visible;
 }
+
+/* The explorer and evolution pages are dark instruments: keep the theme's light table and form
+   chrome out of them (low specificity, so their own rules still win). */
+.dv-db-app :where(table) {
+  background: transparent;
+}
+.dv-db-app :where(th, td) {
+  background: transparent;
+  color: inherit;
+  border-bottom-color: rgba(79, 216, 255, 0.1);
+}
+.dv-db-app :where(tbody tr:hover) {
+  background: rgba(79, 216, 255, 0.05);
+}
+.dv-db-app :where(button) {
+  font-weight: inherit;
+  line-height: inherit;
+}
