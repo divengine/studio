@@ -46,3 +46,10 @@ entity.work_product_definition.collection:
   route_name: entity.work_product_definition.collection
   parent: divengine_process.admin
   weight: 50
+
+entity.development.collection:
+  title: 'Developments'
+  description: 'Developments governed by the Unified Process.'
+  route_name: entity.development.collection
+  parent: divengine.admin
+  weight: 1

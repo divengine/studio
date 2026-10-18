@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Hooks for Divengine Process.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Lists, Views and counts of Developments and of the records that belong to
+ * them only return what the user may see (see DevelopmentVisibility).
+ */
+function divengine_process_query_alter(AlterableInterface $query): void {
+  if (!$query instanceof SelectInterface) {
+    return;
+  }
+  $scoped = [
+    'development' => 'id',
+    'development_phase' => 'development',
+    'iteration' => 'development',
+    'milestone' => 'development',
+    'role_assignment' => 'development',
+  ];
+  foreach ($scoped as $entity_type_id => $field) {
+    if ($query->hasTag($entity_type_id . '_access')) {
+      \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id, $field);
+    }
+  }
+}

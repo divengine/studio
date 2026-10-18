@@ -1,0 +1,5 @@
+entity.development.add_form:
+  route_name: entity.development.add_form
+  title: 'Add Development'
+  appears_on:
+    - entity.development.collection

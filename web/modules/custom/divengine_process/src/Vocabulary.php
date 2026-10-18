@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_process;
 
+use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 
 /**
@@ -66,6 +68,68 @@ final class Vocabulary {
       'activity_definition' => 'activity_definition',
       'work_product_definition' => 'work_product_definition',
     ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function developmentStates(): array {
+    return [
+      'planned' => new TranslatableMarkup('Planned'),
+      'active' => new TranslatableMarkup('Active'),
+      'on_hold' => new TranslatableMarkup('On Hold'),
+      'closed' => new TranslatableMarkup('Closed'),
+      'cancelled' => new TranslatableMarkup('Cancelled'),
+    ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function phaseStates(): array {
+    return [
+      'planned' => new TranslatableMarkup('Planned'),
+      'active' => new TranslatableMarkup('Active'),
+      'done' => new TranslatableMarkup('Done'),
+    ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function iterationStates(): array {
+    return [
+      'planned' => new TranslatableMarkup('Planned'),
+      'active' => new TranslatableMarkup('Active'),
+      'done' => new TranslatableMarkup('Done'),
+      'cancelled' => new TranslatableMarkup('Cancelled'),
+    ];
+  }
+
+  /**
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function milestoneStates(): array {
+    return [
+      'planned' => new TranslatableMarkup('Planned'),
+      'reached' => new TranslatableMarkup('Reached'),
+    ];
+  }
+
+  /**
+   * Allowed values function for the list fields of process entities.
+   *
+   * @return array<string, \Drupal\Core\StringTranslation\TranslatableMarkup>
+   */
+  public static function allowedValues(FieldStorageDefinitionInterface $definition, ?FieldableEntityInterface $entity = NULL, ?bool &$cacheable = TRUE): array {
+    return match ($definition->getTargetEntityTypeId() . '.' . $definition->getName()) {
+      'development.state' => static::developmentStates(),
+      'development_phase.state' => static::phaseStates(),
+      'iteration.state' => static::iterationStates(),
+      'milestone.state' => static::milestoneStates(),
+      'milestone.milestone_type' => static::milestoneTypes(),
+      default => [],
+    };
   }
 
 }

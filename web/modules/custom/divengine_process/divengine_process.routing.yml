@@ -5,3 +5,51 @@ divengine_process.admin:
     _title: 'Unified Process'
   requirements:
     _permission: 'administer unified process'
+
+divengine_process.transition:
+  path: '/process/transition/{entity_type}/{entity}/{transition}'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\ProcessController::transition'
+  requirements:
+    _custom_access: '\Drupal\divengine_process\Controller\ProcessController::transitionAccess'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      entity:
+        type: 'entity:{entity_type}'
+
+divengine_process.transition_confirm:
+  path: '/process/transition/{entity_type}/{entity}/{transition}/confirm'
+  defaults:
+    _form: '\Drupal\divengine_process\Form\TransitionConfirmForm'
+    _title: 'Confirm'
+  requirements:
+    _custom_access: '\Drupal\divengine_process\Controller\ProcessController::transitionAccess'
+  options:
+    parameters:
+      entity:
+        type: 'entity:{entity_type}'
+
+divengine_process.apply_case:
+  path: '/process/development/{development}/apply-case'
+  defaults:
+    _form: '\Drupal\divengine_process\Form\ApplyCaseForm'
+    _title: 'Apply Development Case'
+  requirements:
+    _entity_access: 'development.update'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_process.ensure_phases:
+  path: '/process/development/{development}/ensure-phases'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\ProcessController::ensurePhases'
+  requirements:
+    _entity_access: 'development.update'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
