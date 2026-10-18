@@ -29,7 +29,7 @@
 .dv-topbar__toggle { display: none; }
 .dv-topbar__header { margin-left: auto; display: flex; align-items: center; gap: var(--dv-space-3); }
 
-.dv-content { width: 100%; max-width: 80rem; padding: var(--dv-space-5) var(--dv-space-6) var(--dv-space-6); }
+.dv-content { width: 100%; padding: var(--dv-space-5) var(--dv-space-6) var(--dv-space-6); }
 .dv-footer { margin-top: auto; padding: var(--dv-space-4) var(--dv-space-6); font-size: var(--dv-font-size-xs); color: var(--dv-gray-600); }
 
 /* Anonymous pages (log in): centered card, no sidebar. */
