@@ -1,0 +1,1874 @@
+{
+ "contract_version": "1.0",
+ "database": {
+  "code": "shop",
+  "name": "Shop (demo)",
+  "engine": "MySQL"
+ },
+ "snapshot": {
+  "captured_at": "2026-10-08T09:00:00+00:00",
+  "source": "demo",
+  "source_revision": "v2",
+  "catalog": "shop"
+ },
+ "tables": [
+  {
+   "logical_key": "shop.customer",
+   "name": "customer",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": "People who buy.",
+   "columns": [
+    {
+     "logical_key": "shop.customer.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.customer.email",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "email",
+     "data_type": "varchar",
+     "size": 190,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.customer.full_name",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "full_name",
+     "data_type": "varchar",
+     "size": 120,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.customer.created_at",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "created_at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": false,
+     "has_default": true,
+     "default_value": "CURRENT_TIMESTAMP",
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.customer.phone",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "phone",
+     "data_type": "varchar",
+     "size": 30,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.customer.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.customer.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.customer.idx:uq_customer_email",
+     "name": "uq_customer_email",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.customer.email",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.address",
+   "name": "address",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.address.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.address.customer_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "customer_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.address.line1",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "line1",
+     "data_type": "varchar",
+     "size": 160,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.address.line2",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "line2",
+     "data_type": "varchar",
+     "size": 160,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.address.city",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "city",
+     "data_type": "varchar",
+     "size": 80,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.address.country",
+     "position": 6,
+     "jdbc_type_code": null,
+     "name": "country",
+     "data_type": "char",
+     "size": 2,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.address.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.address.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.address.idx:ix_address_customer_id",
+     "name": "ix_address_customer_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.address.customer_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.category",
+   "name": "category",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": "Product tree.",
+   "columns": [
+    {
+     "logical_key": "shop.category.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.category.parent_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "parent_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.category.name",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "name",
+     "data_type": "varchar",
+     "size": 80,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.category.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.category.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.category.idx:ix_category_parent_id",
+     "name": "ix_category_parent_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.category.parent_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.supplier",
+   "name": "supplier",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.supplier.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.supplier.name",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "name",
+     "data_type": "varchar",
+     "size": 120,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.supplier.contact_email",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "contact_email",
+     "data_type": "varchar",
+     "size": 190,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.supplier.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.supplier.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.product",
+   "name": "product",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.product.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.product.sku",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "sku",
+     "data_type": "varchar",
+     "size": 40,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.product.name",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "name",
+     "data_type": "varchar",
+     "size": 160,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.product.price",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "price",
+     "data_type": "decimal",
+     "size": 12,
+     "scale": 2,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.product.supplier_id",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "supplier_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.product.active",
+     "position": 6,
+     "jdbc_type_code": null,
+     "name": "active",
+     "data_type": "tinyint",
+     "size": 1,
+     "scale": null,
+     "nullable": false,
+     "has_default": true,
+     "default_value": "1",
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.product.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.product.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.product.idx:uq_product_sku",
+     "name": "uq_product_sku",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.product.sku",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.product.idx:ix_product_supplier_id",
+     "name": "ix_product_supplier_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.product.supplier_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.product_category",
+   "name": "product_category",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.product_category.product_id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "product_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 1
+    },
+    {
+     "logical_key": "shop.product_category.category_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "category_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 2
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.product_category.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.product_category.product_id",
+       "position": 1,
+       "ascending": true
+      },
+      {
+       "column_logical_key": "shop.product_category.category_id",
+       "position": 2,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.product_category.idx:ix_product_category_category_id",
+     "name": "ix_product_category_category_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.product_category.category_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.warehouse",
+   "name": "warehouse",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.warehouse.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.warehouse.code",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "code",
+     "data_type": "varchar",
+     "size": 12,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.warehouse.city",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "city",
+     "data_type": "varchar",
+     "size": 80,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.warehouse.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.warehouse.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.warehouse.idx:uq_warehouse_code",
+     "name": "uq_warehouse_code",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.warehouse.code",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.stock",
+   "name": "stock",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.stock.product_id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "product_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 1
+    },
+    {
+     "logical_key": "shop.stock.warehouse_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "warehouse_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 2
+    },
+    {
+     "logical_key": "shop.stock.quantity",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "quantity",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": true,
+     "default_value": "0",
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.stock.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.stock.product_id",
+       "position": 1,
+       "ascending": true
+      },
+      {
+       "column_logical_key": "shop.stock.warehouse_id",
+       "position": 2,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.stock.idx:ix_stock_warehouse_id",
+     "name": "ix_stock_warehouse_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.stock.warehouse_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.purchase_order",
+   "name": "purchase_order",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": "A customer's order.",
+   "columns": [
+    {
+     "logical_key": "shop.purchase_order.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.purchase_order.customer_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "customer_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.purchase_order.address_id",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "address_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.purchase_order.status",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "status",
+     "data_type": "varchar",
+     "size": 20,
+     "scale": null,
+     "nullable": false,
+     "has_default": true,
+     "default_value": "new",
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.purchase_order.placed_at",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "placed_at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.purchase_order.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.purchase_order.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.purchase_order.idx:ix_purchase_order_customer_id",
+     "name": "ix_purchase_order_customer_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.purchase_order.customer_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.purchase_order.idx:ix_purchase_order_address_id",
+     "name": "ix_purchase_order_address_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.purchase_order.address_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.order_item",
+   "name": "order_item",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.order_item.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.order_item.order_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "order_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.order_item.product_id",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "product_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.order_item.quantity",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "quantity",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.order_item.unit_price",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "unit_price",
+     "data_type": "decimal",
+     "size": 10,
+     "scale": 2,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.order_item.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.order_item.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.order_item.idx:ix_order_item_order_id",
+     "name": "ix_order_item_order_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.order_item.order_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.order_item.idx:ix_order_item_product_id",
+     "name": "ix_order_item_product_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.order_item.product_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.payment",
+   "name": "payment",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.payment.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.payment.order_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "order_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.payment.amount",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "amount",
+     "data_type": "decimal",
+     "size": 10,
+     "scale": 2,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.payment.method",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "method",
+     "data_type": "varchar",
+     "size": 20,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.payment.paid_at",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "paid_at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.payment.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.payment.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.payment.idx:ix_payment_order_id",
+     "name": "ix_payment_order_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.payment.order_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.shipment",
+   "name": "shipment",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.shipment.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.shipment.order_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "order_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.shipment.warehouse_id",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "warehouse_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.shipment.tracking",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "tracking",
+     "data_type": "varchar",
+     "size": 60,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.shipment.shipped_at",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "shipped_at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.shipment.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.shipment.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.shipment.idx:ix_shipment_order_id",
+     "name": "ix_shipment_order_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.shipment.order_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.shipment.idx:ix_shipment_warehouse_id",
+     "name": "ix_shipment_warehouse_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.shipment.warehouse_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.review",
+   "name": "review",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": null,
+   "columns": [
+    {
+     "logical_key": "shop.review.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.review.product_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "product_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.review.customer_id",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "customer_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.review.rating",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "rating",
+     "data_type": "tinyint",
+     "size": 1,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.review.body",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "body",
+     "data_type": "text",
+     "size": null,
+     "scale": null,
+     "nullable": true,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.review.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.review.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.review.idx:ix_review_product_id",
+     "name": "ix_review_product_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.review.product_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.review.idx:ix_review_customer_id",
+     "name": "ix_review_customer_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.review.customer_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.audit_log",
+   "name": "audit_log",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": "No foreign keys on purpose.",
+   "columns": [
+    {
+     "logical_key": "shop.audit_log.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.audit_log.entity",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "entity",
+     "data_type": "varchar",
+     "size": 40,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.audit_log.entity_id",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "entity_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.audit_log.action",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "action",
+     "data_type": "varchar",
+     "size": 20,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.audit_log.at",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.audit_log.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.audit_log.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.invoice",
+   "name": "invoice",
+   "catalog": "shop",
+   "obj_type": "table",
+   "comment": "Billing documents.",
+   "columns": [
+    {
+     "logical_key": "shop.invoice.id",
+     "position": 1,
+     "jdbc_type_code": null,
+     "name": "id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": true,
+     "comment": null,
+     "pk_position": 1,
+     "auto_increment": true
+    },
+    {
+     "logical_key": "shop.invoice.order_id",
+     "position": 2,
+     "jdbc_type_code": null,
+     "name": "order_id",
+     "data_type": "int",
+     "size": 10,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.invoice.number",
+     "position": 3,
+     "jdbc_type_code": null,
+     "name": "number",
+     "data_type": "varchar",
+     "size": 20,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.invoice.total",
+     "position": 4,
+     "jdbc_type_code": null,
+     "name": "total",
+     "data_type": "decimal",
+     "size": 12,
+     "scale": 2,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    },
+    {
+     "logical_key": "shop.invoice.issued_at",
+     "position": 5,
+     "jdbc_type_code": null,
+     "name": "issued_at",
+     "data_type": "datetime",
+     "size": null,
+     "scale": null,
+     "nullable": false,
+     "has_default": false,
+     "default_value": null,
+     "auto_updated": false,
+     "comment": null,
+     "pk_position": 0
+    }
+   ],
+   "indexes": [
+    {
+     "logical_key": "shop.invoice.idx:PRIMARY",
+     "name": "PRIMARY",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.invoice.id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.invoice.idx:uq_invoice_number",
+     "name": "uq_invoice_number",
+     "is_unique": true,
+     "columns": [
+      {
+       "column_logical_key": "shop.invoice.number",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    },
+    {
+     "logical_key": "shop.invoice.idx:ix_invoice_order_id",
+     "name": "ix_invoice_order_id",
+     "is_unique": false,
+     "columns": [
+      {
+       "column_logical_key": "shop.invoice.order_id",
+       "position": 1,
+       "ascending": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "foreign_keys": [
+  {
+   "logical_key": "shop.address.fk_address_customer_id",
+   "name": "fk_address_customer_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.address",
+   "parent_table_key": "shop.customer",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.address.customer_id",
+     "parent_column_key": "shop.customer.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.category.fk_category_parent_id",
+   "name": "fk_category_parent_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.category",
+   "parent_table_key": "shop.category",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.category.parent_id",
+     "parent_column_key": "shop.category.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.product.fk_product_supplier_id",
+   "name": "fk_product_supplier_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.product",
+   "parent_table_key": "shop.supplier",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.product.supplier_id",
+     "parent_column_key": "shop.supplier.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.product_category.fk_product_category_product_id",
+   "name": "fk_product_category_product_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.product_category",
+   "parent_table_key": "shop.product",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.product_category.product_id",
+     "parent_column_key": "shop.product.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.product_category.fk_product_category_category_id",
+   "name": "fk_product_category_category_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.product_category",
+   "parent_table_key": "shop.category",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.product_category.category_id",
+     "parent_column_key": "shop.category.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.stock.fk_stock_product_id",
+   "name": "fk_stock_product_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.stock",
+   "parent_table_key": "shop.product",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.stock.product_id",
+     "parent_column_key": "shop.product.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.stock.fk_stock_warehouse_id",
+   "name": "fk_stock_warehouse_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.stock",
+   "parent_table_key": "shop.warehouse",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.stock.warehouse_id",
+     "parent_column_key": "shop.warehouse.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.purchase_order.fk_purchase_order_customer_id",
+   "name": "fk_purchase_order_customer_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.purchase_order",
+   "parent_table_key": "shop.customer",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.purchase_order.customer_id",
+     "parent_column_key": "shop.customer.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.purchase_order.fk_purchase_order_address_id",
+   "name": "fk_purchase_order_address_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.purchase_order",
+   "parent_table_key": "shop.address",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.purchase_order.address_id",
+     "parent_column_key": "shop.address.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.order_item.fk_order_item_order_id",
+   "name": "fk_order_item_order_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.order_item",
+   "parent_table_key": "shop.purchase_order",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.order_item.order_id",
+     "parent_column_key": "shop.purchase_order.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.order_item.fk_order_item_product_id",
+   "name": "fk_order_item_product_id",
+   "implied": false,
+   "on_delete_cascade": true,
+   "child_table_key": "shop.order_item",
+   "parent_table_key": "shop.product",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.order_item.product_id",
+     "parent_column_key": "shop.product.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.payment.fk_payment_order_id",
+   "name": "fk_payment_order_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.payment",
+   "parent_table_key": "shop.purchase_order",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.payment.order_id",
+     "parent_column_key": "shop.purchase_order.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.shipment.fk_shipment_order_id",
+   "name": "fk_shipment_order_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.shipment",
+   "parent_table_key": "shop.purchase_order",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.shipment.order_id",
+     "parent_column_key": "shop.purchase_order.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.shipment.fk_shipment_warehouse_id",
+   "name": "fk_shipment_warehouse_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.shipment",
+   "parent_table_key": "shop.warehouse",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.shipment.warehouse_id",
+     "parent_column_key": "shop.warehouse.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.review.fk_review_product_id",
+   "name": "fk_review_product_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.review",
+   "parent_table_key": "shop.product",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.review.product_id",
+     "parent_column_key": "shop.product.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.review.fk_review_customer_id",
+   "name": "fk_review_customer_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.review",
+   "parent_table_key": "shop.customer",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.review.customer_id",
+     "parent_column_key": "shop.customer.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.invoice.fk_invoice_order_id",
+   "name": "fk_invoice_order_id",
+   "implied": false,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.invoice",
+   "parent_table_key": "shop.purchase_order",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.invoice.order_id",
+     "parent_column_key": "shop.purchase_order.id"
+    }
+   ]
+  },
+  {
+   "logical_key": "shop.audit_log.entity_id->customer.id#implied",
+   "name": "Implied Constraint",
+   "implied": true,
+   "on_delete_cascade": false,
+   "child_table_key": "shop.audit_log",
+   "parent_table_key": "shop.customer",
+   "columns": [
+    {
+     "position": 1,
+     "child_column_key": "shop.audit_log.entity_id",
+     "parent_column_key": "shop.customer.id"
+    }
+   ]
+  }
+ ]
+}

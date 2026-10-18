@@ -1,0 +1,62 @@
+database:
+  css:
+    component:
+      css/database.css: {}
+
+owl:
+  remote: https://github.com/odoo/owl
+  version: 2.8.3
+  license:
+    name: LGPL-3.0
+    url: https://github.com/odoo/owl/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    js/vendor/owl/owl.iife.min.js: { minified: true }
+
+jointjs:
+  remote: https://github.com/clientIO/joint
+  version: 4.3.3
+  license:
+    name: MPL-2.0
+    url: https://github.com/clientIO/joint/blob/master/LICENSE
+    gpl-compatible: true
+  js:
+    js/vendor/jointjs/joint.min.js: { minified: true }
+
+elkjs:
+  remote: https://github.com/kieler/elkjs
+  version: 0.12.0
+  license:
+    name: EPL-2.0
+    url: https://github.com/kieler/elkjs/blob/master/LICENSE.md
+    gpl-compatible: true
+  js:
+    js/vendor/elkjs/elk.bundled.js: { minified: true, preprocess: false }
+
+explorer:
+  js:
+    js/explorer/explorer.js: { attributes: { type: module }, preprocess: false }
+  css:
+    component:
+      css/explorer.css: {}
+      css/database.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - divengine_database/owl
+    - divengine_database/jointjs
+    - divengine_database/elkjs
+
+evolution:
+  js:
+    js/explorer/explorer.js: { attributes: { type: module }, preprocess: false }
+  css:
+    component:
+      css/evolution.css: {}
+      css/database.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings
+    - core/once
+    - divengine_database/owl

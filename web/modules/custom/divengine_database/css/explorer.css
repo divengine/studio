@@ -1,0 +1,901 @@
+/* Schema explorer. Compiled from the CodeIntel schema_explorer.scss (sass 1.83, expanded). */
+.dv_sx {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  color: #d5ecff;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: linear-gradient(180deg, #0a1122, #050913);
+}
+.dv_sx.dv_sx_bg_flat {
+  background: #050913;
+}
+.dv_sx.dv_sx_bg_rich {
+  background: radial-gradient(ellipse at 20% -10%, rgba(59, 130, 246, 0.18), transparent 55%), radial-gradient(ellipse at 110% 120%, rgba(157, 140, 255, 0.14), transparent 50%), linear-gradient(180deg, #0a1122, #050913);
+}
+.dv_sx.dv_sx_bg_rich .dv_sx_bar,
+.dv_sx.dv_sx_bg_rich .dv_sx_hud,
+.dv_sx.dv_sx_bg_rich .dv_sx_minimap,
+.dv_sx.dv_sx_bg_rich .dv_sx_inspector,
+.dv_sx.dv_sx_bg_rich .dv_sx_perf,
+.dv_sx.dv_sx_bg_rich .dv_sx_gfx_panel {
+  backdrop-filter: blur(6px);
+}
+.dv_sx.dv_sx_bg_grid .dv_sx_body, .dv_sx.dv_sx_bg_rich .dv_sx_body {
+  background-image: linear-gradient(rgba(79, 216, 255, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(79, 216, 255, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.dv_sx.dv_sx_fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+}
+.dv_sx button {
+  border: 1px solid transparent;
+  background: transparent;
+  color: #6f86a6;
+  font: 600 11px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+.dv_sx button:hover {
+  color: #d5ecff;
+  background: rgba(79, 216, 255, 0.08);
+}
+.dv_sx button.is-on {
+  color: #050913;
+  background: #4fd8ff;
+  box-shadow: 0 0 10px rgba(79, 216, 255, 0.45);
+}
+
+.dv_sx_bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding: 8px 12px;
+  background: rgba(11, 19, 37, 0.78);
+  border-bottom: 1px solid rgba(79, 216, 255, 0.22);
+  z-index: 5;
+}
+
+.dv_sx_brand {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-right: 6px;
+  white-space: nowrap;
+}
+.dv_sx_brand .dv_sx_glyph {
+  color: #4fd8ff;
+  text-shadow: 0 0 8px rgba(79, 216, 255, 0.8);
+}
+.dv_sx_brand .dv_sx_brand_text {
+  font: 700 12px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.3em;
+}
+.dv_sx_brand .dv_sx_snapshot_select {
+  font: 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #4fd8ff;
+  max-width: 260px;
+  border: 1px solid rgba(79, 216, 255, 0.25);
+  border-radius: 6px;
+  background: rgba(5, 9, 19, 0.6);
+  cursor: pointer;
+}
+.dv_sx_brand .dv_sx_snapshot_select optgroup {
+  background: #0a1122;
+  color: #6f86a6;
+}
+
+.dv_sx_group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid rgba(79, 216, 255, 0.14);
+  border-radius: 7px;
+  background: rgba(5, 9, 19, 0.5);
+}
+.dv_sx_group.is-muted {
+  opacity: 0.45;
+}
+
+.dv_sx_label {
+  font: 600 9px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.2em;
+  color: #6f86a6;
+  padding: 0 6px;
+}
+
+.dv_sx_select {
+  background: transparent;
+  color: #d5ecff;
+  border: none;
+  font: 12px "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  padding: 4px;
+  max-width: 160px;
+}
+.dv_sx_select option {
+  background: #0a1122;
+}
+
+.dv_sx_search {
+  position: relative;
+  flex: 1 1 240px;
+  max-width: 360px;
+}
+.dv_sx_search .dv_sx_input {
+  width: 100%;
+  background: rgba(5, 9, 19, 0.7);
+  border: 1px solid rgba(79, 216, 255, 0.3);
+  border-radius: 7px;
+  color: #d5ecff;
+  font: 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  padding: 7px 10px;
+  outline: none;
+}
+.dv_sx_search .dv_sx_input:focus {
+  border-color: #4fd8ff;
+  box-shadow: 0 0 0 2px rgba(79, 216, 255, 0.15);
+}
+.dv_sx_search .dv_sx_spin {
+  position: absolute;
+  right: 10px;
+  top: 11px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4fd8ff;
+  animation: dv_sx_pulse 0.9s ease-in-out infinite;
+}
+
+.dv_sx_results {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 360px;
+  overflow: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: rgba(8, 14, 28, 0.97);
+  border: 1px solid rgba(79, 216, 255, 0.22);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  z-index: 20;
+}
+.dv_sx_results li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  font: 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_sx_results li:hover {
+  background: rgba(79, 216, 255, 0.1);
+}
+.dv_sx_results .dv_sx_kind {
+  font: 700 9px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 5px;
+  border-radius: 3px;
+  color: #050913;
+  background: #4fd8ff;
+}
+.dv_sx_results .dv_sx_kind[data-kind=schema] {
+  background: #9d8cff;
+}
+.dv_sx_results .dv_sx_kind[data-kind=column] {
+  background: #ffc857;
+}
+.dv_sx_results .dv_sx_rtext {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dv_sx_banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  font-size: 12px;
+  background: rgba(59, 130, 246, 0.14);
+  border-bottom: 1px solid rgba(79, 216, 255, 0.25);
+}
+.dv_sx_banner span {
+  flex: 1;
+}
+.dv_sx_banner.is-warn {
+  background: rgba(255, 200, 87, 0.1);
+  border-bottom-color: rgba(255, 200, 87, 0.35);
+}
+
+.dv_sx_body {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.dv_sx_stage,
+.ci-paper-host {
+  position: absolute;
+  inset: 0;
+}
+
+.dv_sx_overlay {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font: 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  background: rgba(11, 19, 37, 0.78);
+  border: 1px solid rgba(79, 216, 255, 0.22);
+  border-radius: 8px;
+  z-index: 6;
+}
+.dv_sx_overlay.is-soft {
+  opacity: 0.9;
+}
+.dv_sx_overlay.is-error {
+  color: #ffb4c4;
+  border-color: rgba(255, 90, 120, 0.5);
+}
+
+.dv_sx_pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4fd8ff;
+  box-shadow: 0 0 8px #4fd8ff;
+  animation: dv_sx_pulse 1s ease-in-out infinite;
+}
+
+@keyframes dv_sx_pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+.dv_sx_gfx_panel, .dv_sx_perf, .dv_sx_inspector, .dv_sx_minimap, .dv_sx_hud {
+  position: absolute;
+  background: rgba(11, 19, 37, 0.78);
+  border: 1px solid rgba(79, 216, 255, 0.22);
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 4;
+}
+
+.dv_sx_hud {
+  left: 12px;
+  bottom: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  max-width: calc(100% - 270px);
+  padding: 7px 12px;
+  font: 10px/1.4 "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  letter-spacing: 0.08em;
+  color: #6f86a6;
+}
+.dv_sx_hud b {
+  color: #4fd8ff;
+  font-weight: 600;
+}
+
+.dv_sx_minimap {
+  right: 12px;
+  bottom: 12px;
+  width: 220px;
+  height: 150px;
+  cursor: crosshair;
+}
+
+.dv_sx_inspector {
+  top: 12px;
+  right: 12px;
+  width: 300px;
+  max-height: calc(100% - 190px);
+  overflow: auto;
+  padding: 12px 14px;
+  font-size: 12px;
+}
+.dv_sx_inspector .dv_sx_ins_head {
+  border-bottom: 1px solid rgba(79, 216, 255, 0.18);
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+}
+.dv_sx_inspector .dv_sx_ins_type {
+  font: 700 9px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #4fd8ff;
+}
+.dv_sx_inspector .dv_sx_ins_type.is-implied {
+  color: #9d8cff;
+}
+.dv_sx_inspector .dv_sx_ins_schema {
+  margin-left: 8px;
+  font: 10px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #6f86a6;
+}
+.dv_sx_inspector .dv_sx_ins_title {
+  margin-top: 4px;
+  font: 600 15px/1.3 "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #fff;
+  word-break: break-all;
+}
+.dv_sx_inspector .dv_sx_ins_facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 12px;
+  margin: 0 0 8px;
+}
+.dv_sx_inspector .dv_sx_ins_facts dt {
+  color: #6f86a6;
+  font-weight: 400;
+}
+.dv_sx_inspector .dv_sx_ins_facts dd {
+  margin: 0;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_sx_inspector .dv_sx_ins_facts small {
+  color: #6f86a6;
+}
+.dv_sx_inspector .dv_sx_ins_pairs {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font: 11px/1.6 "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #ffc857;
+  word-break: break-all;
+}
+.dv_sx_inspector .dv_sx_ins_note {
+  color: #6f86a6;
+  font-style: italic;
+}
+.dv_sx_inspector .dv_sx_ins_actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.dv_sx_inspector .dv_sx_ins_actions button {
+  border-color: rgba(79, 216, 255, 0.3);
+}
+
+.dv_sx_perf {
+  left: 12px;
+  top: 12px;
+  padding: 10px 12px;
+  font: 10.5px/1.5 "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_sx_perf .dv_sx_perf_title {
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #ff5adc;
+  margin-bottom: 4px;
+}
+.dv_sx_perf td {
+  padding: 0 10px 0 0;
+  color: #6f86a6;
+}
+.dv_sx_perf td:last-child {
+  color: #d5ecff;
+  text-align: right;
+}
+.dv_sx_perf .dv_sx_perf_foot {
+  margin-top: 6px;
+  color: #6f86a6;
+  font-size: 9.5px;
+}
+
+.dv_sx_gfx_level {
+  font: 600 10px/1 "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #4fd8ff;
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
+.dv_sx_gfx_panel {
+  left: 12px;
+  bottom: 56px;
+  width: 250px;
+  max-height: calc(100% - 80px);
+  overflow: auto;
+  padding: 10px 12px;
+  font-size: 11.5px;
+}
+.dv_sx_gfx_panel .dv_sx_gfx_section {
+  margin: 8px 0 4px;
+  font: 700 9px/1 "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6f86a6;
+}
+.dv_sx_gfx_panel label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 3px 0;
+  color: #d5ecff;
+  font-weight: 400;
+}
+.dv_sx_gfx_panel select {
+  background: rgba(5, 9, 19, 0.7);
+  color: #d5ecff;
+  border: 1px solid rgba(79, 216, 255, 0.25);
+  border-radius: 4px;
+  font: 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  padding: 2px 4px;
+}
+.dv_sx_gfx_panel select option {
+  background: #0a1122;
+}
+.dv_sx_gfx_panel input[type=checkbox] {
+  accent-color: #4fd8ff;
+  margin-right: auto;
+}
+
+.dv_sx_perf_wrap {
+  max-width: 180px;
+  white-space: normal;
+}
+
+.dv_sx_legend {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 14px;
+  font: 10px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #6f86a6;
+  z-index: 3;
+  pointer-events: none;
+}
+.dv_sx_legend i {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  margin-right: 4px;
+  vertical-align: middle;
+  border-top: 2px solid #4fd8ff;
+}
+.dv_sx_legend .dv_sx_lg_implied {
+  border-top: 2px dashed #9d8cff;
+}
+.dv_sx_legend .dv_sx_lg_in {
+  border-top-color: #ff5adc;
+}
+.dv_sx_legend .dv_sx_lg_out {
+  border-top-color: #4fd8ff;
+}
+
+.ci-paper {
+  cursor: grab;
+}
+.ci-paper.is-panning {
+  cursor: grabbing;
+}
+.ci-paper .joint-element {
+  cursor: pointer;
+}
+.ci-paper .ci-body {
+  fill: rgba(9, 16, 31, 0.94);
+  stroke: rgba(79, 216, 255, 0.34);
+  stroke-width: 1;
+}
+.ci-paper .ci-body-view {
+  stroke: rgba(157, 140, 255, 0.55);
+  stroke-dasharray: 4 3;
+}
+.ci-paper .ci-head {
+  fill: rgba(79, 216, 255, 0.09);
+}
+.ci-paper .ci-accent {
+  fill: #4fd8ff;
+  opacity: 0.55;
+}
+.ci-paper .ci-schema {
+  fill: #6f86a6;
+  font: 600 9.5px "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.ci-paper .ci-title {
+  fill: #eaf7ff;
+  font: 600 13px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-title-lg {
+  font-size: 22px;
+}
+.ci-paper .ci-badge {
+  fill: #4fd8ff;
+  font: 700 8.5px "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.16em;
+}
+.ci-paper .ci-badge-view {
+  fill: #9d8cff;
+}
+.ci-paper .ci-meta {
+  fill: #6f86a6;
+  font: 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-row-bg {
+  fill: transparent;
+}
+.ci-paper .ci-row:hover .ci-row-bg {
+  fill: rgba(79, 216, 255, 0.07);
+}
+.ci-paper .ci-row-pk .ci-row-bg {
+  fill: rgba(255, 200, 87, 0.045);
+}
+.ci-paper .ci-key {
+  font: 700 9px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-key-pk {
+  fill: #ffc857;
+}
+.ci-paper .ci-key-fk {
+  fill: #4fd8ff;
+}
+.ci-paper .ci-key-implied {
+  fill: #9d8cff;
+}
+.ci-paper .ci-key-uq {
+  fill: #6ee7b7;
+}
+.ci-paper .ci-col {
+  fill: #d5ecff;
+  font: 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-nullable {
+  fill: #93a9c6;
+}
+.ci-paper .ci-type {
+  fill: #6f86a6;
+  font: 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-more {
+  fill: #6f86a6;
+  font: italic 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-bar {
+  fill: rgba(120, 170, 225, 0.22);
+}
+.ci-paper .ci-port {
+  fill: #050913;
+  stroke-width: 1.5;
+}
+.ci-paper .ci-port-out {
+  stroke: #4fd8ff;
+}
+.ci-paper .ci-port-in {
+  stroke: #ffc857;
+}
+.ci-paper .ci-rel-line {
+  stroke: #4fd8ff;
+  stroke-width: 1.4;
+  opacity: 0.55;
+}
+.ci-paper .ci-rel-implied {
+  stroke: #9d8cff;
+  stroke-dasharray: 5 4;
+}
+.ci-paper .joint-link {
+  cursor: pointer;
+}
+.ci-paper.ci-tr-fast .joint-element, .ci-paper.ci-tr-fast .joint-link {
+  transition: opacity 0.12s;
+}
+.ci-paper.ci-tr-smooth .joint-element, .ci-paper.ci-tr-smooth .joint-link {
+  transition: opacity 0.22s ease-out;
+}
+.ci-paper.ci-has-focus .joint-element:not(.is-lit) {
+  opacity: 0.2;
+}
+.ci-paper.ci-has-focus .joint-link:not(.is-lit) {
+  opacity: 0.06;
+}
+.ci-paper .joint-element.is-endpoint .ci-body {
+  stroke: rgba(79, 216, 255, 0.8);
+}
+.ci-paper .joint-element.is-selected .ci-body {
+  stroke: #4fd8ff;
+  stroke-width: 2;
+}
+.ci-paper .joint-element.is-selected .ci-head {
+  fill: rgba(79, 216, 255, 0.2);
+}
+.ci-paper.ci-fx-glow-on .joint-element.is-selected .ci-body {
+  filter: drop-shadow(0 0 7px rgba(79, 216, 255, 0.55));
+}
+.ci-paper.ci-fx-shadows .joint-element.is-selected .ci-body {
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55));
+}
+.ci-paper.ci-fx-glow-on.ci-fx-shadows .joint-element.is-selected .ci-body {
+  filter: drop-shadow(0 0 7px rgba(79, 216, 255, 0.55)) drop-shadow(0 6px 10px rgba(0, 0, 0, 0.55));
+}
+.ci-paper.ci-fx-glow-related .joint-element.is-endpoint .ci-body {
+  filter: drop-shadow(0 0 4px rgba(79, 216, 255, 0.35));
+}
+.ci-paper.ci-fx-shadows .joint-element.is-endpoint .ci-body {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+}
+.ci-paper.ci-fx-glow-related.ci-fx-shadows .joint-element.is-endpoint .ci-body {
+  filter: drop-shadow(0 0 4px rgba(79, 216, 255, 0.35)) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.45));
+}
+.ci-paper.ci-fx-pulse .joint-element.is-selected .ci-body {
+  animation: ci-pulse 1.6s ease-in-out infinite;
+}
+.ci-paper .ci-row.is-lit .ci-row-bg {
+  fill: rgba(79, 216, 255, 0.16);
+}
+.ci-paper .ci-row.is-lit .ci-col {
+  fill: #fff;
+}
+.ci-paper .joint-link.is-lit .ci-rel-line {
+  opacity: 1;
+  stroke-width: 2.2;
+}
+.ci-paper.ci-fx-edge-anim .joint-link.is-lit .ci-rel-line {
+  stroke-dasharray: 10 6;
+  animation: ci-flow 0.9s linear infinite;
+}
+.ci-paper .joint-link.is-out .ci-rel-line {
+  stroke: #4fd8ff;
+}
+.ci-paper .joint-link.is-in .ci-rel-line {
+  stroke: #ff5adc;
+}
+.ci-paper .joint-link.is-selected .ci-rel-line {
+  stroke: #fff;
+}
+.ci-paper .ci-hubnote {
+  fill: #9d8cff;
+  font: italic 10.5px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.ci-paper .ci-hubnote-hub {
+  fill: #ffc857;
+}
+.ci-paper.ci-edges-straight .ci-port {
+  display: none;
+}
+.ci-paper .ci-body-diff-added {
+  stroke: #6ee7b7;
+  stroke-width: 1.6;
+}
+.ci-paper .ci-body-diff-removed {
+  fill: rgba(40, 12, 22, 0.72);
+  stroke: #ff6b81;
+  stroke-width: 1.4;
+  stroke-dasharray: 6 4;
+}
+.ci-paper .ci-body-diff-modified {
+  stroke: #ffc857;
+  stroke-width: 1.6;
+}
+.ci-paper .ci-title-diff-added {
+  fill: #6ee7b7;
+}
+.ci-paper .ci-title-diff-removed {
+  fill: #ff6b81;
+  text-decoration: line-through;
+}
+.ci-paper .ci-title-diff-modified {
+  fill: #ffc857;
+}
+.ci-paper .ci-badge-diff-added {
+  fill: #6ee7b7;
+}
+.ci-paper .ci-badge-diff-removed {
+  fill: #ff6b81;
+}
+.ci-paper .ci-badge-diff-modified {
+  fill: #ffc857;
+}
+.ci-paper .ci-row-mark {
+  fill: transparent;
+}
+.ci-paper .ci-row-diff-added .ci-row-bg {
+  fill: rgba(110, 231, 183, 0.1);
+}
+.ci-paper .ci-row-diff-added .ci-row-mark {
+  fill: #6ee7b7;
+}
+.ci-paper .ci-row-diff-added .ci-col {
+  fill: #6ee7b7;
+}
+.ci-paper .ci-row-diff-removed .ci-row-bg {
+  fill: rgba(255, 107, 129, 0.09);
+}
+.ci-paper .ci-row-diff-removed .ci-row-mark {
+  fill: #ff6b81;
+}
+.ci-paper .ci-row-diff-removed .ci-col,
+.ci-paper .ci-row-diff-removed .ci-type {
+  fill: #ff6b81;
+  text-decoration: line-through;
+}
+.ci-paper .ci-row-diff-modified .ci-row-bg {
+  fill: rgba(255, 200, 87, 0.09);
+}
+.ci-paper .ci-row-diff-modified .ci-row-mark {
+  fill: #ffc857;
+}
+.ci-paper .ci-type-diff {
+  fill: #ffc857;
+  font-weight: 600;
+}
+.ci-paper .ci-rel-diff-added {
+  stroke: #6ee7b7;
+  opacity: 0.9;
+}
+.ci-paper .ci-rel-diff-removed {
+  stroke: #ff6b81;
+  stroke-dasharray: 3 4;
+  opacity: 0.75;
+}
+.ci-paper .ci-rel-diff-modified {
+  stroke: #ffc857;
+  opacity: 0.85;
+}
+.ci-paper.ci-diff-mode .joint-element.ci-diff-unchanged {
+  opacity: 0.42;
+}
+.ci-paper.ci-diff-mode .joint-link.ci-diff-unchanged {
+  opacity: 0.3;
+}
+.ci-paper.ci-diff-mode .joint-element.ci-diff-unchanged.is-selected,
+.ci-paper.ci-diff-mode .joint-element.ci-diff-unchanged.is-endpoint,
+.ci-paper.ci-diff-mode .joint-link.ci-diff-unchanged.is-lit {
+  opacity: 1;
+}
+.ci-paper.ci-lod-0 .ci-port {
+  display: none;
+}
+.ci-paper.ci-lod-0 .ci-rel-line {
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.35;
+}
+.ci-paper.ci-lod-0 .ci-rel-diff-added,
+.ci-paper.ci-lod-0 .ci-rel-diff-removed,
+.ci-paper.ci-lod-0 .ci-rel-diff-modified {
+  stroke-width: 1.6;
+  opacity: 0.85;
+}
+.ci-paper.ci-lod-0 .ci-body-diff-added,
+.ci-paper.ci-lod-0 .ci-body-diff-removed,
+.ci-paper.ci-lod-0 .ci-body-diff-modified {
+  stroke-width: 3;
+  vector-effect: non-scaling-stroke;
+}
+.ci-paper.ci-lod-0 .ci-body-diff-added {
+  fill: rgba(110, 231, 183, 0.35);
+}
+.ci-paper.ci-lod-0 .ci-body-diff-removed {
+  fill: rgba(255, 107, 129, 0.35);
+}
+.ci-paper.ci-lod-0 .ci-body-diff-modified {
+  fill: rgba(255, 200, 87, 0.3);
+}
+.ci-paper.ci-lod-0 .joint-element,
+.ci-paper.ci-lod-0 .joint-link {
+  transition: none;
+}
+.ci-paper.ci-lod-0 .joint-element .ci-body {
+  filter: none;
+  animation: none;
+}
+
+@keyframes ci-pulse {
+  50% {
+    stroke-opacity: 0.45;
+  }
+}
+@keyframes ci-flow {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ci-paper .joint-link.is-lit .ci-rel-line,
+  .ci-paper .joint-element .ci-body {
+    animation: none !important;
+  }
+}
+.dv_sx .dv_sx_diff_pair {
+  font: 600 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #d5ecff;
+  white-space: nowrap;
+}
+.dv_sx .dv_sx_diff_pair b {
+  color: #4fd8ff;
+}
+.dv_sx .dv_sx_diff_back,
+.dv_sx .dv_sx_diff_count {
+  margin-left: 8px;
+  font: 600 10px "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.06em;
+  color: #6f86a6;
+}
+.dv_sx .dv_sx_diff_back {
+  background: transparent;
+  border: 1px solid rgba(79, 216, 255, 0.22);
+  border-radius: 4px;
+  padding: 2px 8px;
+  color: #d5ecff;
+  cursor: pointer;
+}
+.dv_sx .dv_sx_chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 3px;
+  font: 700 9.5px "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  letter-spacing: 0.12em;
+  border: 1px solid currentColor;
+}
+.dv_sx .dv_sx_chip.is-added {
+  color: #6ee7b7;
+}
+.dv_sx .dv_sx_chip.is-removed {
+  color: #ff6b81;
+}
+.dv_sx .dv_sx_chip.is-modified {
+  color: #ffc857;
+}
+.dv_sx .dv_sx_chip.is-unchanged {
+  color: #6f86a6;
+}
+.dv_sx .dv_sx_ins_diff {
+  margin: 8px 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(79, 216, 255, 0.22);
+}
+.dv_sx .dv_sx_ins_diff small {
+  margin-left: 6px;
+  color: #6f86a6;
+}
+.dv_sx .dv_sx_ins_changes {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  max-height: 240px;
+  overflow: auto;
+  font: 11px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_sx .dv_sx_ins_changes li {
+  padding: 3px 0 3px 8px;
+  border-left: 2px solid #6f86a6;
+  margin-bottom: 3px;
+}
+.dv_sx .dv_sx_ins_changes li.is-added {
+  border-color: #6ee7b7;
+}
+.dv_sx .dv_sx_ins_changes li.is-removed {
+  border-color: #ff6b81;
+}
+.dv_sx .dv_sx_ins_changes li.is-modified {
+  border-color: #ffc857;
+}
+.dv_sx .dv_sx_ins_prop {
+  color: #6f86a6;
+  padding-left: 12px;
+}

@@ -1,0 +1,9 @@
+name: 'Divengine Database'
+type: module
+description: 'Database schemas of a Development: immutable snapshots imported from any analyzer through a normalized contract (SchemaSpy XML out of the box), an interactive schema explorer, schema evolution between snapshots, findings and MCP tools. Metadata only, never row data.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_process
+  - divengine_traceability

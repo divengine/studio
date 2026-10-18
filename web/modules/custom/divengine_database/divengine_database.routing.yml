@@ -1,0 +1,157 @@
+divengine_database.databases:
+  path: '/databases'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::databases'
+    _title: 'Databases'
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.development:
+  path: '/development/{development}/databases'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::development'
+    _title_callback: '\Drupal\divengine_database\Controller\DatabaseController::developmentTitle'
+  requirements:
+    _entity_access: 'development.view'
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_database.import:
+  path: '/database/{schema_database}/import'
+  defaults:
+    _form: '\Drupal\divengine_database\Form\ImportSnapshotForm'
+    _title: 'Import a snapshot'
+  requirements:
+    _entity_access: 'schema_database.update'
+  options:
+    parameters:
+      schema_database:
+        type: 'entity:schema_database'
+
+divengine_database.evolution:
+  path: '/database/{schema_database}/evolution'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::evolution'
+    _title: 'Schema evolution'
+  requirements:
+    _entity_access: 'schema_database.view'
+  options:
+    parameters:
+      schema_database:
+        type: 'entity:schema_database'
+
+divengine_database.diff_explorer:
+  path: '/database/visual-diff'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::diffExplorer'
+    _title: 'Visual diff'
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.explorer:
+  path: '/database/snapshot/{schema_snapshot}/explorer'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::explorer'
+    _title: 'Schema explorer'
+  requirements:
+    _entity_access: 'schema_snapshot.view'
+  options:
+    parameters:
+      schema_snapshot:
+        type: 'entity:schema_snapshot'
+
+divengine_database.table:
+  path: '/database/snapshot/{schema_snapshot}/table/{table}'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::table'
+    _title_callback: '\Drupal\divengine_database\Controller\DatabaseController::tableTitle'
+  requirements:
+    _entity_access: 'schema_snapshot.view'
+    table: '\d+'
+  options:
+    parameters:
+      schema_snapshot:
+        type: 'entity:schema_snapshot'
+
+divengine_database.reanalyze:
+  path: '/database/snapshot/{schema_snapshot}/analyze'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseController::reanalyze'
+  requirements:
+    _permission: 'manage database schemas+administer database schemas'
+    _entity_access: 'schema_snapshot.view'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      schema_snapshot:
+        type: 'entity:schema_snapshot'
+
+divengine_database.api.index:
+  path: '/api/divengine/database/index'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::index'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.details:
+  path: '/api/divengine/database/details'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::details'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.search:
+  path: '/api/divengine/database/search'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::search'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.snapshots:
+  path: '/api/divengine/database/snapshots'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::snapshots'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.diff:
+  path: '/api/divengine/database/diff'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::diff'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.diff_graph:
+  path: '/api/divengine/database/diff/graph'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::diffGraph'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.diff_details:
+  path: '/api/divengine/database/diff/details'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::diffDetails'
+  methods: [GET]
+  requirements:
+    _permission: 'use database schemas+manage database schemas+administer database schemas'
+
+divengine_database.api.import:
+  path: '/api/divengine/database/import'
+  defaults:
+    _controller: '\Drupal\divengine_database\Controller\DatabaseApiController::import'
+  methods: [POST]
+  requirements:
+    _permission: 'import database snapshots+manage database schemas+administer database schemas'
+    _csrf_request_header_token: 'TRUE'
+  options:
+    _auth: ['basic_auth', 'cookie']

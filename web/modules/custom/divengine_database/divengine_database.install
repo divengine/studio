@@ -1,0 +1,169 @@
+<?php
+
+/**
+ * @file
+ * Schema of the database catalog: the facts of each snapshot.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ *
+ * The facts of the snapshots: tables, columns, indexes, relationships,
+ * routines and findings, all keyed by the snapshot that captured them.
+ * Metadata only, never row data. Rows of a ready snapshot never change: a
+ * new capture is a new snapshot.
+ */
+function divengine_database_schema(): array {
+  $id = ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE];
+  $ref = ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE];
+  $optional_ref = ['type' => 'int', 'unsigned' => TRUE, 'not null' => FALSE];
+  $name = ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''];
+  $short = ['type' => 'varchar', 'length' => 128, 'not null' => FALSE];
+  $key = ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''];
+  $flag = ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 0];
+  $int = ['type' => 'int', 'not null' => FALSE];
+  $text = ['type' => 'text', 'size' => 'big', 'not null' => FALSE];
+  return [
+    'divengine_db_table' => [
+      'description' => 'A table or view of a snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'name' => $name,
+        'catalog' => $name,
+        'obj_type' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE, 'default' => 'table'],
+        'comment' => $text,
+        'view_definition' => $text,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot_name' => ['sid', 'name']],
+    ],
+    'divengine_db_column' => [
+      'description' => 'A column of a table of a snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'table_id' => $ref,
+        'name' => $name,
+        'position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'data_type' => $short,
+        'jdbc_type_code' => $int,
+        'size' => ['type' => 'int', 'size' => 'big', 'not null' => FALSE],
+        'scale' => $int,
+        'nullable' => $flag,
+        'has_default' => $flag,
+        'default_value' => $text,
+        'auto_updated' => $flag,
+        'comment' => $text,
+        'pk_position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'charset' => $short,
+        'collation' => $short,
+        'enum_values' => $text,
+        'auto_increment' => $flag,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['table_position' => ['table_id', 'position'], 'snapshot_name' => ['sid', 'name']],
+    ],
+    'divengine_db_index' => [
+      'description' => 'An index of a table of a snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'table_id' => $ref,
+        'name' => $name,
+        'is_unique' => $flag,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid'], 'table' => ['table_id']],
+    ],
+    'divengine_db_index_column' => [
+      'description' => 'An ordered column of an index.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'index_id' => $ref,
+        'column_id' => $ref,
+        'position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'ascending' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid'], 'index' => ['index_id']],
+    ],
+    'divengine_db_fk' => [
+      'description' => 'A relationship of a snapshot: a real foreign key or one implied by the analyzer.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'name' => $name,
+        'implied' => $flag,
+        'on_delete_cascade' => $flag,
+        'on_update' => $short,
+        'child_table_id' => $ref,
+        'parent_table_id' => $ref,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid'], 'child' => ['child_table_id'], 'parent' => ['parent_table_id']],
+    ],
+    'divengine_db_fk_column' => [
+      'description' => 'An ordered column pair of a relationship (composite keys have several).',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'fk_id' => $ref,
+        'position' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+        'child_column_id' => $ref,
+        'parent_column_id' => $ref,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid'], 'fk' => ['fk_id'], 'child_column' => ['child_column_id']],
+    ],
+    'divengine_db_routine' => [
+      'description' => 'A stored procedure or function of a snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'name' => $name,
+        'catalog' => $name,
+        'schema_name' => $name,
+        'routine_type' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE, 'default' => 'procedure'],
+        'return_type' => $short,
+        'parameter_signature' => $text,
+        'definition' => $text,
+        'deterministic' => $flag,
+        'sql_data_access' => $short,
+        'security_type' => $short,
+        'comment' => $text,
+        'created' => $short,
+        'modified' => $short,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid']],
+    ],
+    'divengine_db_finding' => [
+      'description' => 'A finding of a rule over the facts of a snapshot.',
+      'fields' => [
+        'id' => $id,
+        'sid' => $ref,
+        'rule_code' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+        'rule_version' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE, 'default' => '1'],
+        'producer' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'default' => 'divengine_database'],
+        'object_type' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE, 'default' => 'table'],
+        'table_id' => $optional_ref,
+        'column_id' => $optional_ref,
+        'severity' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE, 'default' => 'info'],
+        'title' => $name,
+        'detail' => $text,
+        'logical_key' => $key,
+      ],
+      'primary key' => ['id'],
+      'indexes' => ['snapshot' => ['sid', 'severity'], 'table' => ['table_id']],
+    ],
+  ];
+}

@@ -1,0 +1,25 @@
+services:
+  divengine_database.adapters:
+    class: Drupal\divengine_database\Contract\AdapterManager
+    tags:
+      - { name: service_collector, tag: divengine_database.contract_adapter, call: addAdapter }
+  divengine_database.adapter.contract:
+    class: Drupal\divengine_database\Contract\Adapter\JsonContractAdapter
+    tags:
+      - { name: divengine_database.contract_adapter, priority: 10 }
+  divengine_database.adapter.schemaspy:
+    class: Drupal\divengine_database\Contract\Adapter\SchemaSpyAdapter
+    tags:
+      - { name: divengine_database.contract_adapter }
+  divengine_database.facts:
+    class: Drupal\divengine_database\SchemaFacts
+    arguments: ['@database']
+  divengine_database.findings:
+    class: Drupal\divengine_database\FindingsAnalyzer
+    arguments: ['@database']
+  divengine_database.importer:
+    class: Drupal\divengine_database\SnapshotImporter
+    arguments: ['@database', '@entity_type.manager', '@divengine_database.findings', '@datetime.time', '@current_user', '@logger.channel.divengine_database']
+  logger.channel.divengine_database:
+    parent: logger.channel_base
+    arguments: ['divengine_database']

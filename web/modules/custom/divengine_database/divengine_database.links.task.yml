@@ -1,0 +1,41 @@
+divengine_database.development:
+  title: 'Databases'
+  route_name: divengine_database.development
+  base_route: entity.development.canonical
+  weight: 10
+
+entity.schema_database.canonical:
+  title: 'Overview'
+  route_name: entity.schema_database.canonical
+  base_route: entity.schema_database.canonical
+  weight: 0
+
+divengine_database.evolution:
+  title: 'Evolution'
+  route_name: divengine_database.evolution
+  base_route: entity.schema_database.canonical
+  weight: 2
+
+divengine_database.import:
+  title: 'Import'
+  route_name: divengine_database.import
+  base_route: entity.schema_database.canonical
+  weight: 5
+
+entity.schema_database.edit_form:
+  title: 'Edit'
+  route_name: entity.schema_database.edit_form
+  base_route: entity.schema_database.canonical
+  weight: 10
+
+entity.schema_snapshot.canonical:
+  title: 'Overview'
+  route_name: entity.schema_snapshot.canonical
+  base_route: entity.schema_snapshot.canonical
+  weight: 0
+
+divengine_database.explorer:
+  title: 'Explorer'
+  route_name: divengine_database.explorer
+  base_route: entity.schema_snapshot.canonical
+  weight: 1

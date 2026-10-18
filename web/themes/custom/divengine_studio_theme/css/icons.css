@@ -26,3 +26,4 @@
 .dv-sidebar li.dv-nav--traceability > a::before { -webkit-mask-image: url(../icons/traceability.svg); mask-image: url(../icons/traceability.svg); }
 .dv-sidebar li.dv-nav--work > a::before { -webkit-mask-image: url(../icons/work.svg); mask-image: url(../icons/work.svg); }
 .dv-sidebar li.dv-nav--code > a::before { -webkit-mask-image: url(../icons/code.svg); mask-image: url(../icons/code.svg); }
+.dv-sidebar li.dv-nav--database > a::before { -webkit-mask-image: url(../icons/database.svg); mask-image: url(../icons/database.svg); }

@@ -1,0 +1,13 @@
+use database schemas:
+  title: 'Explore database schemas'
+  description: 'See the databases of the Developments the user can see, their snapshots, tables, the schema explorer and schema evolution.'
+manage database schemas:
+  title: 'Manage database schemas'
+  description: 'Register databases and import snapshots into them.'
+import database snapshots:
+  title: 'Import database snapshots'
+  description: 'Push snapshots of registered databases through the HTTP endpoint, e.g. for an analyzer account in CI. Grants nothing else.'
+administer database schemas:
+  title: 'Administer database schemas'
+  description: 'Delete databases and snapshots with history.'
+  restrict access: true

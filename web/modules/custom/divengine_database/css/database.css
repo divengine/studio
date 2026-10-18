@@ -1,0 +1,40 @@
+/**
+ * Database pages: tables, SQL blocks, and the room the explorer needs.
+ */
+.dv-db-sql {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  overflow: auto;
+  max-height: 28rem;
+  border-radius: 6px;
+  background: #0f1b2e;
+  color: #d5ecff;
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+}
+.dv-db-columns td:first-child {
+  width: 2.5rem;
+  color: #64748b;
+  text-align: right;
+}
+.dv-db-columns tr:target,
+.dv-db-columns tr[id]:target td {
+  background: #fff7d6;
+}
+.dv-db-filter input[type="search"] {
+  min-width: 14rem;
+}
+
+/* The explorer and evolution pages fill the content area down to the window bottom. */
+.dv-db-app {
+  position: relative;
+  height: calc(100vh - 14rem);
+  min-height: 34rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.dv-db-app--evolution {
+  height: auto;
+  min-height: calc(100vh - 14rem);
+  overflow: visible;
+}

@@ -1,0 +1,408 @@
+/* Schema evolution. Compiled from the CodeIntel schema_evolution.scss (sass 1.83, expanded). */
+.dv_ev {
+  height: 100%;
+  overflow: auto;
+  padding: 12px 16px 24px;
+  background: #070c19;
+  color: #d5ecff;
+  font-size: 13px;
+}
+.dv_ev button {
+  background: transparent;
+  color: #d5ecff;
+  border: 1px solid rgba(79, 216, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.dv_ev button.is-on {
+  background: rgba(79, 216, 255, 0.16);
+  border-color: #4fd8ff;
+}
+.dv_ev button.is-primary {
+  background: rgba(79, 216, 255, 0.22);
+  border-color: #4fd8ff;
+  font-weight: 600;
+}
+.dv_ev button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.dv_ev button small {
+  color: #6f86a6;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+.dv_ev select,
+.dv_ev input[type=search] {
+  background: #0c1427;
+  color: #d5ecff;
+  border: 1px solid rgba(79, 216, 255, 0.2);
+  border-radius: 4px;
+  padding: 3px 6px;
+  max-width: 100%;
+}
+.dv_ev .is-added {
+  color: #6ee7b7;
+}
+.dv_ev .is-removed {
+  color: #ff6b81;
+}
+.dv_ev .is-modified {
+  color: #ffc857;
+}
+
+.dv_ev_nav,
+.dv_ev_pair,
+.dv_ev_filters,
+.dv_ev_tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.dv_ev_brand {
+  font: 700 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  letter-spacing: 0.14em;
+  color: #4fd8ff;
+  margin-right: 12px;
+}
+
+.dv_ev_pair label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 700 10px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  color: #6f86a6;
+  letter-spacing: 0.1em;
+}
+.dv_ev_pair label select {
+  min-width: 260px;
+  font: 12px "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+
+.dv_ev_spacer {
+  flex: 1;
+}
+
+.dv_ev_sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(79, 216, 255, 0.2);
+  margin: 0 4px;
+}
+
+.dv_ev_msg {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(79, 216, 255, 0.2);
+  border-radius: 4px;
+  background: #0c1427;
+}
+.dv_ev_msg.is-error {
+  border-color: #ff6b81;
+  color: #ff6b81;
+}
+.dv_ev_msg.is-warn {
+  border-color: #ffc857;
+  color: #ffc857;
+}
+.dv_ev_msg.is-note {
+  color: #6f86a6;
+}
+
+.dv_ev_future {
+  max-width: 720px;
+  padding: 16px;
+  border: 1px dashed rgba(79, 216, 255, 0.2);
+  border-radius: 6px;
+  color: #6f86a6;
+}
+
+.dv_ev_summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.dv_ev_card {
+  background: #0c1427;
+  border: 1px solid rgba(79, 216, 255, 0.2);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.dv_ev_card small {
+  color: #6f86a6;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.dv_ev_card_head {
+  flex: 1 1 260px;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_ev_card_head b {
+  color: #4fd8ff;
+}
+
+.dv_ev_totals {
+  margin-top: 8px;
+  display: flex;
+  gap: 14px;
+  color: #6f86a6;
+}
+.dv_ev_totals b {
+  color: #d5ecff;
+}
+
+.dv_ev_counts {
+  border-collapse: separate;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_ev_counts th,
+.dv_ev_counts td {
+  padding: 2px 10px;
+  text-align: right;
+}
+.dv_ev_counts tbody th {
+  text-align: left;
+  color: #6f86a6;
+  font-weight: 400;
+}
+
+.dv_ev_sev {
+  min-width: 200px;
+}
+
+.dv_ev_sev_row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+}
+.dv_ev_sev_row.is-destructive {
+  color: #ff6b81;
+}
+.dv_ev_sev_row.is-compatibility {
+  color: #ffc857;
+}
+.dv_ev_sev_row.is-additive {
+  color: #6ee7b7;
+}
+
+.dv_ev_filters input[type=search] {
+  min-width: 220px;
+}
+
+.dv_ev_split {
+  display: grid;
+  grid-template-columns: minmax(280px, 2fr) minmax(300px, 3fr);
+  gap: 10px;
+  min-height: 360px;
+}
+@media (max-width: 900px) {
+  .dv_ev_split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dv_ev_tree,
+.dv_ev_detail {
+  background: #0c1427;
+  border: 1px solid rgba(79, 216, 255, 0.2);
+  border-radius: 6px;
+  padding: 6px;
+  overflow: auto;
+  max-height: calc(100vh - 330px);
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.dv_ev_group,
+.dv_ev_leaf {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+.dv_ev_group:hover,
+.dv_ev_leaf:hover {
+  background: rgba(79, 216, 255, 0.07);
+}
+.dv_ev_group.is-selected,
+.dv_ev_leaf.is-selected {
+  background: rgba(79, 216, 255, 0.16);
+}
+.dv_ev_group.is-added,
+.dv_ev_leaf.is-added {
+  border-left-color: #6ee7b7;
+}
+.dv_ev_group.is-removed,
+.dv_ev_leaf.is-removed {
+  border-left-color: #ff6b81;
+}
+.dv_ev_group.is-removed .dv_ev_name,
+.dv_ev_leaf.is-removed .dv_ev_name {
+  text-decoration: line-through;
+}
+.dv_ev_group.is-modified,
+.dv_ev_leaf.is-modified {
+  border-left-color: #ffc857;
+}
+.dv_ev_group.is-unchanged,
+.dv_ev_leaf.is-unchanged {
+  opacity: 0.6;
+}
+
+.dv_ev_group {
+  font-weight: 600;
+}
+
+.dv_ev_leaf {
+  margin-left: 18px;
+}
+
+.dv_ev_twisty {
+  width: 12px;
+  color: #6f86a6;
+}
+
+.dv_ev_sign {
+  width: 10px;
+  font-weight: 700;
+}
+
+.dv_ev_type {
+  color: #6f86a6;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dv_ev_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dv_ev_badge {
+  margin-left: auto;
+  color: #6f86a6;
+  font-size: 10px;
+}
+
+.dv_ev_sevtag {
+  margin-left: auto;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6f86a6;
+}
+.dv_ev_sevtag.is-destructive {
+  color: #ff6b81;
+}
+.dv_ev_sevtag.is-compatibility {
+  color: #ffc857;
+}
+.dv_ev_sevtag.is-additive {
+  color: #6ee7b7;
+}
+
+.dv_ev_chip {
+  display: inline-block;
+  padding: 1px 7px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.dv_ev_detail_head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.dv_ev_detail_head h3 {
+  flex-basis: 100%;
+  margin: 4px 0 0;
+  font-size: 15px;
+  color: #d5ecff;
+}
+
+.dv_ev_key {
+  color: #6f86a6;
+  font-size: 10px;
+  background: transparent;
+}
+
+.dv_ev_props {
+  width: 100%;
+  border-collapse: collapse;
+}
+.dv_ev_props th,
+.dv_ev_props td {
+  padding: 3px 8px;
+  border-bottom: 1px solid rgba(79, 216, 255, 0.08);
+  text-align: left;
+  vertical-align: top;
+  word-break: break-word;
+}
+.dv_ev_props thead th {
+  color: #6f86a6;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.dv_ev_props tbody th {
+  color: #6f86a6;
+  font-weight: 400;
+}
+.dv_ev_props tr.is-changed {
+  background: rgba(255, 200, 87, 0.08);
+}
+.dv_ev_props tr.is-changed td:nth-child(2) {
+  color: #ff6b81;
+}
+.dv_ev_props tr.is-changed td:nth-child(3) {
+  color: #6ee7b7;
+}
+
+.dv_ev_detail_actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.dv_ev_report {
+  max-width: 960px;
+  font-family: "JetBrains Mono", "SFMono-Regular", "Cascadia Code", Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+.dv_ev_report h2,
+.dv_ev_report h3,
+.dv_ev_report h4 {
+  color: #d5ecff;
+}
+.dv_ev_report h3 small {
+  color: #6f86a6;
+  font-size: 11px;
+}
+.dv_ev_report h4.is-destructive {
+  color: #ff6b81;
+}
+.dv_ev_report h4.is-compatibility {
+  color: #ffc857;
+}
+
+.dv_ev_muted {
+  color: #6f86a6;
+  padding: 8px;
+}

@@ -1,0 +1,40 @@
+<?php
+
+/**
+ * @file
+ * Database schemas of Developments: snapshots, explorer and evolution.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_divengine_process_scoped_types_alter().
+ *
+ * Databases and snapshots follow the visibility of their Development.
+ */
+function divengine_database_divengine_process_scoped_types_alter(array &$types): void {
+  array_push($types, 'schema_database', 'schema_snapshot');
+}
+
+/**
+ * Implements hook_divengine_thread_types_alter().
+ */
+function divengine_database_divengine_thread_types_alter(array &$types): void {
+  $types['schema_database'] = ['bundles' => NULL, 'field' => 'thread', 'comment_type' => 'thread_schema_database'];
+}
+
+/**
+ * Implements hook_divengine_code_fields_alter().
+ *
+ * [[DB-0001]] links a database.
+ */
+function divengine_database_divengine_code_fields_alter(array &$fields): void {
+  $fields['schema_database'] = 'code';
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ */
+function divengine_database_divengine_trace_end_types_alter(array &$types): void {
+  $types[] = 'schema_database';
+}

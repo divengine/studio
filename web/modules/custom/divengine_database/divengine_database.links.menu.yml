@@ -1,0 +1,6 @@
+divengine_database.studio.databases:
+  title: 'Databases'
+  description: 'The database schemas of your Developments.'
+  route_name: divengine_database.databases
+  menu_name: studio
+  weight: 3
