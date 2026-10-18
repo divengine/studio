@@ -113,4 +113,41 @@ class TracePanel {
     ];
   }
 
+
+  /**
+   * "Mentioned in": the records whose texts mention this one with
+   * [[CODE]], that the viewer may see. A comment shows as the discussion
+   * of its record.
+   */
+  public function mentions(ContentEntityInterface $entity): array {
+    $rows = [];
+    foreach (\Drupal::service('divengine_traceability.reference_index')->mentionsOf($entity) as $source) {
+      $place = $source;
+      $where = $source->getEntityType()->getBundleEntityType() && ($bundle = $source->get($source->getEntityType()->getKey('bundle'))->entity)
+        ? (string) $bundle->label()
+        : (string) $source->getEntityType()->getSingularLabel();
+      if ($source->getEntityTypeId() === 'comment' && ($host = $source->getCommentedEntity())) {
+        $place = $host;
+        $where = (string) $this->t('discussion of a @type', ['@type' => $host->getEntityType()->getSingularLabel()]);
+      }
+      if (!$source->access('view', $this->currentUser) || !$place->access('view', $this->currentUser) || !$place->hasLinkTemplate('canonical')) {
+        continue;
+      }
+      $rows[$place->getEntityTypeId() . ':' . $place->id() . ':' . $where] = [
+        ['data' => $place->toLink()->toRenderable()],
+        ['data' => ['#plain_text' => $where]],
+      ];
+    }
+    if (!$rows) {
+      return [];
+    }
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:section',
+      '#props' => ['title' => (string) $this->t('Mentioned in'), 'count' => (string) count($rows), 'description' => (string) $this->t('Texts that link here with its code.')],
+      '#slots' => ['content' => ['#type' => 'table', '#header' => [$this->t('Record'), $this->t('Where')], '#rows' => array_values($rows)]],
+      '#cache' => ['tags' => ['comment_list', 'node_list'], 'contexts' => ['user']],
+    ];
+  }
+
 }

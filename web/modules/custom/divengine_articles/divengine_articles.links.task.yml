@@ -1,0 +1,5 @@
+divengine_articles.development:
+  title: 'Knowledge'
+  route_name: divengine_articles.development
+  base_route: entity.development.canonical
+  weight: 8

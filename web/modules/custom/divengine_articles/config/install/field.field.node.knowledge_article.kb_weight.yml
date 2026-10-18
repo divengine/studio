@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.kb_weight
+    - node.type.knowledge_article
+id: node.knowledge_article.kb_weight
+field_name: kb_weight
+entity_type: node
+bundle: knowledge_article
+label: Order
+description: 'Sub-articles are listed by this number, then by title.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer
+

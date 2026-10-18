@@ -21,6 +21,7 @@ function divengine_traceability_entity_delete(EntityInterface $entity): void {
   if (!$entity instanceof ContentEntityInterface || $entity->getEntityTypeId() === 'trace_link') {
     return;
   }
+  \Drupal::service('divengine_traceability.reference_index')->forget($entity);
   $storage = \Drupal::entityTypeManager()->getStorage('trace_link');
   $query = $storage->getQuery()->accessCheck(FALSE);
   $source = $query->andConditionGroup()
@@ -76,5 +77,33 @@ function divengine_traceability_entity_extra_field_info(): array {
 function divengine_traceability_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
   if ($entity instanceof ContentEntityInterface && !$entity->isNew() && $display->getComponent('divengine_traces')) {
     $build['divengine_traces'] = \Drupal::service('divengine_traceability.trace_panel')->build($entity);
+  }
+  // Where a record with a code is mentioned ([[CODE]] in other texts).
+  if ($entity instanceof ContentEntityInterface && !$entity->isNew() && in_array($view_mode, ['full', 'default'], TRUE)
+    && \Drupal::service('divengine_traceability.code_resolver')->codeOf($entity) !== NULL) {
+    $mentions = \Drupal::service('divengine_traceability.trace_panel')->mentions($entity);
+    if ($mentions) {
+      $build['divengine_mentions'] = $mentions + ['#weight' => 61];
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Records the [[CODE]] mentions of the new record's texts.
+ */
+function divengine_traceability_entity_insert(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface && $entity->getEntityTypeId() !== 'trace_link') {
+    \Drupal::service('divengine_traceability.reference_index')->index($entity);
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function divengine_traceability_entity_update(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface && $entity->getEntityTypeId() !== 'trace_link') {
+    \Drupal::service('divengine_traceability.reference_index')->index($entity);
   }
 }

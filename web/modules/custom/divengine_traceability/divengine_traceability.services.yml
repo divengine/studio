@@ -6,3 +6,9 @@ services:
   divengine_traceability.trace_panel:
     class: Drupal\divengine_traceability\TracePanel
     arguments: ['@entity_type.manager', '@module_handler', '@current_user']
+  divengine_traceability.code_resolver:
+    class: Drupal\divengine_traceability\CodeResolver
+    arguments: ['@entity_type.manager', '@module_handler']
+  divengine_traceability.reference_index:
+    class: Drupal\divengine_traceability\ReferenceIndex
+    arguments: ['@database', '@entity_type.manager', '@divengine_traceability.code_resolver']

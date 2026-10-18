@@ -1,0 +1,6 @@
+divengine_articles.studio.knowledge:
+  title: 'Knowledge'
+  description: 'Articles: guides, documentation of Developments, how things work.'
+  route_name: divengine_articles.index
+  menu_name: studio
+  weight: 3

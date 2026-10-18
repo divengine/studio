@@ -1,0 +1,8 @@
+services:
+  divengine_articles.tree:
+    class: Drupal\divengine_articles\ArticleTree
+    arguments: ['@entity_type.manager', '@database']
+  divengine_articles.breadcrumb:
+    class: Drupal\divengine_articles\ArticleBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

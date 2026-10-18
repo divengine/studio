@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * @file
+ * Install of Divengine Knowledge Base.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_install().
+ *
+ * Article access by Development uses node access grants.
+ */
+function divengine_articles_install(bool $is_syncing): void {
+  if (!$is_syncing) {
+    node_access_rebuild();
+  }
+}

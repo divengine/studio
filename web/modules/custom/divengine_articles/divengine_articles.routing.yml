@@ -1,0 +1,19 @@
+divengine_articles.index:
+  path: '/knowledge'
+  defaults:
+    _controller: '\Drupal\divengine_articles\Controller\KnowledgeController::index'
+    _title: 'Knowledge'
+  requirements:
+    _permission: 'access content'
+
+divengine_articles.development:
+  path: '/development/{development}/knowledge'
+  defaults:
+    _controller: '\Drupal\divengine_articles\Controller\KnowledgeController::development'
+    _title_callback: '\Drupal\divengine_articles\Controller\KnowledgeController::developmentTitle'
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'

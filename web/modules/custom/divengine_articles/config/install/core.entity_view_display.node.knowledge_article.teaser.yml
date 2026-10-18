@@ -1,0 +1,50 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.knowledge_article.body
+    - field.field.node.knowledge_article.kb_code
+    - field.field.node.knowledge_article.kb_development
+    - field.field.node.knowledge_article.kb_parent
+    - field.field.node.knowledge_article.kb_topics
+    - field.field.node.knowledge_article.kb_weight
+    - node.type.knowledge_article
+  module:
+    - text
+    - user
+id: node.knowledge_article.teaser
+targetEntityType: node
+bundle: knowledge_article
+mode: teaser
+content:
+  body:
+    type: text_summary_or_trimmed
+    label: hidden
+    settings:
+      trim_length: 300
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  diagram_backlinks:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 50
+    region: content
+  divengine_traces:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 60
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  kb_code: true
+  kb_development: true
+  kb_parent: true
+  kb_topics: true
+  kb_weight: true
+

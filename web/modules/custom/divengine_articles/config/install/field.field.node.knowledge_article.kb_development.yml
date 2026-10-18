@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.kb_development
+    - node.type.knowledge_article
+id: node.knowledge_article.kb_development
+field_name: kb_development
+entity_type: node
+bundle: knowledge_article
+label: Development
+description: 'Documentation of a Development is seen by its members only. Leave empty for knowledge everyone can read.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:development'
+  handler_settings: {  }
+field_type: entity_reference
+

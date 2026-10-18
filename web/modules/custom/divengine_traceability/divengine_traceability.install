@@ -10,6 +10,35 @@ declare(strict_types=1);
 use Drupal\Core\Config\FileStorage;
 
 /**
+ * Implements hook_schema().
+ */
+function divengine_traceability_schema(): array {
+  return [
+    'divengine_reference' => [
+      'description' => 'Records that mention other records with [[CODE]] in their texts.',
+      'fields' => [
+        'source_type' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'description' => 'Entity type of the mentioning record.'],
+        'source_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'ID of the mentioning record.'],
+        'target_type' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'description' => 'Entity type of the mentioned record.'],
+        'target_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'ID of the mentioned record.'],
+      ],
+      'primary key' => ['source_type', 'source_id', 'target_type', 'target_id'],
+      'indexes' => ['target' => ['target_type', 'target_id']],
+    ],
+  ];
+}
+
+/**
+ * Create the table of mentions ([[CODE]] in texts).
+ */
+function divengine_traceability_update_11002(): void {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('divengine_reference')) {
+    $schema->createTable('divengine_reference', divengine_traceability_schema()['divengine_reference']);
+  }
+}
+
+/**
  * Turn trace link types into configuration and use core revision fields.
  */
 function divengine_traceability_update_11001(): string {

@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.kb_parent
+    - node.type.knowledge_article
+id: node.knowledge_article.kb_parent
+field_name: kb_parent
+entity_type: node
+bundle: knowledge_article
+label: 'Parent article'
+description: 'Nest this article under another one.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      knowledge_article: knowledge_article
+    sort:
+      field: title
+      direction: ASC
+field_type: entity_reference
+

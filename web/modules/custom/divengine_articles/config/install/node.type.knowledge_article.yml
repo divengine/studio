@@ -1,0 +1,11 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Knowledge article'
+type: knowledge_article
+description: 'A page of the knowledge base: how something works, a guide, a decision explained. Articles nest under other articles.'
+help: ''
+new_revision: true
+preview_mode: 0
+display_submitted: false
+

@@ -1,0 +1,11 @@
+/* [[CODE]] links in texts. */
+a.dv-ref {
+  padding: 0 0.3rem;
+  border-radius: 4px;
+  background: var(--dv-navy-50, #eef3fa);
+  text-decoration: none;
+  white-space: nowrap;
+}
+a.dv-ref:hover, a.dv-ref:focus { text-decoration: underline; }
+.dv-ref--restricted { padding: 0 0.3rem; border-radius: 4px; background: #f1f1f1; color: var(--dv-gray-500, #6b7280); }
+.dv-ref--missing { color: var(--dv-danger, #b42318); text-decoration: underline dotted; }

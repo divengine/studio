@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.kb_code
+    - node.type.knowledge_article
+id: node.knowledge_article.kb_code
+field_name: kb_code
+entity_type: node
+bundle: knowledge_article
+label: Code
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
+

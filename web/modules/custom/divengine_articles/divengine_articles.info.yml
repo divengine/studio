@@ -1,0 +1,13 @@
+name: 'Divengine Knowledge Base'
+type: module
+description: 'Knowledge articles in a hierarchy, documenting Developments or the whole organisation: diagrams and links to records embedded in the text, access by Development.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_knowledge
+  - divengine_process
+  - divengine_traceability
+  - drupal:node
+  - drupal:text
+  - drupal:taxonomy

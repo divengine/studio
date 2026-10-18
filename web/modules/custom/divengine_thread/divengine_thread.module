@@ -84,6 +84,11 @@ function divengine_thread_entity_view_alter(array &$build, EntityInterface $enti
   unset($build['divengine_thread']);
   $main = ['#type' => 'container', '#attributes' => ['class' => ['dv-with-thread__main']]];
   foreach (Element::children($build, TRUE) as $key) {
+    // Templates take these out of the content themselves (node title,
+    // author and date).
+    if (in_array($key, ['title', 'uid', 'created'], TRUE)) {
+      continue;
+    }
     $main[$key] = $build[$key];
     unset($build[$key]);
   }

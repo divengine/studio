@@ -1,0 +1,150 @@
+<?php
+
+/**
+ * @file
+ * Knowledge articles: codes, hierarchy, access by Development and pages.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_presave() for node.
+ *
+ * Articles get a KB code; a sub-article documents the same Development as
+ * its parent.
+ */
+function divengine_articles_node_presave(NodeInterface $node): void {
+  if ($node->bundle() !== 'knowledge_article') {
+    return;
+  }
+  if (trim((string) $node->get('kb_code')->value) === '') {
+    $node->set('kb_code', \Drupal::service('divengine_core.sequence')->next('KB'));
+  }
+  if ($parent = $node->get('kb_parent')->entity) {
+    $node->set('kb_development', $parent->get('kb_development')->target_id);
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_field_info_alter().
+ */
+function divengine_articles_entity_bundle_field_info_alter(array &$fields, EntityTypeInterface $entity_type, string $bundle): void {
+  if ($entity_type->id() === 'node' && $bundle === 'knowledge_article' && isset($fields['kb_parent'])) {
+    $fields['kb_parent']->addConstraint('KnowledgeArticleParent');
+  }
+}
+
+/**
+ * Implements hook_node_access_records().
+ *
+ * An article of a Development is seen by those who see the Development;
+ * other articles by everyone who may read content.
+ */
+function divengine_articles_node_access_records(NodeInterface $node): array {
+  if ($node->bundle() !== 'knowledge_article') {
+    return [];
+  }
+  $development = $node->get('kb_development')->target_id;
+  return [[
+    'realm' => $development ? 'divengine_development' : 'divengine_knowledge',
+    'gid' => $development ? (int) $development : 1,
+    'grant_view' => $node->isPublished() ? 1 : 0,
+    'grant_update' => 0,
+    'grant_delete' => 0,
+  ]];
+}
+
+/**
+ * Implements hook_node_grants().
+ */
+function divengine_articles_node_grants(AccountInterface $account, string $operation): array {
+  if ($operation !== 'view') {
+    return [];
+  }
+  $grants = [];
+  if ($account->hasPermission('access content')) {
+    $grants['divengine_knowledge'] = [1];
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('development');
+  $ids = $storage->getQuery()->accessCheck(TRUE)->addMetaData('account', $account)->execute();
+  if ($ids) {
+    $grants['divengine_development'] = array_map('intval', array_values($ids));
+  }
+  return $grants;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for node.
+ *
+ * Nobody changes the documentation of a Development they do not see.
+ */
+function divengine_articles_node_access(NodeInterface $node, string $operation, AccountInterface $account): AccessResult {
+  if ($node->bundle() !== 'knowledge_article' || !($development = $node->get('kb_development')->entity)) {
+    return AccessResult::neutral();
+  }
+  $visible = $development->access('view', $account, TRUE);
+  return ($visible->isAllowed() ? AccessResult::neutral() : AccessResult::forbidden())->addCacheableDependency($visible)->addCacheableDependency($node);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for node.
+ */
+function divengine_articles_node_view(array &$build, EntityInterface $node, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($node->bundle() === 'knowledge_article' && $view_mode === 'full') {
+    $build += \Drupal::classResolver(\Drupal\divengine_articles\ArticleView::class)->build($node);
+  }
+}
+
+/**
+ * Implements hook_divengine_thread_types_alter().
+ */
+function divengine_articles_divengine_thread_types_alter(array &$types): void {
+  $types['node'] = ['bundles' => ['knowledge_article'], 'field' => 'thread', 'comment_type' => 'thread_knowledge_article'];
+}
+
+/**
+ * Implements hook_preprocess_HOOK() for node templates.
+ *
+ * The article page shows its own header; the node title is the page title.
+ */
+function divengine_articles_preprocess_node(array &$variables): void {
+  if (($variables['node'] ?? NULL) instanceof NodeInterface && $variables['node']->bundle() === 'knowledge_article' && $variables['view_mode'] === 'full') {
+    $variables['display_submitted'] = FALSE;
+    $variables['attributes']['class'][] = 'dv-kb-article';
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for node_form.
+ *
+ * "New article" in a Development and "Add sub-article" fill in the
+ * Development or the parent; a sub-article takes its parent's Development.
+ */
+function divengine_articles_form_node_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+  /** @var \Drupal\node\NodeInterface $node */
+  $node = $form_state->getFormObject()->getEntity();
+  if ($node->bundle() !== 'knowledge_article') {
+    return;
+  }
+  $query = \Drupal::request()->query;
+  if ($node->isNew()) {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    if (($id = $query->get('parent')) && ($parent = $storage->load($id)) && $parent->bundle() === 'knowledge_article' && $parent->access('view')) {
+      $form['kb_parent']['widget'][0]['target_id']['#default_value'] = $parent;
+      $form['kb_development']['widget']['#default_value'] = $parent->get('kb_development')->target_id ? [$parent->get('kb_development')->target_id] : [];
+    }
+    elseif (($id = $query->get('development')) && ($development = \Drupal::entityTypeManager()->getStorage('development')->load($id)) && $development->access('view')) {
+      $form['kb_development']['widget']['#default_value'] = [$development->id()];
+    }
+  }
+  $form['kb_development']['#states'] = ['visible' => [':input[name="kb_parent[0][target_id]"]' => ['value' => '']]];
+  $form['kb_development']['widget']['#description'] = t('A sub-article belongs to the Development of its parent.');
+}

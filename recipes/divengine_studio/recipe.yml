@@ -20,6 +20,7 @@ install:
   - divengine_project
   - divengine_timesheet
   - divengine_thread
+  - divengine_articles
   - gin
   - divengine_studio_theme
 config:
@@ -40,6 +41,7 @@ config:
     divengine_process: '*'
     divengine_qa: '*'
     divengine_project: '*'
+    divengine_articles: '*'
     divengine_core: '*'
     divengine_studio_theme: '*'
   actions:
@@ -75,14 +77,37 @@ config:
             status: true
             weight: 100
             settings: {}
+        - instance_id: divengine_record_references
+          configuration:
+            id: divengine_record_references
+            provider: divengine_traceability
+            status: true
+            weight: 90
+            settings: {}
     filter.format.full_html:
+      setFilterConfigs:
+        - instance_id: divengine_diagram_embed
+          configuration:
+            id: divengine_diagram_embed
+            provider: divengine_diagram_embed
+            status: true
+            weight: 100
+            settings: {}
+        - instance_id: divengine_record_references
+          configuration:
+            id: divengine_record_references
+            provider: divengine_traceability
+            status: true
+            weight: 90
+            settings: {}
+    filter.format.qa_issue:
       setFilterConfig:
-        instance_id: divengine_diagram_embed
+        instance_id: divengine_record_references
         configuration:
-          id: divengine_diagram_embed
-          provider: divengine_diagram_embed
+          id: divengine_record_references
+          provider: divengine_traceability
           status: true
-          weight: 100
+          weight: 90
           settings: {}
     editor.editor.basic_html:
       addItemToToolbar: divengineDiagram
@@ -130,6 +155,11 @@ config:
         - 'skip comment approval'
         - 'edit own comments'
         - 'log time'
+        - 'create knowledge_article content'
+        - 'edit any knowledge_article content'
+        - 'delete own knowledge_article content'
+        - 'view knowledge_article revisions'
+        - 'revert knowledge_article revisions'
         - 'use qa'
     # Verification criteria of divengine_qa, after the cases are imported.
     divengine_process.development_case.standard:

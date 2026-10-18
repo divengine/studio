@@ -1,0 +1,4 @@
+articles:
+  css:
+    component:
+      css/articles.css: {}
