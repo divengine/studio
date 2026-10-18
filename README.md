@@ -22,6 +22,8 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_qa` | Test management: plans, suites, cases, steps, runs with frozen snapshots, results, corrections, evidence, QA Issues, dashboard, reports; verification of process records (ADR-0008) |
 | `web/modules/custom/divengine_project` | Project management: projects and subprojects, tasks and subtasks on Kanban boards, related tasks, comments, links to diagrams and artifacts (ADR-0009) |
 | `web/modules/custom/divengine_timesheet` | Time tracking: timesheet entries, allocated vs spent time on tasks, timer, weekly grid, reports (ADR-0010) |
+| `web/modules/custom/divengine_thread` | Discussion with attachments on every record, shown as a side panel (ADR-0011) |
+| `web/modules/custom/divengine_articles` | Knowledge base: hierarchical articles per Development, embedded diagrams, `[[CODE]]` links (ADR-0011) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
@@ -67,6 +69,12 @@ member).
 create projects and subprojects, manage any project they see and see everyone's timesheets
 on them. Everyone logs their own time. Add people as members of a
 project (or of a parent project) to let them see it.
+
+### Studio Manager
+
+The **Studio Manager** role can do everything in Studio's business logic (records, process,
+QA, projects, timesheets, knowledge and their configuration) without being a Drupal site
+administrator; it works entirely in the Studio theme.
 
 ### MCP (optional)
 
