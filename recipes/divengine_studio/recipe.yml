@@ -41,7 +41,7 @@ config:
     system.site:
       simpleConfigUpdate:
         name: 'Divengine Studio'
-        page.front: /developments
+        page.front: /studio
     # The filter goes first: the CKEditor 5 "Diagram" button requires it.
     filter.format.basic_html:
       setFilterConfigs:

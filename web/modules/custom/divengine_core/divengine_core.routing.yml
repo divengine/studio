@@ -5,3 +5,13 @@ divengine.admin:
     _title: 'Divengine Studio'
   requirements:
     _permission: 'access divengine'
+
+divengine_core.home:
+  path: '/studio'
+  defaults:
+    _controller: '\Drupal\divengine_core\Controller\HomeController::home'
+    _title: 'Divengine Studio'
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
