@@ -1,0 +1,70 @@
+<?php
+
+/**
+ * @file
+ * A discussion with attachments on every Studio record.
+ */
+
+declare(strict_types=1);
+
+use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
+/**
+ * Implements hook_modules_installed().
+ *
+ * Record types of newly installed modules get their thread.
+ */
+function divengine_thread_modules_installed(array $modules, bool $is_syncing): void {
+  if (!$is_syncing) {
+    \Drupal::service('divengine_thread.manager')->sync();
+  }
+}
+
+/**
+ * Implements hook_entity_bundle_create().
+ *
+ * New artifact types (and other bundles of threaded types) get a thread.
+ */
+function divengine_thread_entity_bundle_create(string $entity_type_id, string $bundle): void {
+  if (!\Drupal::isConfigSyncing() && isset(\Drupal::service('divengine_thread.manager')->types()[$entity_type_id])) {
+    \Drupal::service('divengine_thread.manager')->sync();
+  }
+}
+
+/**
+ * Implements hook_entity_load().
+ *
+ * Records created before their thread existed have no value in the thread
+ * field; they are open for discussion like new ones.
+ */
+function divengine_thread_entity_load(array $entities, string $entity_type_id): void {
+  $manager = \Drupal::service('divengine_thread.manager');
+  if (!isset($manager->types()[$entity_type_id])) {
+    return;
+  }
+  foreach ($entities as $entity) {
+    if ($entity instanceof ContentEntityInterface && ($field = $manager->field($entity)) && $entity->get($field)->isEmpty()) {
+      $entity->get($field)->setValue([['status' => CommentItemInterface::OPEN]]);
+    }
+  }
+}
+
+/**
+ * Implements hook_entity_view().
+ *
+ * The full page of a threaded record ends with its attachments and its
+ * discussion.
+ */
+function divengine_thread_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  if (($view_mode !== 'full' && $view_mode !== 'default') || !$entity instanceof ContentEntityInterface || $entity->isNew()) {
+    return;
+  }
+  $manager = \Drupal::service('divengine_thread.manager');
+  if (!$field = $manager->field($entity)) {
+    return;
+  }
+  $build['divengine_thread'] = \Drupal::service('divengine_thread.view')->build($entity, $field) + ['#weight' => 1000];
+}

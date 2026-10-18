@@ -1,0 +1,10 @@
+name: 'Divengine Thread'
+type: module
+description: 'A discussion with attachments on every Studio record, like a chatter: comments, replies and files, built on the core Comment module.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - drupal:comment
+  - drupal:file
+  - drupal:text

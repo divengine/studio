@@ -19,6 +19,7 @@ install:
   - divengine_qa
   - divengine_project
   - divengine_timesheet
+  - divengine_thread
   - gin
   - divengine_studio_theme
 config:
@@ -151,6 +152,7 @@ config:
       createIfNotExists:
         label: 'QA User'
       grantPermissions:
+        - 'access comments'
         - 'access divengine'
         - 'use unified process'
         - 'view trace links'
@@ -159,6 +161,10 @@ config:
       createIfNotExists:
         label: 'QA Tester'
       grantPermissions:
+        - 'access comments'
+        - 'post comments'
+        - 'skip comment approval'
+        - 'edit own comments'
         - 'access divengine'
         - 'use unified process'
         - 'view trace links'
@@ -169,6 +175,10 @@ config:
       createIfNotExists:
         label: 'QA Lead'
       grantPermissions:
+        - 'access comments'
+        - 'post comments'
+        - 'skip comment approval'
+        - 'edit own comments'
         - 'access divengine'
         - 'use unified process'
         - 'view trace links'
@@ -182,6 +192,10 @@ config:
       createIfNotExists:
         label: 'QA Manager'
       grantPermissions:
+        - 'access comments'
+        - 'post comments'
+        - 'skip comment approval'
+        - 'edit own comments'
         - 'access divengine'
         - 'use unified process'
         - 'view trace links'

@@ -36,3 +36,13 @@ function divengine_project_query_alter(AlterableInterface $query): void {
 function divengine_project_divengine_trace_end_types_alter(array &$types): void {
   array_push($types, 'project', 'project_task');
 }
+
+/**
+ * Implements hook_divengine_thread_types_alter().
+ *
+ * Projects get a discussion; tasks already have their comments field,
+ * which becomes their discussion with attachments.
+ */
+function divengine_project_divengine_thread_types_alter(array &$types): void {
+  $types['project_task'] = ['bundles' => NULL, 'field' => 'comments', 'comment_type' => 'project_task_comment'];
+}

@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Install and requirements of Divengine Thread.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_install().
+ */
+function divengine_thread_install(bool $is_syncing): void {
+  if (!$is_syncing) {
+    \Drupal::service('divengine_thread.manager')->sync();
+  }
+}
+
+/**
+ * Implements hook_requirements().
+ *
+ * Attachments are stored in the private file system.
+ */
+function divengine_thread_requirements(string $phase): array {
+  if (!in_array($phase, ['install', 'runtime'], TRUE)) {
+    return [];
+  }
+  $private = \Drupal::service('stream_wrapper_manager')->isValidScheme('private');
+  return [
+    'divengine_thread_private_files' => [
+      'title' => new TranslatableMarkup('Discussion attachments'),
+      'value' => $private ? new TranslatableMarkup('Private file system') : new TranslatableMarkup('Not configured'),
+      'description' => $private ? NULL : new TranslatableMarkup("Attachments are stored privately. Set <code>\$settings['file_private_path']</code> in settings.php."),
+      'severity' => $private ? REQUIREMENT_OK : REQUIREMENT_ERROR,
+    ],
+  ];
+}

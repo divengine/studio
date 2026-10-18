@@ -1,0 +1,7 @@
+services:
+  divengine_thread.manager:
+    class: Drupal\divengine_thread\ThreadManager
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity_display.repository', '@module_handler', '@database']
+  divengine_thread.view:
+    class: Drupal\divengine_thread\ThreadView
+    arguments: ['@divengine_thread.manager', '@entity_type.manager', '@date.formatter', '@file_url_generator']

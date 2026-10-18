@@ -1,0 +1,17 @@
+.dv-thread { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1.5rem; }
+.dv-attachments { display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 0.5rem; }
+.dv-attachment {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #dfe3ea;
+  border-radius: 6px;
+  background: #fff;
+}
+.dv-attachment__icon { grid-row: span 2; font-size: 1.4rem; text-align: center; }
+.dv-attachment__name { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dv-attachment__meta { font-size: 0.75rem; color: var(--dv-gray-500, #6b7280); }
+.dv-comment__body .field--name-thread-files, .dv-comment__body .file { font-size: 0.85rem; }

@@ -47,14 +47,15 @@ class ProjectViewBuilder extends EntityViewBuilder {
       return;
     }
     foreach ($entities as $id => $entity) {
-      // The page shows the fields in its own sections; traces and the
-      // comment thread stay.
+      // The page shows the fields in its own sections; traces stay, and
+      // the discussion is added by divengine_thread when installed.
       foreach (array_keys($entity->getFieldDefinitions()) as $field_name) {
-        if ($field_name !== 'comments') {
-          unset($build[$id][$field_name]);
-        }
+        unset($build[$id][$field_name]);
       }
       $build[$id] += $entity instanceof Project ? $this->project($entity) : $this->task($entity);
+      if ($entity instanceof ProjectTask && !\Drupal::moduleHandler()->moduleExists('divengine_thread')) {
+        $build[$id]['comments'] = $entity->get('comments')->view(['label' => 'above', 'type' => 'comment_default', 'settings' => ['view_mode' => 'default', 'pager_id' => 0]]) + ['#weight' => 100];
+      }
       $build[$id]['#attached']['library'][] = 'divengine_project/project';
       $build[$id]['#cache']['tags'][] = 'project_list';
       $build[$id]['#cache']['tags'][] = 'project_task_list';
