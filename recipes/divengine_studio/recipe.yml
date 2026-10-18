@@ -38,6 +38,10 @@ config:
       simpleConfigUpdate:
         admin: gin
         default: divengine_studio_theme
+    # Diagram types arrive as synced config, which skips the hook that
+    # attaches them to the diagram lifecycle; attach them here.
+    workflows.workflow.diagram_lifecycle:
+      addDiagramTypes: '*'
     system.site:
       simpleConfigUpdate:
         name: 'Divengine Studio'
