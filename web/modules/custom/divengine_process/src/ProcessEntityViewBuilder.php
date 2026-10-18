@@ -60,7 +60,7 @@ class ProcessEntityViewBuilder extends EntityViewBuilder {
     if ($development) {
       $facts[] = ['label' => (string) $this->t('Development'), 'value' => (string) $development->label()];
     }
-    foreach (['iteration', 'target_iteration', 'discipline', 'uid'] as $field) {
+    foreach (['phase', 'iteration', 'target_iteration', 'discipline', 'uid', 'responsible'] as $field) {
       if ($entity->hasField($field) && ($target = $entity->get($field)->entity)) {
         $facts[] = ['label' => (string) $entity->getFieldDefinition($field)->getLabel(), 'value' => (string) $target->label()];
       }
@@ -77,7 +77,7 @@ class ProcessEntityViewBuilder extends EntityViewBuilder {
 
     $state = $entity->getState();
     $tone = match ($state) {
-      'completed', 'verified', 'closed', 'implemented', 'scheduled' => 'success',
+      'completed', 'verified', 'closed', 'implemented', 'scheduled', 'reached', 'active', 'done' => 'success',
       'blocked', 'rejected' => 'danger',
       'skipped', 'accepted', 'triaged' => 'warning',
       'in_progress', 'ready' => 'info',

@@ -54,7 +54,10 @@ rafageist/archimate-js), `cmmn`, `ifml`, `excalidraw`. Each repeats the BPMN pat
 (canvas) or the UML pattern (text): plugin, bundle, vendored engine, editor, preview
 renderer, link extractor, tests.
 
-## Phase 4 — Unified Process
+## Phase 4 — Unified Process ✅
+
+Done; see ADR-0007 and `web/modules/custom/divengine_process/README.md`. Integrations
+(UML generation, Discovery, QA, Project, dashboard) remain.
 
 Port the ideas of the CodeIntel Unified Process (not its code):
 

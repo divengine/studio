@@ -66,6 +66,7 @@ function divengine_process_entity_type_alter(array &$entity_types): void {
     $entity_types['artifact']->addConstraint('ProcessDevelopmentRequired');
     $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
     $entity_types['artifact']->addConstraint('ProcessSameDevelopment');
+    $entity_types['artifact']->addConstraint('ProcessUniqueInDevelopment');
   }
 }
 

@@ -175,6 +175,19 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
     }
   }
 
+  public static function postDelete(EntityStorageInterface $storage, array $entities): void {
+    parent::postDelete($storage, $entities);
+    // The structure of a Development goes with it.
+    $entity_type_manager = \Drupal::entityTypeManager();
+    foreach (['role_assignment', 'milestone', 'iteration', 'development_phase'] as $entity_type_id) {
+      $children = $entity_type_manager->getStorage($entity_type_id);
+      $ids = $children->getQuery()->accessCheck(FALSE)->condition('development', array_keys($entities), 'IN')->execute();
+      if ($ids) {
+        $children->delete($children->loadMultiple($ids));
+      }
+    }
+  }
+
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::ownerBaseFieldDefinitions($entity_type);

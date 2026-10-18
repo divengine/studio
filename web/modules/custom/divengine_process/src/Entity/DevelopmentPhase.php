@@ -45,8 +45,8 @@ use Drupal\divengine_process\Form\ScopedEntityForm;
     'ProcessUniqueFields' => ['fields' => ['development', 'phase_type'], 'message' => 'A Development has one phase of each type.'],
   ],
   links: [
-    'canonical' => '/process/phase/{development_phase}',
-    'edit-form' => '/process/phase/{development_phase}/edit',
+    'canonical' => '/phase/{development_phase}',
+    'edit-form' => '/phase/{development_phase}/edit',
   ],
 )]
 class DevelopmentPhase extends ContentEntityBase {

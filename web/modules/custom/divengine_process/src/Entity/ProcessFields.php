@@ -94,6 +94,10 @@ final class ProcessFields {
       $field->setDisplayOptions('form', ['type' => 'options_select', 'weight' => $weight])
         ->setDisplayConfigurable('form', TRUE);
     }
+    else {
+      // Lifecycle states show in the status bar badge.
+      $field->setDisplayOptions('view', ['region' => 'hidden']);
+    }
     return $field;
   }
 

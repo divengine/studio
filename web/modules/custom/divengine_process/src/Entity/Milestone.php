@@ -13,6 +13,7 @@ use Drupal\divengine_process\Form\ScopedEntityForm;
 use Drupal\divengine_process\Lifecycle\StatefulInterface;
 use Drupal\divengine_process\Lifecycle\StatefulTrait;
 use Drupal\divengine_process\Lifecycle\Transition;
+use Drupal\divengine_process\ProcessEntityViewBuilder;
 use Drupal\divengine_process\Vocabulary;
 
 /**
@@ -28,6 +29,7 @@ use Drupal\divengine_process\Vocabulary;
   label_singular: new TranslatableMarkup('milestone'),
   label_plural: new TranslatableMarkup('milestones'),
   handlers: [
+    'view_builder' => ProcessEntityViewBuilder::class,
     'views_data' => 'Drupal\views\EntityViewsData',
     'access' => ScopedAccessControlHandler::class,
     'form' => [
@@ -50,8 +52,8 @@ use Drupal\divengine_process\Vocabulary;
     'ProcessUniqueFields' => ['fields' => ['development', 'milestone_type'], 'message' => 'A Development has one milestone of each type.'],
   ],
   links: [
-    'canonical' => '/process/milestone/{milestone}',
-    'edit-form' => '/process/milestone/{milestone}/edit',
+    'canonical' => '/milestone/{milestone}',
+    'edit-form' => '/milestone/{milestone}/edit',
   ],
 )]
 class Milestone extends ContentEntityBase implements StatefulInterface {

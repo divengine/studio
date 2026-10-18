@@ -19,3 +19,7 @@ services:
   divengine_process.baselines:
     class: Drupal\divengine_process\BaselineRecorder
     arguments: ['@entity_type.manager', '@database']
+  divengine_process.breadcrumb:
+    class: Drupal\divengine_process\ProcessBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

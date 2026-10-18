@@ -13,6 +13,7 @@ use Drupal\divengine_process\Form\ScopedEntityForm;
 use Drupal\divengine_process\Lifecycle\StatefulInterface;
 use Drupal\divengine_process\Lifecycle\StatefulTrait;
 use Drupal\divengine_process\Lifecycle\Transition;
+use Drupal\divengine_process\ProcessEntityViewBuilder;
 use Drupal\divengine_process\Vocabulary;
 
 /**
@@ -27,6 +28,7 @@ use Drupal\divengine_process\Vocabulary;
   label_singular: new TranslatableMarkup('iteration'),
   label_plural: new TranslatableMarkup('iterations'),
   handlers: [
+    'view_builder' => ProcessEntityViewBuilder::class,
     'views_data' => 'Drupal\views\EntityViewsData',
     'access' => ScopedAccessControlHandler::class,
     'form' => [
@@ -53,10 +55,10 @@ use Drupal\divengine_process\Vocabulary;
     'ProcessSameDevelopment' => ['fields' => ['phase']],
   ],
   links: [
-    'canonical' => '/process/iteration/{iteration}',
-    'add-form' => '/process/iteration/add',
-    'edit-form' => '/process/iteration/{iteration}/edit',
-    'delete-form' => '/process/iteration/{iteration}/delete',
+    'canonical' => '/iteration/{iteration}',
+    'add-form' => '/iteration/add',
+    'edit-form' => '/iteration/{iteration}/edit',
+    'delete-form' => '/iteration/{iteration}/delete',
   ],
 )]
 class Iteration extends ContentEntityBase implements StatefulInterface {

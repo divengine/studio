@@ -49,10 +49,10 @@ use Drupal\divengine_process\Form\ScopedEntityForm;
     'ProcessUniqueFields' => ['fields' => ['development', 'process_role', 'user'], 'message' => 'This user already plays this role in the Development.'],
   ],
   links: [
-    'canonical' => '/process/role-assignment/{role_assignment}',
-    'add-form' => '/process/role-assignment/add',
-    'edit-form' => '/process/role-assignment/{role_assignment}/edit',
-    'delete-form' => '/process/role-assignment/{role_assignment}/delete',
+    'canonical' => '/role-assignment/{role_assignment}',
+    'add-form' => '/role-assignment/add',
+    'edit-form' => '/role-assignment/{role_assignment}/edit',
+    'delete-form' => '/role-assignment/{role_assignment}/delete',
   ],
 )]
 class RoleAssignment extends ContentEntityBase {

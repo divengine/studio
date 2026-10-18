@@ -50,3 +50,22 @@
 .dv-intro { max-width: 60rem; color: var(--dv-gray-700); }
 .dv-section__description { margin-top: 0; color: var(--dv-gray-600); }
 .dv-section .item-list ul { margin: 0; padding-left: var(--dv-space-4); }
+
+/* Content moderation control on records with a lifecycle. */
+.entity-moderation-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--dv-space-3) var(--dv-space-5);
+  margin: 0 0 var(--dv-space-5);
+  padding: var(--dv-space-3) var(--dv-space-4);
+  border: 1px solid var(--dv-gray-200);
+  border-left: 4px solid var(--dv-navy);
+  border-radius: var(--dv-radius);
+  background: var(--dv-white);
+  list-style: none;
+}
+.entity-moderation-form__item { margin: 0; }
+.entity-moderation-form .form-item { margin: 0; }
+.entity-moderation-form input[type="text"] { min-width: 18rem; }
+.dv-section__content { overflow-x: auto; }
