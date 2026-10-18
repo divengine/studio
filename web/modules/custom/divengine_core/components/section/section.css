@@ -17,3 +17,8 @@
 .dv-section__actions { display: flex; gap: var(--dv-space-2, 0.5rem); }
 .dv-section__content { padding: var(--dv-space-4, 1rem); }
 .dv-section__content > table { width: 100%; margin: 0; }
+.dv-section__description {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  color: var(--dv-gray-600, #4b5563);
+}

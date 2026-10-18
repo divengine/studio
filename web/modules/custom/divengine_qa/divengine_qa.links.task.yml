@@ -3,3 +3,27 @@ divengine_qa.development_quality:
   route_name: divengine_qa.development_quality
   base_route: entity.development.canonical
   weight: 7
+
+divengine_qa.dashboard:
+  title: 'Dashboard'
+  route_name: divengine_qa.dashboard
+  base_route: divengine_qa.dashboard
+  weight: 0
+
+divengine_qa.report_executions:
+  title: 'Execution Reporting'
+  route_name: divengine_qa.report_executions
+  base_route: divengine_qa.dashboard
+  weight: 1
+
+divengine_qa.report_cases:
+  title: 'Test Case Reporting'
+  route_name: divengine_qa.report_cases
+  base_route: divengine_qa.dashboard
+  weight: 2
+
+divengine_qa.corrections:
+  title: 'Result Corrections'
+  route_name: divengine_qa.corrections
+  base_route: divengine_qa.dashboard
+  weight: 3

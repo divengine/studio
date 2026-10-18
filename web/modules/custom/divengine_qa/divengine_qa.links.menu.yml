@@ -53,3 +53,10 @@ divengine_qa.studio.issues:
   route_name: divengine_qa.issues
   menu_name: studio
   weight: 6
+
+divengine_qa.studio.dashboard:
+  title: 'QA dashboard'
+  description: 'Test management metrics, gaps and recent executions.'
+  route_name: divengine_qa.dashboard
+  menu_name: studio
+  weight: 4

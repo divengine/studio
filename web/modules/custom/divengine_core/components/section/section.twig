@@ -1,7 +1,10 @@
 <section{{ attributes.addClass('dv-section') }}>
   {% if title %}
     <header class="dv-section__header">
-      <h2 class="dv-section__title">{{ title }}{% if count is not empty %} <span class="dv-section__count">{{ count }}</span>{% endif %}</h2>
+      <div class="dv-section__heading">
+        <h2 class="dv-section__title">{{ title }}{% if count is not empty %} <span class="dv-section__count">{{ count }}</span>{% endif %}</h2>
+        {% if description %}<p class="dv-section__description">{{ description }}</p>{% endif %}
+      </div>
       <div class="dv-section__actions">{% block actions %}{% endblock %}</div>
     </header>
   {% endif %}

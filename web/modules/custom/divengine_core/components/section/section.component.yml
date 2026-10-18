@@ -11,6 +11,9 @@ props:
     count:
       type: string
       title: Count shown next to the title
+    description:
+      type: string
+      title: Subtitle shown under the title
 slots:
   content:
     title: Content

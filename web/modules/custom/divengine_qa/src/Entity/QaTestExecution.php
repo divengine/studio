@@ -6,6 +6,8 @@ namespace Drupal\divengine_qa\Entity;
 
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedInterface;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -52,7 +54,9 @@ use Drupal\divengine_qa\QaVocabulary;
     'canonical' => '/qa/execution/{qa_test_execution}',
   ],
 )]
-class QaTestExecution extends ContentEntityBase {
+class QaTestExecution extends ContentEntityBase implements EntityChangedInterface {
+
+  use EntityChangedTrait;
 
   use QaResultTrait;
   use QaScopedTrait;
@@ -159,6 +163,7 @@ class QaTestExecution extends ContentEntityBase {
       $fields[$name] = BaseFieldDefinition::create('string_long')->setLabel(new TranslatableMarkup($label));
     }
     $fields += static::resultFieldDefinitions();
+    $fields['changed'] = BaseFieldDefinition::create('changed')->setLabel(new TranslatableMarkup('Changed'));
     return $fields;
   }
 

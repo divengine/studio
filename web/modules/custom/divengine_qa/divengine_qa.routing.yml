@@ -234,3 +234,44 @@ divengine_qa.issues:
     _title: 'QA issues'
   requirements:
     _permission: 'use qa+execute qa tests+manage qa+administer qa'
+
+divengine_qa.dashboard:
+  path: '/qa/dashboard'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaDashboardController::page'
+    _title: 'QA dashboard'
+  requirements:
+    _permission: 'manage qa+administer qa'
+
+divengine_qa.browse:
+  path: '/qa/browse/{list}'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaDashboardController::browse'
+    _title: 'QA Management'
+  requirements:
+    _permission: 'manage qa+administer qa'
+    list: 'plans|suites|cases|steps|runs|executions|issues'
+
+divengine_qa.report_executions:
+  path: '/qa/reporting/executions'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaDashboardController::executionReport'
+    _title: 'Execution Reporting'
+  requirements:
+    _permission: 'manage qa+administer qa'
+
+divengine_qa.report_cases:
+  path: '/qa/reporting/cases'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaDashboardController::caseReport'
+    _title: 'Test Case Reporting'
+  requirements:
+    _permission: 'manage qa+administer qa'
+
+divengine_qa.corrections:
+  path: '/qa/reporting/corrections'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaDashboardController::corrections'
+    _title: 'Result Corrections'
+  requirements:
+    _permission: 'manage qa+administer qa'

@@ -20,3 +20,6 @@ services:
   divengine_qa.issues:
     class: Drupal\divengine_qa\QaIssues
     arguments: ['@entity_type.manager', '@current_user', '@file.repository', '@file_system', '@divengine_qa.logger']
+  divengine_qa.dashboard:
+    class: Drupal\divengine_qa\QaDashboard
+    arguments: ['@entity_type.manager']
