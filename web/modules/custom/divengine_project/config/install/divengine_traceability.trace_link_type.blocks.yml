@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - divengine_project
+id: blocks
+label: 'Blocks'
+inverse_label: 'Is blocked by'
+description: 'The target task cannot be finished until the source task is.'
+source_rules:
+  - project_task
+target_rules:
+  - project_task
+same_kind: true
+weight: 21

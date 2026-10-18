@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: task
+label: 'Task'
+description: "A piece of work to be done."
+color: '#335999'
+weight: 3

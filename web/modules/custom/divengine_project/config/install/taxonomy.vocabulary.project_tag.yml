@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Project tags'
+vid: project_tag
+description: 'Labels for tasks: areas, components, anything a team wants to filter by.'
+weight: 20
+new_revision: false

@@ -15,11 +15,6 @@ entity.diagram.edit_form:
   title: 'Edit details'
   weight: 10
 
-entity.diagram.version_history:
-  route_name: entity.diagram.version_history
-  base_route: entity.diagram.canonical
-  title: 'Revisions'
-  weight: 20
 
 entity.diagram.delete_form:
   route_name: entity.diagram.delete_form

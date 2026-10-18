@@ -1,0 +1,17 @@
+project:
+  css:
+    component:
+      css/project.css: {}
+
+board:
+  css:
+    component:
+      css/board.css: {}
+  js:
+    js/board.js: {}
+  dependencies:
+    - core/drupal
+    - core/drupal.message
+    - core/once
+    - core/sortable
+    - divengine_project/project

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: story
+label: 'Story'
+description: "A small piece of value, told from the user's point of view."
+color: '#22c55e'
+weight: 2

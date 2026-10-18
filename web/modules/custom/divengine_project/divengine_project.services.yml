@@ -1,0 +1,11 @@
+services:
+  divengine_project.visibility:
+    class: Drupal\divengine_project\ProjectVisibility
+    arguments: ['@database', '@entity_type.manager']
+  divengine_project.task_table:
+    class: Drupal\divengine_project\TaskTable
+    arguments: ['@entity_type.manager']
+  divengine_project.breadcrumb:
+    class: Drupal\divengine_project\ProjectBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

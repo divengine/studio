@@ -1,0 +1,35 @@
+entity.project.canonical:
+  title: 'Overview'
+  route_name: entity.project.canonical
+  base_route: entity.project.canonical
+  weight: 0
+
+divengine_project.board:
+  title: 'Board'
+  route_name: divengine_project.board
+  base_route: entity.project.canonical
+  weight: 1
+
+divengine_project.tasks:
+  title: 'Tasks'
+  route_name: divengine_project.tasks
+  base_route: entity.project.canonical
+  weight: 2
+
+entity.project.edit_form:
+  title: 'Edit'
+  route_name: entity.project.edit_form
+  base_route: entity.project.canonical
+  weight: 50
+
+entity.project_task.canonical:
+  title: 'View'
+  route_name: entity.project_task.canonical
+  base_route: entity.project_task.canonical
+  weight: 0
+
+entity.project_task.edit_form:
+  title: 'Edit'
+  route_name: entity.project_task.edit_form
+  base_route: entity.project_task.canonical
+  weight: 10

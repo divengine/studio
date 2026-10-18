@@ -1,0 +1,75 @@
+divengine_project.admin:
+  path: '/admin/divengine/projects'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Projects'
+  requirements:
+    _permission: 'administer projects'
+
+divengine_project.projects:
+  path: '/projects'
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\ProjectPagesController::projects'
+    _title: 'Projects'
+  requirements:
+    _permission: 'use projects+manage projects+administer projects'
+
+divengine_project.my_tasks:
+  path: '/my-tasks'
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\ProjectPagesController::myTasks'
+    _title: 'My tasks'
+  requirements:
+    _permission: 'use projects+manage projects+administer projects'
+
+divengine_project.tasks:
+  path: '/project/{project}/tasks'
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\ProjectPagesController::tasks'
+    _title: 'Tasks'
+  requirements:
+    _entity_access: 'project.view'
+  options:
+    parameters:
+      project:
+        type: 'entity:project'
+
+divengine_project.board:
+  path: '/project/{project}/board'
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\ProjectPagesController::board'
+    _title: 'Board'
+  requirements:
+    _entity_access: 'project.view'
+  options:
+    parameters:
+      project:
+        type: 'entity:project'
+
+divengine_project.board_move:
+  path: '/project/{project}/board/move'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\TaskMoveController::boardMove'
+  requirements:
+    _custom_access: '\Drupal\divengine_project\Controller\TaskMoveController::boardAccess'
+    _csrf_request_header_token: 'TRUE'
+    _format: json
+  options:
+    parameters:
+      project:
+        type: 'entity:project'
+
+divengine_project.move:
+  path: '/task/{project_task}/move/{stage}'
+  defaults:
+    _controller: '\Drupal\divengine_project\Controller\TaskMoveController::move'
+  requirements:
+    _custom_access: '\Drupal\divengine_project\Controller\TaskMoveController::moveAccess'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      project_task:
+        type: 'entity:project_task'
+      stage:
+        type: 'entity:project_stage'

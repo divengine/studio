@@ -1,0 +1,34 @@
+divengine_project.admin:
+  title: 'Projects'
+  description: 'Project configuration: task stages and task types.'
+  route_name: divengine_project.admin
+  parent: divengine.admin
+  weight: 45
+
+entity.project_stage.collection:
+  title: 'Task stages'
+  description: 'The columns of the boards and what each one means.'
+  route_name: entity.project_stage.collection
+  parent: divengine_project.admin
+  weight: 0
+
+entity.project_task_type.collection:
+  title: 'Task types'
+  description: 'Epic, Feature, Story, Task, Bug…'
+  route_name: entity.project_task_type.collection
+  parent: divengine_project.admin
+  weight: 10
+
+divengine_project.studio.projects:
+  title: 'Projects'
+  description: 'The projects you work on.'
+  route_name: divengine_project.projects
+  menu_name: studio
+  weight: 1
+
+divengine_project.studio.my_tasks:
+  title: 'My tasks'
+  description: 'The tasks assigned to you.'
+  route_name: divengine_project.my_tasks
+  menu_name: studio
+  weight: -9

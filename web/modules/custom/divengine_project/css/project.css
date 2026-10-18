@@ -1,0 +1,50 @@
+/* Task type marker: a coloured dot and the type name. */
+.dv-task-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-right: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--dv-task-type, #335999);
+}
+.dv-task-type::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 2px;
+  background: var(--dv-task-type, #335999);
+}
+
+/* Assignees as initials. */
+.dv-avatars { display: flex; gap: 0.2rem; }
+.dv-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--dv-navy, #335999);
+}
+
+.dv-deadline { font-size: 0.8rem; white-space: nowrap; }
+.dv-deadline--overdue { color: var(--dv-danger, #b42318); font-weight: 700; }
+
+.dv-progress { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+.dv-progress__track { flex: 1; height: 0.5rem; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+.dv-progress__fill { display: block; height: 100%; background: var(--dv-success, #1f7a4d); }
+.dv-progress__label { font-size: 0.8rem; white-space: nowrap; }
+
+/* Project tree. */
+.dv-indent { display: inline-block; width: 1.25rem; }
+.dv-indent__mark { color: var(--dv-gray-500, #6b7280); }
+
+.dv-filters, .dv-filter-form { margin-bottom: 1rem; }
+.dv-filter-form { display: flex; flex-wrap: wrap; align-items: end; gap: 0.75rem; }
+.dv-filter-form .form-item { margin: 0; }

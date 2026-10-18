@@ -1,0 +1,10 @@
+use projects:
+  title: 'Use projects'
+  description: 'See the projects the user belongs to (and their subprojects) and work on their tasks.'
+manage projects:
+  title: 'Manage projects'
+  description: 'Create projects and subprojects, and edit or delete any project and task the user can see.'
+administer projects:
+  title: 'Administer projects'
+  description: 'See every project and edit the project configuration: stages and task types.'
+  restrict access: true

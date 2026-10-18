@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: bug
+label: 'Bug'
+description: "Something that does not work as expected."
+color: '#ef4444'
+weight: 4

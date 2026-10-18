@@ -1,0 +1,38 @@
+<?php
+
+/**
+ * @file
+ * Project management: visibility and traces of projects and tasks.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+
+/**
+ * Implements hook_query_alter().
+ *
+ * Lists, Views and counts of projects and tasks only return what the user
+ * may see (see ProjectVisibility).
+ */
+function divengine_project_query_alter(AlterableInterface $query): void {
+  if (!$query instanceof SelectInterface) {
+    return;
+  }
+  foreach (['project', 'project_task'] as $entity_type_id) {
+    if ($query->hasTag($entity_type_id . '_access')) {
+      \Drupal::service('divengine_project.visibility')->alterQuery($query, $entity_type_id);
+    }
+  }
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ *
+ * Projects and tasks are linked to diagrams, artifacts and each other with
+ * traces; related tasks use "relates to", "blocks" and "duplicates".
+ */
+function divengine_project_divengine_trace_end_types_alter(array &$types): void {
+  array_push($types, 'project', 'project_task');
+}

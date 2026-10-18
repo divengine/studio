@@ -1,0 +1,13 @@
+name: 'Divengine Project'
+type: module
+description: 'Project management: projects and subprojects, tasks and subtasks on Kanban boards, related tasks, and links to diagrams and artifacts through traces.'
+core_version_requirement: ^11
+package: 'Divengine'
+configure: divengine_project.admin
+dependencies:
+  - divengine_core
+  - divengine_traceability
+  - drupal:datetime
+  - drupal:options
+  - drupal:text
+  - drupal:taxonomy

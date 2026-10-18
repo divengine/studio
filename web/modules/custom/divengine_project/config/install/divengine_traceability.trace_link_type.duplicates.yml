@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - divengine_project
+id: duplicates
+label: 'Duplicates'
+inverse_label: 'Is duplicated by'
+description: 'The source task describes the same work as the target.'
+source_rules:
+  - project_task
+target_rules:
+  - project_task
+same_kind: true
+weight: 22

@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: feature
+label: 'Feature'
+description: "A capability delivered to users."
+color: '#0ea5e9'
+weight: 1

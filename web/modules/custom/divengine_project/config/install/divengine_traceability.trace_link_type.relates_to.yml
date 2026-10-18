@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - divengine_project
+id: relates_to
+label: 'Relates to'
+inverse_label: 'Relates to'
+description: 'The two tasks are connected; working on one may affect the other.'
+source_rules:
+  - project_task
+target_rules:
+  - project_task
+same_kind: true
+weight: 20

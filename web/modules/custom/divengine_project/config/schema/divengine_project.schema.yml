@@ -1,0 +1,42 @@
+divengine_project.stage.*:
+  type: config_entity
+  label: 'Task stage'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Stage'
+    description:
+      type: text
+      label: 'Description'
+    category:
+      type: string
+      label: 'Category'
+    folded:
+      type: boolean
+      label: 'Folded on boards'
+    weight:
+      type: weight
+      label: 'Order'
+
+divengine_project.task_type.*:
+  type: config_entity
+  label: 'Task type'
+  mapping:
+    id:
+      type: machine_name
+      label: 'Code'
+    label:
+      type: required_label
+      label: 'Type'
+    description:
+      type: text
+      label: 'Description'
+    color:
+      type: color_hex
+      label: 'Color'
+    weight:
+      type: weight
+      label: 'Order'

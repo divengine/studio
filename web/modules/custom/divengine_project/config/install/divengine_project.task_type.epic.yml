@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: epic
+label: 'Epic'
+description: "A large body of work, split into features or stories."
+color: '#8b5cf6'
+weight: 0
