@@ -125,3 +125,28 @@ divengine_process.my_work:
     _title: 'My work'
   requirements:
     _permission: 'use unified process+administer unified process'
+
+divengine_process.development_baselines:
+  path: '/development/{development}/baselines'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\DevelopmentSectionController::section'
+    _title_callback: '\Drupal\divengine_process\Controller\DevelopmentSectionController::title'
+    section: baselines
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_process.take_baseline:
+  path: '/development/{development}/baselines/take'
+  defaults:
+    _form: '\Drupal\divengine_process\Form\TakeBaselineForm'
+    _title: 'Take a baseline'
+  requirements:
+    _entity_access: 'development.update'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'

@@ -67,6 +67,7 @@ class Milestone extends ContentEntityBase implements StatefulInterface {
         ['planned'],
         'reached',
         effect: 'recordReachedDate',
+        after: 'takeBaseline',
         confirm: new TranslatableMarkup('Readiness is advisory: unmet criteria are recorded, not enforced. Mark this milestone as reached?'),
       ),
       'reset' => new Transition('reset', new TranslatableMarkup('Back to planned'), ['reached'], 'planned', effect: 'clearReachedDate'),
@@ -105,6 +106,15 @@ class Milestone extends ContentEntityBase implements StatefulInterface {
       $note = (string) \Drupal::translation()->formatPlural($missing, 'Reached on @date with 1 required readiness criterion not met.', 'Reached on @date with @count required readiness criteria not met.', ['@date' => $today]);
       $notes = trim((string) $this->get('notes')->value);
       $this->set('notes', $notes === '' ? $note : $notes . "\n" . $note);
+    }
+  }
+
+  /**
+   * Reaching a milestone takes a baseline of the Development.
+   */
+  public function takeBaseline(): void {
+    if ($development = $this->getDevelopment()) {
+      \Drupal::service('divengine_process.baselines')->take($development, $this->label(), $this);
     }
   }
 

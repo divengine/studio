@@ -1,0 +1,144 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - divengine_process
+  - user
+id: divengine_process_baselines
+label: Development baselines
+module: views
+description: The baselines of a Development.
+tag: divengine
+base_table: baseline
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Development baselines
+      fields:
+        code:
+          id: code
+          table: baseline
+          field: code
+          entity_type: baseline
+          plugin_id: field
+          label: Code
+          entity_field: code
+        name:
+          id: name
+          table: baseline
+          field: name
+          entity_type: baseline
+          plugin_id: field
+          label: Baseline
+          entity_field: name
+          type: string
+          settings:
+            link_to_entity: true
+        milestone:
+          id: milestone
+          table: baseline
+          field: milestone
+          entity_type: baseline
+          plugin_id: field
+          label: Milestone
+          entity_field: milestone
+          type: entity_reference_label
+          settings:
+            link: false
+        created:
+          id: created
+          table: baseline
+          field: created
+          entity_type: baseline
+          plugin_id: field
+          label: Taken on
+          entity_field: created
+          type: timestamp
+          settings:
+            date_format: short
+        uid:
+          id: uid
+          table: baseline
+          field: uid
+          entity_type: baseline
+          plugin_id: field
+          label: Taken by
+          entity_field: uid
+          type: entity_reference_label
+          settings:
+            link: false
+      pager:
+        type: some
+        options:
+          items_per_page: 0
+          offset: 0
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+      access:
+        type: perm
+        options:
+          perm: use unified process
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: 'No baseline yet: take one, or reach a milestone.'
+      sorts:
+        created:
+          id: created
+          table: baseline
+          field: created
+          entity_type: baseline
+          entity_field: created
+          plugin_id: standard
+          order: DESC
+      arguments:
+        development:
+          id: development
+          table: baseline
+          field: development
+          entity_type: baseline
+          entity_field: development
+          plugin_id: numeric
+          default_action: not found
+          specify_validation: true
+          validate:
+            type: 'entity:development'
+            fail: not found
+          validate_options:
+            access: true
+            operation: view
+            multiple: 0
+            bundles: {}
+      filters: {}
+      style:
+        type: table
+        options:
+          sticky: false
+          empty_table: false
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {}
+  embed_1:
+    id: embed_1
+    display_title: Embed
+    display_plugin: embed
+    position: 1
+    display_options:
+      display_extenders: {}

@@ -16,3 +16,6 @@ services:
   divengine_process.readiness:
     class: Drupal\divengine_process\Readiness\ReadinessEvaluator
     arguments: ['@plugin.manager.divengine_readiness', '@divengine_process.development']
+  divengine_process.baselines:
+    class: Drupal\divengine_process\BaselineRecorder
+    arguments: ['@entity_type.manager', '@database']

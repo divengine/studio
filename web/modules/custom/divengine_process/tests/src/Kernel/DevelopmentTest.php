@@ -33,7 +33,9 @@ class DevelopmentTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installEntitySchema('artifact');
     $this->installEntitySchema('content_moderation_state');
-    foreach (['development', 'development_phase', 'iteration', 'milestone', 'role_assignment', 'process_activity', 'change_request'] as $entity_type_id) {
+    $this->installEntitySchema('trace_link');
+    $this->installSchema('divengine_process', ['divengine_process_baseline_item']);
+    foreach (['development', 'development_phase', 'iteration', 'milestone', 'role_assignment', 'process_activity', 'change_request', 'baseline'] as $entity_type_id) {
       $this->installEntitySchema($entity_type_id);
     }
     $this->installConfig(['divengine_artifact', 'divengine_traceability', 'divengine_process']);

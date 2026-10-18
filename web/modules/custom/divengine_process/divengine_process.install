@@ -1,0 +1,39 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for Divengine Process.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function divengine_process_schema(): array {
+  $schema['divengine_process_baseline_item'] = [
+    'description' => 'The exact revisions that took part in a baseline.',
+    'fields' => [
+      'baseline_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The baseline.'],
+      'entity_type' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'description' => 'Entity type of the record.'],
+      'entity_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'ID of the record.'],
+      'revision_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'description' => 'The exact revision of the record in the baseline.'],
+    ],
+    'primary key' => ['baseline_id', 'entity_type', 'entity_id'],
+    'indexes' => [
+      'revision' => ['entity_type', 'revision_id'],
+      'record' => ['entity_type', 'entity_id'],
+    ],
+  ];
+  return $schema;
+}
+
+/**
+ * Creates the baseline item table.
+ */
+function divengine_process_update_10001(): void {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('divengine_process_baseline_item')) {
+    $schema->createTable('divengine_process_baseline_item', divengine_process_schema()['divengine_process_baseline_item']);
+  }
+}

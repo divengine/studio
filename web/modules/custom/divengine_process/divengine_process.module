@@ -30,6 +30,7 @@ const DIVENGINE_PROCESS_SCOPED_TYPES = [
   'role_assignment',
   'process_activity',
   'change_request',
+  'baseline',
   'artifact',
 ];
 
@@ -75,6 +76,9 @@ function divengine_process_entity_type_alter(array &$entity_types): void {
  * and edit the Development; its type permissions still apply on top.
  */
 function divengine_process_artifact_access(EntityInterface $artifact, string $operation, AccountInterface $account): AccessResult {
+  if ($protected = divengine_process_baseline_protection($artifact, $operation)) {
+    return $protected;
+  }
   $development = $artifact->get('development')->entity;
   if (!$development) {
     return AccessResult::neutral()->addCacheableDependency($artifact);
@@ -151,6 +155,9 @@ function divengine_process_divengine_trace_end_types_alter(array &$types): void 
  * A trace is seen only by those who see both of its ends.
  */
 function divengine_process_trace_link_access(EntityInterface $link, string $operation, AccountInterface $account): AccessResult {
+  if ($protected = divengine_process_baseline_protection($link, $operation)) {
+    return $protected;
+  }
   /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
   foreach ([$link->getSourceEntity(), $link->getTargetEntity()] as $end) {
     if ($end && $end->hasField('development') && !$end->get('development')->isEmpty() && !$end->access('view', $account)) {
@@ -179,4 +186,23 @@ function divengine_process_artifact_view(array &$build, EntityInterface $artifac
       '#weight' => -95,
     ];
   }
+}
+
+/**
+ * Refuses deleting what a baseline holds, so baselines stay reproducible.
+ *
+ * A revision that took part in a baseline is never deleted, and neither is
+ * a record with such a revision.
+ */
+function divengine_process_baseline_protection(EntityInterface $entity, string $operation): ?AccessResult {
+  /** @var \Drupal\Core\Entity\RevisionableInterface $entity */
+  $baselines = \Drupal::service('divengine_process.baselines');
+  $protected = match ($operation) {
+    'delete revision' => $baselines->protectsRevision($entity->getEntityTypeId(), $entity->getRevisionId()),
+    'delete' => $baselines->protectsRecord($entity->getEntityTypeId(), $entity->id()),
+    default => FALSE,
+  };
+  return $protected
+    ? AccessResult::forbidden('A baseline holds this revision.')->addCacheTags(['baseline_list'])->addCacheableDependency($entity)
+    : NULL;
 }

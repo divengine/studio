@@ -35,7 +35,7 @@ class DevelopmentSectionController extends ControllerBase {
   public function section(DevelopmentInterface $development, string $section): array {
     $build = [
       '#cache' => [
-        'tags' => ['artifact_list', 'process_activity_list', 'change_request_list', 'config:artifact_type_list'],
+        'tags' => ['artifact_list', 'process_activity_list', 'change_request_list', 'baseline_list', 'config:artifact_type_list'],
         'contexts' => ['user', 'url.path'],
       ],
       'intro' => [
@@ -55,7 +55,8 @@ class DevelopmentSectionController extends ControllerBase {
       if (isset($definition['bundle'])) {
         $count->condition('type', $definition['bundle']);
       }
-      $add = Url::fromRoute($definition['add_route'], $definition['add_parameters'] ?? [], [
+      $parameters = array_map(fn ($value) => $value ?? $development->id(), $definition['add_parameters'] ?? []);
+      $add = Url::fromRoute($definition['add_route'], $parameters, [
         'query' => ['development' => $development->id(), 'destination' => $destination],
       ]);
       $actions = NULL;
@@ -131,6 +132,17 @@ class DevelopmentSectionController extends ControllerBase {
         ],
       ] + $sections;
     }
+    if ($tab === 'baselines') {
+      $sections['baselines'] = [
+        'entity_type' => 'baseline',
+        'title' => $this->t('Baselines'),
+        'description' => $this->t('Each baseline records the exact revisions of the baselined records and their traces, so that state can always be reproduced. Reaching a milestone takes one.'),
+        'view' => ['divengine_process_baselines', 'embed_1'],
+        'add_route' => 'divengine_process.take_baseline',
+        'add_parameters' => ['development' => NULL],
+        'add_label' => $this->t('Take a baseline'),
+      ];
+    }
     if ($tab === 'changes') {
       $sections['change_requests'] = [
         'entity_type' => 'change_request',
@@ -149,6 +161,7 @@ class DevelopmentSectionController extends ControllerBase {
       'business' => $this->t('The business as it is and as it should be, whether or not software exists: who takes part, what the business must accomplish and the rules it follows.'),
       'requirements' => $this->t('What the software must do: the people and systems that use it, how they use it and the requirements it must satisfy.'),
       'process' => $this->t('How the Development is carried out: the activities of each iteration and the work products they produce.'),
+      'baselines' => $this->t('Traces point to records; baselines point to the exact revisions that were in force. A revision held by a baseline is never deleted.'),
       default => $this->t('Every change to what was already agreed goes through a decision with a rationale, and its impact is traced.'),
     };
   }
@@ -158,6 +171,7 @@ class DevelopmentSectionController extends ControllerBase {
       'business' => $this->t('Business model'),
       'requirements' => $this->t('Requirements'),
       'process' => $this->t('Process'),
+      'baselines' => $this->t('Baselines'),
       default => $this->t('Changes'),
     };
   }
