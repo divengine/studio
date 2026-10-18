@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_process\Entity;
 
+use Drupal\Core\Config\Action\Attribute\ActionMethod;
 use Drupal\Core\Entity\Attribute\ConfigEntityType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -113,6 +114,31 @@ class DevelopmentCase extends ProcessConfigEntityBase {
   public function setLines(array $lines): static {
     $this->lines = array_values(array_map(static fn (array $line): array => static::normalizeLine($line), $lines));
     return $this;
+  }
+
+  /**
+   * Adds lines for elements the case does not tailor yet.
+   *
+   * Lines whose element type and target already exist are left as they
+   * are, so modules and recipes can extend a case without overriding what
+   * the site tailored. New lines go after the existing ones.
+   *
+   * @param array<int, array<string, mixed>> $lines
+   */
+  #[ActionMethod(adminLabel: new TranslatableMarkup('Add Development Case lines'), pluralize: FALSE)]
+  public function addLines(array $lines): static {
+    $existing = array_map(static fn (array $line): string => $line['element_type'] . ':' . $line['target'], $this->lines);
+    $weight = $this->lines ? max(array_column($this->lines, 'weight')) + 1 : 0;
+    $added = $this->lines;
+    foreach ($lines as $line) {
+      $line = static::normalizeLine($line + ['weight' => $weight]);
+      if (!in_array($line['element_type'] . ':' . $line['target'], $existing, TRUE)) {
+        $line['weight'] = $weight++;
+        $added[] = $line;
+        $existing[] = $line['element_type'] . ':' . $line['target'];
+      }
+    }
+    return $this->setLines($added);
   }
 
   /**

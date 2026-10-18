@@ -16,6 +16,7 @@ install:
   - divengine_modeler_uml
   - divengine_diagram_embed
   - divengine_process
+  - divengine_qa
   - gin
   - divengine_studio_theme
 config:
@@ -34,6 +35,7 @@ config:
     divengine_modeler_uml: '*'
     divengine_diagram_embed: '*'
     divengine_process: '*'
+    divengine_qa: '*'
     divengine_core: '*'
     divengine_studio_theme: '*'
   actions:
@@ -118,3 +120,66 @@ config:
         - 'use work_product_lifecycle transition draft'
         - 'use work_product_lifecycle transition submit'
         - 'use work_product_lifecycle transition baseline'
+        - 'use qa'
+    # Verification criteria of divengine_qa, after the cases are imported.
+    divengine_process.development_case.standard:
+      addLines: &qa_lines
+        - element_type: readiness
+          target: requirements_verified
+          milestone_type: initial_operational_capability
+          level: recommended
+        - element_type: readiness
+          target: use_cases_verified
+          milestone_type: product_release
+          level: recommended
+        - element_type: readiness
+          target: change_requests_evidenced
+          level: recommended
+    divengine_process.development_case.brownfield:
+      addLines: *qa_lines
+    # Test management roles, cumulative like their permissions.
+    user.role.qa_user:
+      createIfNotExists:
+        label: 'QA User'
+      grantPermissions:
+        - 'access divengine'
+        - 'use unified process'
+        - 'view trace links'
+        - 'use qa'
+    user.role.qa_tester:
+      createIfNotExists:
+        label: 'QA Tester'
+      grantPermissions:
+        - 'access divengine'
+        - 'use unified process'
+        - 'view trace links'
+        - 'use qa'
+        - 'execute qa tests'
+        - 'use text format qa_issue'
+    user.role.qa_lead:
+      createIfNotExists:
+        label: 'QA Lead'
+      grantPermissions:
+        - 'access divengine'
+        - 'use unified process'
+        - 'view trace links'
+        - 'create trace links'
+        - 'edit trace links'
+        - 'use qa'
+        - 'execute qa tests'
+        - 'manage qa'
+        - 'use text format qa_issue'
+    user.role.qa_manager:
+      createIfNotExists:
+        label: 'QA Manager'
+      grantPermissions:
+        - 'access divengine'
+        - 'use unified process'
+        - 'view trace links'
+        - 'create trace links'
+        - 'edit trace links'
+        - 'use qa'
+        - 'execute qa tests'
+        - 'manage qa'
+        - 'administer qa'
+        - 'use text format qa_issue'

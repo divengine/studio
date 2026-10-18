@@ -19,6 +19,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_modeler_uml` | UML notation (PlantUML in the browser, CodeMirror) |
 | `web/modules/custom/divengine_diagram_embed` | Diagrams in formatted text: CKEditor 5 button, `<drupal-diagram>` filter, usage |
 | `web/modules/custom/divengine_process` | Unified Process: Developments with phases, iterations and milestones, business and system model, activities, work products, change requests, traces, readiness, baselines, My work |
+| `web/modules/custom/divengine_qa` | Test management: plans, suites, cases, steps, runs with frozen snapshots, results, corrections, evidence, QA Issues, dashboard, reports; verification of process records (ADR-0008) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
@@ -36,7 +37,9 @@ Unified Process layer. See [docs/roadmap.md](docs/roadmap.md) and the ADRs in
 
 ## Setup
 
-Requires PHP 8.4 and PostgreSQL (with the `pg_trgm` extension).
+Requires PHP 8.4 and PostgreSQL (with the `pg_trgm` extension). Test evidence is stored
+in the private file system: set `$settings['file_private_path'] = '../private/files';` in
+`settings.php` (or `settings.local.php`) before installing.
 
 ```bash
 composer install
@@ -47,6 +50,14 @@ vendor/bin/drush site:install recipes/divengine_studio \
 That installs the complete suite: Standard, every Studio module, Gin as the admin theme
 and the "Diagram" button with the "Embed diagrams" filter in Basic and Full HTML. On an
 existing Drupal 11 site, apply it instead with `drush recipe $PWD/recipes/divengine_studio`.
+
+### Test management
+
+People get the roles **QA User** (read plans and their own runs), **QA Tester** (execute
+assigned runs, record results and evidence, report QA Issues), **QA Lead** (design plans,
+create and assign runs, dashboard and reporting) or **QA Manager** (configuration, reopen
+completed runs, delete). They must also see the Development (owner, responsible or
+member).
 
 ### MCP (optional)
 

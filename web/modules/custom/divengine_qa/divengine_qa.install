@@ -34,28 +34,20 @@ function divengine_qa_requirements(string $phase): array {
  * Implements hook_install().
  *
  * The Standard and Existing System Development Cases recommend the
- * verification criteria. Developments using them see their case as
- * outdated and re-apply it explicitly.
+ * verification criteria (the site recipe adds the same lines after it
+ * imports the cases). Developments using them see their case as outdated
+ * and re-apply it explicitly.
  */
 function divengine_qa_install(bool $is_syncing): void {
   if ($is_syncing) {
     return;
   }
   $lines = [
-    ['target' => 'requirements_verified', 'milestone_type' => 'initial_operational_capability'],
-    ['target' => 'use_cases_verified', 'milestone_type' => 'product_release'],
-    ['target' => 'change_requests_evidenced', 'milestone_type' => ''],
+    ['element_type' => 'readiness', 'target' => 'requirements_verified', 'milestone_type' => 'initial_operational_capability', 'level' => 'recommended'],
+    ['element_type' => 'readiness', 'target' => 'use_cases_verified', 'milestone_type' => 'product_release', 'level' => 'recommended'],
+    ['element_type' => 'readiness', 'target' => 'change_requests_evidenced', 'milestone_type' => '', 'level' => 'recommended'],
   ];
-  $storage = \Drupal::entityTypeManager()->getStorage('development_case');
-  foreach ($storage->loadMultiple(['standard', 'brownfield']) as $case) {
-    $current = $case->get('lines') ?: [];
-    $targets = array_map(fn ($line) => $line['element_type'] . ':' . $line['target'], $current);
-    $weight = $current ? max(array_column($current, 'weight')) + 1 : 0;
-    foreach ($lines as $line) {
-      if (!in_array('readiness:' . $line['target'], $targets, TRUE)) {
-        $current[] = ['element_type' => 'readiness', 'target' => $line['target'], 'milestone_type' => $line['milestone_type'], 'level' => 'recommended', 'note' => '', 'weight' => $weight++];
-      }
-    }
-    $case->set('lines', $current)->save();
+  foreach (\Drupal::entityTypeManager()->getStorage('development_case')->loadMultiple(['standard', 'brownfield']) as $case) {
+    $case->addLines($lines)->save();
   }
 }
