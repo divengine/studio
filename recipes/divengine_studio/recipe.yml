@@ -4,6 +4,8 @@ type: 'Site'
 recipes:
   - core/recipes/standard
 install:
+  - workflows
+  - content_moderation
   - divengine_core
   - divengine_artifact
   - divengine_knowledge
@@ -100,3 +102,15 @@ config:
         - 'use artifact_lifecycle transition submit_for_review'
         - 'use diagram_lifecycle transition create_new_draft'
         - 'use diagram_lifecycle transition submit_for_review'
+        - 'view latest version'
+        - 'use requirement_lifecycle transition draft'
+        - 'use requirement_lifecycle transition propose'
+        - 'use requirement_lifecycle transition approve'
+        - 'use requirement_lifecycle transition baseline'
+        - 'use requirement_lifecycle transition deprecate'
+        - 'use use_case_lifecycle transition identify'
+        - 'use use_case_lifecycle transition outline'
+        - 'use use_case_lifecycle transition detail'
+        - 'use use_case_lifecycle transition review'
+        - 'use use_case_lifecycle transition baseline'
+        - 'use use_case_lifecycle transition deprecate'

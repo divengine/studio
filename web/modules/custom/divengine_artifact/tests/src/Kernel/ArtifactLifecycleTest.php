@@ -39,20 +39,20 @@ class ArtifactLifecycleTest extends KernelTestBase {
     $bundles = Workflow::load('artifact_lifecycle')->getTypePlugin()->getBundlesForEntityType('artifact');
     sort($bundles);
     $this->assertSame([
-      'decision', 'evidence', 'knowledge_reference', 'method_fragment', 'requirement',
-      'risk', 'standard_reference', 'test_case', 'use_case',
+      'decision', 'evidence', 'knowledge_reference', 'method_fragment',
+      'risk', 'standard_reference', 'test_case',
     ], $bundles);
   }
 
   public function testNewArtifactsStartAsUnpublishedDrafts(): void {
-    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'REQ-1', 'type' => 'requirement']);
+    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'RSK-1', 'type' => 'risk']);
     $artifact->save();
     $this->assertSame('draft', $artifact->get('moderation_state')->value);
     $this->assertFalse($artifact->isPublished());
   }
 
   public function testReviewApproveAndDeprecate(): void {
-    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'REQ-1', 'type' => 'requirement']);
+    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'RSK-1', 'type' => 'risk']);
     $artifact->save();
 
     $this->moveTo($artifact, 'review');
@@ -73,7 +73,7 @@ class ArtifactLifecycleTest extends KernelTestBase {
   }
 
   public function testInvalidTransitionIsRejected(): void {
-    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'REQ-1', 'type' => 'requirement']);
+    $artifact = Artifact::create(['title' => 'Login', 'artifact_key' => 'RSK-1', 'type' => 'risk']);
     $artifact->save();
     // Approval must go through review.
     $artifact->set('moderation_state', 'published');

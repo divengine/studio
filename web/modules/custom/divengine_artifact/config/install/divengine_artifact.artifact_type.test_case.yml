@@ -1,3 +1,4 @@
 id: test_case
 label: 'Test Case'
 description: 'A test case with inputs, expected results, and verification criteria.'
+key_prefix: TC

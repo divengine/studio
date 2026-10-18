@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.system_actor
+  - divengine_artifact.artifact_type.use_case
+  - field.storage.artifact.field_supporting_actors
+  module:
+  - divengine_process
+id: artifact.use_case.field_supporting_actors
+field_name: field_supporting_actors
+entity_type: artifact
+bundle: use_case
+label: Supporting actors
+description: ''
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings:
+  handler: divengine_process_development
+  handler_settings:
+    auto_create: false
+    target_bundles:
+      system_actor: system_actor
+field_type: entity_reference

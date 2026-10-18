@@ -1,3 +1,4 @@
 id: method_fragment
 label: 'Method Fragment'
 description: 'A reusable method, practice, technique or process fragment.'
+key_prefix: MF

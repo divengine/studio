@@ -1,0 +1,114 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.requirement
+  - field.field.artifact.requirement.field_acceptance_notes
+  - field.field.artifact.requirement.field_iteration
+  - field.field.artifact.requirement.field_priority
+  - field.field.artifact.requirement.field_rationale
+  - field.field.artifact.requirement.field_requirement_type
+  - field.field.artifact.requirement.field_risk
+  - field.field.artifact.requirement.field_source
+  - field.field.artifact.requirement.field_statement
+  module:
+  - content_moderation
+  - divengine_process
+  - options
+id: artifact.requirement.default
+targetEntityType: artifact
+bundle: requirement
+mode: default
+content:
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  development:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {}
+    third_party_settings: {}
+  field_statement:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings: &id002
+      rows: 4
+      placeholder: ''
+    third_party_settings: {}
+  field_requirement_type:
+    type: options_select
+    weight: 3
+    region: content
+    settings: &id001 {}
+    third_party_settings: {}
+  field_priority:
+    type: options_select
+    weight: 4
+    region: content
+    settings: *id001
+    third_party_settings: {}
+  field_risk:
+    type: options_select
+    weight: 5
+    region: content
+    settings: *id001
+    third_party_settings: {}
+  field_source:
+    type: string_textfield
+    weight: 6
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  field_rationale:
+    type: string_textarea
+    weight: 7
+    region: content
+    settings: *id002
+    third_party_settings: {}
+  field_acceptance_notes:
+    type: string_textarea
+    weight: 8
+    region: content
+    settings: *id002
+    third_party_settings: {}
+  field_iteration:
+    type: entity_reference_autocomplete
+    weight: 9
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  uid:
+    type: entity_reference_autocomplete
+    weight: 10
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {}
+    third_party_settings: {}
+hidden:
+  artifact_key: true
+  body: true
+  status: true
+  created: true
+  summary: true

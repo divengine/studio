@@ -7,6 +7,9 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+use Drupal\Core\Entity\EntityInterface;
+
 /**
  * Implements hook_views_data_alter().
  *
@@ -24,4 +27,50 @@ function divengine_artifact_views_data_alter(array &$data): void {
       }
     }
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for artifact.
+ *
+ * The full page opens with a status bar: key, state, type and owner.
+ */
+function divengine_artifact_artifact_view(array &$build, EntityInterface $artifact, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($view_mode !== 'full') {
+    return;
+  }
+  /** @var \Drupal\divengine_artifact\Entity\ArtifactInterface $artifact */
+  $state = $artifact->get('moderation_state')->value ?? NULL;
+  $workflow = \Drupal::service('content_moderation.moderation_information')->getWorkflowForEntity($artifact);
+  if ($state && $workflow) {
+    $state_definition = $workflow->getTypePlugin()->getState($state);
+    $label = $state_definition->label();
+    $tone = match (TRUE) {
+      $state === 'deprecated' => 'danger',
+      $state_definition->isPublishedState() => 'success',
+      $state === 'draft' => 'neutral',
+      default => 'info',
+    };
+  }
+  else {
+    $label = $artifact->isPublished() ? t('Active') : t('Archived');
+    $tone = $artifact->isPublished() ? 'neutral' : 'warning';
+  }
+  $facts = [
+    ['label' => (string) t('Type'), 'value' => (string) $artifact->get('type')->entity?->label()],
+    ['label' => (string) t('Owner'), 'value' => (string) $artifact->getOwner()?->getDisplayName()],
+    ['label' => (string) t('Changed'), 'value' => \Drupal::service('date.formatter')->format($artifact->getChangedTime(), 'short')],
+  ];
+  $build['dv_status'] = [
+    '#type' => 'component',
+    '#component' => 'divengine_core:status-bar',
+    '#props' => ['code' => $artifact->getArtifactKey(), 'facts' => $facts],
+    '#slots' => [
+      'badge' => [
+        '#type' => 'component',
+        '#component' => 'divengine_core:badge',
+        '#props' => ['label' => (string) $label, 'tone' => $tone],
+      ],
+    ],
+    '#weight' => -100,
+  ];
 }

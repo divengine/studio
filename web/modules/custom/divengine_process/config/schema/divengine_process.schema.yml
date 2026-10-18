@@ -169,3 +169,7 @@ divengine_process.development_case.*:
           weight:
             type: weight
             label: 'Order'
+
+entity_reference_selection.divengine_process_development:
+  type: entity_reference_selection.default
+  label: 'Records of the same Development selection handler settings'

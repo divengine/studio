@@ -1,0 +1,474 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - content_moderation
+  - divengine_artifact
+  - divengine_core
+  - divengine_process
+  - options
+  - user
+id: divengine_process_records
+label: Development records
+module: views
+description: 'The business and system model of a Development, one display per record type.'
+tag: divengine
+base_table: artifact
+base_field: id
+display:
+  default:
+    id: default
+    display_title: Default
+    display_plugin: default
+    position: 0
+    display_options:
+      title: Development records
+      fields:
+        artifact_key: &id001
+          id: artifact_key
+          table: artifact
+          field: artifact_key
+          entity_type: artifact
+          plugin_id: field
+          label: Code
+          entity_field: artifact_key
+        title: &id002
+          id: title
+          table: artifact
+          field: title
+          entity_type: artifact
+          plugin_id: field
+          label: Title
+          entity_field: title
+          type: string
+          settings:
+            link_to_entity: true
+        operations: &id003
+          id: operations
+          table: artifact
+          field: operations
+          entity_type: artifact
+          plugin_id: entity_operations
+          label: ''
+      pager:
+        type: some
+        options:
+          items_per_page: 0
+          offset: 0
+      exposed_form:
+        type: basic
+        options:
+          submit_button: Apply
+          reset_button: false
+      access:
+        type: perm
+        options:
+          perm: use unified process
+      cache:
+        type: tag
+      empty:
+        area_text_custom:
+          id: area_text_custom
+          table: views
+          field: area_text_custom
+          plugin_id: text_custom
+          empty: true
+          content: None yet.
+      sorts:
+        artifact_key:
+          id: artifact_key
+          table: artifact
+          field: artifact_key
+          entity_type: artifact
+          entity_field: artifact_key
+          plugin_id: standard
+          order: ASC
+        title:
+          id: title
+          table: artifact
+          field: title
+          entity_type: artifact
+          entity_field: title
+          plugin_id: standard
+          order: ASC
+      arguments:
+        development:
+          id: development
+          table: artifact
+          field: development
+          entity_type: artifact
+          entity_field: development
+          plugin_id: numeric
+          default_action: not found
+          specify_validation: true
+          validate:
+            type: 'entity:development'
+            fail: not found
+          validate_options:
+            access: true
+            operation: view
+            multiple: 0
+            bundles: {}
+      filters: {}
+      style:
+        type: table
+        options:
+          sticky: false
+          empty_table: false
+          class: ''
+      row:
+        type: fields
+      query:
+        type: views_query
+      display_extenders: {}
+  requirement:
+    id: requirement
+    display_title: Requirements
+    display_plugin: embed
+    position: 1
+    display_options:
+      display_extenders: {}
+      title: Requirements
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        artifact_key: *id001
+        title: *id002
+        field_requirement_type:
+          id: field_requirement_type
+          table: artifact__field_requirement_type
+          field: field_requirement_type
+          entity_type: artifact
+          plugin_id: field
+          label: Type
+          entity_field: field_requirement_type
+          type: list_default
+          settings: {}
+        moderation_state: &id004
+          id: moderation_state
+          table: artifact
+          field: moderation_state
+          entity_type: artifact
+          plugin_id: moderation_state_field
+          label: State
+          type: content_moderation_state
+        field_priority: &id005
+          id: field_priority
+          table: artifact__field_priority
+          field: field_priority
+          entity_type: artifact
+          plugin_id: field
+          label: Priority
+          entity_field: field_priority
+          type: divengine_badge
+          settings:
+            tones:
+              unassessed: neutral
+              low: neutral
+              medium: info
+              high: warning
+              critical: danger
+        field_risk: &id006
+          id: field_risk
+          table: artifact__field_risk
+          field: field_risk
+          entity_type: artifact
+          plugin_id: field
+          label: Risk
+          entity_field: field_risk
+          type: divengine_badge
+          settings:
+            tones:
+              unassessed: neutral
+              low: neutral
+              medium: info
+              high: danger
+        uid:
+          id: uid
+          table: artifact
+          field: uid
+          entity_type: artifact
+          plugin_id: field
+          label: Owner
+          entity_field: uid
+          type: entity_reference_label
+          settings:
+            link: false
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            requirement: requirement
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  use_case:
+    id: use_case
+    display_title: System use cases
+    display_plugin: embed
+    position: 2
+    display_options:
+      display_extenders: {}
+      title: System use cases
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        artifact_key: *id001
+        title: *id002
+        field_primary_actor:
+          id: field_primary_actor
+          table: artifact__field_primary_actor
+          field: field_primary_actor
+          entity_type: artifact
+          plugin_id: field
+          label: Primary actor
+          entity_field: field_primary_actor
+          type: entity_reference_label
+          settings:
+            link: true
+        moderation_state: *id004
+        field_priority: *id005
+        field_risk: *id006
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            use_case: use_case
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  system_actor:
+    id: system_actor
+    display_title: System actors
+    display_plugin: embed
+    position: 3
+    display_options:
+      display_extenders: {}
+      title: System actors
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        title: *id002
+        field_actor_type:
+          id: field_actor_type
+          table: artifact__field_actor_type
+          field: field_actor_type
+          entity_type: artifact
+          plugin_id: field
+          label: Type
+          entity_field: field_actor_type
+          type: list_default
+          settings: {}
+        summary: &id007
+          id: summary
+          table: artifact
+          field: summary
+          entity_type: artifact
+          plugin_id: field
+          label: Description
+          entity_field: summary
+          type: basic_string
+          settings: {}
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            system_actor: system_actor
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  business_use_case:
+    id: business_use_case
+    display_title: Business use cases
+    display_plugin: embed
+    position: 4
+    display_options:
+      display_extenders: {}
+      title: Business use cases
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        artifact_key: *id001
+        title: *id002
+        field_primary_actor:
+          id: field_primary_actor
+          table: artifact__field_primary_actor
+          field: field_primary_actor
+          entity_type: artifact
+          plugin_id: field
+          label: Primary business actor
+          entity_field: field_primary_actor
+          type: entity_reference_label
+          settings:
+            link: true
+        moderation_state: *id004
+        field_priority: *id005
+        field_risk: *id006
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            business_use_case: business_use_case
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  business_rule:
+    id: business_rule
+    display_title: Business rules
+    display_plugin: embed
+    position: 5
+    display_options:
+      display_extenders: {}
+      title: Business rules
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        artifact_key: *id001
+        field_source_ref:
+          id: field_source_ref
+          table: artifact__field_source_ref
+          field: field_source_ref
+          entity_type: artifact
+          plugin_id: field
+          label: Reference
+          entity_field: field_source_ref
+        title: *id002
+        moderation_state: *id004
+        field_priority: *id005
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            business_rule: business_rule
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  business_actor:
+    id: business_actor
+    display_title: Business actors
+    display_plugin: embed
+    position: 6
+    display_options:
+      display_extenders: {}
+      title: Business actors
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        title: *id002
+        field_business_actor_type:
+          id: field_business_actor_type
+          table: artifact__field_business_actor_type
+          field: field_business_actor_type
+          entity_type: artifact
+          plugin_id: field
+          label: Type
+          entity_field: field_business_actor_type
+          type: list_default
+          settings: {}
+        summary: *id007
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            business_actor: business_actor
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND
+  business_worker:
+    id: business_worker
+    display_title: Business workers
+    display_plugin: embed
+    position: 7
+    display_options:
+      display_extenders: {}
+      title: Business workers
+      defaults:
+        fields: false
+        filters: false
+        filter_groups: false
+        title: false
+      fields:
+        title: *id002
+        summary: *id007
+        operations: *id003
+      filters:
+        type:
+          id: type
+          table: artifact
+          field: type
+          entity_type: artifact
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            business_worker: business_worker
+      filter_groups:
+        operator: AND
+        groups:
+          1: AND

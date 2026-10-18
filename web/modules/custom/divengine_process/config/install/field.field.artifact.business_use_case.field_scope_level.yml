@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_use_case
+  - field.storage.artifact.field_scope_level
+  module:
+  - options
+id: artifact.business_use_case.field_scope_level
+field_name: field_scope_level
+entity_type: artifact
+bundle: business_use_case
+label: Level
+description: ''
+required: true
+translatable: false
+default_value:
+- value: summary
+default_value_callback: ''
+settings: {}
+field_type: list_string

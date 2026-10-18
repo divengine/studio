@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_use_case
+  - divengine_artifact.artifact_type.business_worker
+  - field.storage.artifact.field_workers
+  module:
+  - divengine_process
+id: artifact.business_use_case.field_workers
+field_name: field_workers
+entity_type: artifact
+bundle: business_use_case
+label: Business workers
+description: Roles inside the business that take part.
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings:
+  handler: divengine_process_development
+  handler_settings:
+    auto_create: false
+    target_bundles:
+      business_worker: business_worker
+field_type: entity_reference

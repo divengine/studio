@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - divengine_traceability
+id: includes
+label: Includes
+inverse_label: Is included by
+description: The use case always performs the target use case as part of its flow.
+source_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+target_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+same_kind: true
+weight: 30

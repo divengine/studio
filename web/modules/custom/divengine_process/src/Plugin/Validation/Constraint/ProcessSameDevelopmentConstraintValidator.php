@@ -22,7 +22,12 @@ class ProcessSameDevelopmentConstraintValidator extends ConstraintValidator {
     if ($development_id === NULL || $development_id === '') {
       return;
     }
-    foreach ($constraint->fields as $field_name) {
+    // Without a list, every entity reference field is checked.
+    $fields = $constraint->fields ?: array_keys(array_filter(
+      $entity->getFieldDefinitions(),
+      fn ($definition) => $definition->getType() === 'entity_reference' && !in_array($definition->getName(), ['development', 'type', 'uid', 'revision_uid'], TRUE),
+    ));
+    foreach ($fields as $field_name) {
       foreach ($entity->get($field_name)->referencedEntities() as $referenced) {
         if (!$referenced instanceof FieldableEntityInterface || !$referenced->hasField('development')) {
           continue;

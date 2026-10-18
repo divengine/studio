@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - divengine_artifact
+  - divengine_process
+id: artifact.field_iteration
+field_name: field_iteration
+entity_type: artifact
+type: entity_reference
+settings:
+  target_type: iteration
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {}
+persist_with_no_fields: false
+custom_storage: false

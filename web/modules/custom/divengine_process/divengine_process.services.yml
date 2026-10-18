@@ -1,7 +1,4 @@
 services:
-  divengine_process.sequence:
-    class: Drupal\divengine_process\Sequence
-    arguments: ['@state', '@lock.persistent']
   divengine_process.lifecycle:
     class: Drupal\divengine_process\Lifecycle\LifecycleManager
   divengine_process.visibility:

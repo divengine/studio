@@ -41,6 +41,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
     'label',
     'description',
     'new_revision',
+    'key_prefix',
     'uuid',
   ],
   links: [
@@ -65,6 +66,17 @@ class ArtifactType extends ConfigEntityBundleBase implements RevisionableEntityB
    * @var bool
    */
   protected $new_revision = TRUE;
+
+  /**
+   * Prefix of the keys assigned to new artifacts, e.g. "REQ" for REQ-0001.
+   *
+   * Empty: keys are typed by hand.
+   */
+  protected string $key_prefix = '';
+
+  public function getKeyPrefix(): string {
+    return $this->key_prefix;
+  }
 
   /**
    * {@inheritdoc}

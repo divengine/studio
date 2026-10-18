@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - divengine_traceability
+id: extends
+label: Extends
+inverse_label: Is extended by
+description: The use case adds optional behaviour to the target use case at an extension point (put the condition in the rationale).
+source_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+target_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+same_kind: true
+weight: 31

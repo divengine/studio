@@ -96,6 +96,9 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
     parent::preSave($storage);
     // Keys are identifiers: surrounding whitespace never makes them distinct.
     $this->set('artifact_key', trim($this->getArtifactKey()));
+    if ($this->getArtifactKey() === '' && ($type = $this->get('type')->entity) && $type->getKeyPrefix() !== '') {
+      $this->set('artifact_key', \Drupal::service('divengine_core.sequence')->next($type->getKeyPrefix()));
+    }
   }
 
   public function getTitle(): string {
@@ -157,8 +160,7 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
 
     $fields['artifact_key'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Artifact key'))
-      ->setDescription(t('A unique machine-readable key for the artifact (e.g., REQ-001).'))
-      ->setRequired(TRUE)
+      ->setDescription(t('A unique key for the artifact (e.g., REQ-0001). Types with a key prefix assign it on save.'))
       ->setRevisionable(TRUE)
       ->setSetting('max_length', 64)
       ->setDisplayOptions('form', [

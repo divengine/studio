@@ -38,6 +38,15 @@ class ArtifactTypeForm extends EntityForm {
       '#default_value' => $artifact_type->get('description'),
     ];
 
+    $form['key_prefix'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Key prefix'),
+      '#default_value' => $artifact_type->getKeyPrefix(),
+      '#maxlength' => 16,
+      '#size' => 10,
+      '#pattern' => '[A-Z][A-Z0-9]*',
+      '#description' => $this->t('New artifacts get the next key with this prefix, e.g. REQ gives REQ-0001. Leave empty to type keys by hand.'),
+    ];
     $form['new_revision'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Create new revision'),

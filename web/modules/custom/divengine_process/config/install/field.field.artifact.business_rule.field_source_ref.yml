@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_rule
+  - field.storage.artifact.field_source_ref
+id: artifact.business_rule.field_source_ref
+field_name: field_source_ref
+entity_type: artifact
+bundle: business_rule
+label: Source reference
+description: 'Reference in the source material, e.g. R-31. Unique within the Development.'
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string

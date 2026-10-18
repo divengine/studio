@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_rule
+  - divengine_artifact.artifact_type.business_use_case
+  - field.storage.artifact.field_business_rules
+  module:
+  - divengine_process
+id: artifact.business_use_case.field_business_rules
+field_name: field_business_rules
+entity_type: artifact
+bundle: business_use_case
+label: Business rules
+description: The business rules that govern this business use case.
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings:
+  handler: divengine_process_development
+  handler_settings:
+    auto_create: false
+    target_bundles:
+      business_rule: business_rule
+field_type: entity_reference

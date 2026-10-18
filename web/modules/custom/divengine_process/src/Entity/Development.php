@@ -163,7 +163,7 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
     $this->set('name', trim((string) $this->get('name')->value));
     if ($this->isNew()) {
       if ($this->getCode() === '') {
-        $this->set('code', \Drupal::service('divengine_process.sequence')->next('DEV'));
+        $this->set('code', \Drupal::service('divengine_core.sequence')->next('DEV'));
       }
     }
   }

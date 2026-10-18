@@ -1,3 +1,4 @@
 id: knowledge_reference
 label: 'Knowledge Reference'
 description: 'A reference to external knowledge such as standards, articles or documentation.'
+key_prefix: KR

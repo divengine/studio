@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\divengine_process;
+namespace Drupal\divengine_core;
 
 use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\State\StateInterface;
@@ -24,12 +24,12 @@ class Sequence {
    * Returns the next code for a prefix, e.g. "DEV-0001".
    */
   public function next(string $prefix): string {
-    $lock = 'divengine_process_sequence:' . $prefix;
+    $lock = 'divengine_sequence:' . $prefix;
     while (!$this->lock->acquire($lock)) {
       $this->lock->wait($lock, 5);
     }
     try {
-      $key = 'divengine_process.sequence.' . $prefix;
+      $key = 'divengine_core.sequence.' . $prefix;
       // Another process may have advanced the counter since it was cached.
       $this->state->resetCache();
       $value = (int) $this->state->get($key, 0) + 1;

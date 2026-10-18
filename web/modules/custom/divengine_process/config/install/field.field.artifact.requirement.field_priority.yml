@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.requirement
+  - field.storage.artifact.field_priority
+  module:
+  - options
+id: artifact.requirement.field_priority
+field_name: field_priority
+entity_type: artifact
+bundle: requirement
+label: Priority
+description: ''
+required: true
+translatable: false
+default_value:
+- value: unassessed
+default_value_callback: ''
+settings: {}
+field_type: list_string

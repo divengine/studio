@@ -53,3 +53,29 @@ divengine_process.ensure_phases:
     parameters:
       development:
         type: 'entity:development'
+
+divengine_process.development_business:
+  path: '/development/{development}/business'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\DevelopmentSectionController::section'
+    _title_callback: '\Drupal\divengine_process\Controller\DevelopmentSectionController::title'
+    section: business
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_process.development_requirements:
+  path: '/development/{development}/requirements'
+  defaults:
+    _controller: '\Drupal\divengine_process\Controller\DevelopmentSectionController::section'
+    _title_callback: '\Drupal\divengine_process\Controller\DevelopmentSectionController::title'
+    section: requirements
+  requirements:
+    _entity_access: 'development.view'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'

@@ -78,14 +78,14 @@ class UniqueArtifactKeyConstraintTest extends KernelTestBase {
     $this->assertCount(0, $violations, 'Updating an artifact with its own key should not produce a violation.');
   }
 
-  public function testEmptyKeyIsRequired(): void {
-    $artifact = Artifact::create([
-      'title' => 'No Key',
-      'artifact_key' => '',
-      'type' => 'requirement',
-    ]);
-    $violations = $artifact->validate();
-    $this->assertGreaterThan(0, count($violations), 'Empty artifact key should produce violations.');
+  public function testEmptyKeyIsAssignedFromTheTypePrefix(): void {
+    $artifact = Artifact::create(['title' => 'No Key', 'artifact_key' => '', 'type' => 'requirement']);
+    $this->assertCount(0, $artifact->validate());
+    $artifact->save();
+    $this->assertSame('REQ-0001', $artifact->getArtifactKey());
+    $second = Artifact::create(['title' => 'Next', 'type' => 'requirement']);
+    $second->save();
+    $this->assertSame('REQ-0002', $second->getArtifactKey());
   }
 
   public function testDifferentKeysSucceed(): void {

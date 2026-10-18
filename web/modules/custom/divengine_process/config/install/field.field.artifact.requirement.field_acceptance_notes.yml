@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.requirement
+  - field.storage.artifact.field_acceptance_notes
+id: artifact.requirement.field_acceptance_notes
+field_name: field_acceptance_notes
+entity_type: artifact
+bundle: requirement
+label: Acceptance
+description: How acceptance will be judged.
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

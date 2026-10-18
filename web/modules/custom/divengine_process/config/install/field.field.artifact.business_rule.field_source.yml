@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_rule
+  - field.storage.artifact.field_source
+id: artifact.business_rule.field_source
+field_name: field_source
+entity_type: artifact
+bundle: business_rule
+label: Source
+description: 'The regulation, contract or policy it comes from.'
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string

@@ -46,22 +46,25 @@ class DevelopmentVisibility {
   /**
    * Restricts a query on a Development-scoped entity type to visible rows.
    *
+   * Developments are restricted to the visible ones; records that belong to
+   * a Development follow it; records without a Development (artifacts
+   * outside the Unified Process) are left to their own access rules.
+   *
    * @param \Drupal\Core\Database\Query\SelectInterface $query
    *   An entity query or a Views query tagged ENTITY_TYPE_access.
    * @param string $entity_type_id
-   *   The entity type of the query's base table.
-   * @param string $field
-   *   The column holding the Development ID ("id" for developments).
+   *   The entity type of the query.
    */
-  public function alterQuery(SelectInterface $query, string $entity_type_id, string $field): void {
+  public function alterQuery(SelectInterface $query, string $entity_type_id): void {
     $account = $query->getMetaData('account') ?: \Drupal::currentUser();
     if ($account->hasPermission('administer unified process')) {
       return;
     }
-    $base_table = $this->entityTypeManager->getDefinition($entity_type_id)->getBaseTable();
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $tables = array_filter([$entity_type->getBaseTable(), $entity_type->getDataTable()]);
     $alias = NULL;
     foreach ($query->getTables() as $table_alias => $info) {
-      if (($info['table'] ?? NULL) === $base_table) {
+      if (in_array($info['table'] ?? NULL, $tables, TRUE)) {
         $alias = $table_alias;
         break;
       }
@@ -69,11 +72,25 @@ class DevelopmentVisibility {
     if ($alias === NULL) {
       return;
     }
-    if (!$account->hasPermission('use unified process')) {
-      $query->alwaysFalse();
+    $id = $entity_type->getKey('id');
+    if ($entity_type_id === 'development') {
+      if (!$account->hasPermission('use unified process')) {
+        $query->alwaysFalse();
+        return;
+      }
+      $query->condition("$alias.$id", $this->visibleDevelopments((int) $account->id()), 'IN');
       return;
     }
-    $query->condition("$alias.$field", $this->visibleDevelopments((int) $account->id()), 'IN');
+
+    // Rows whose Development is visible, plus rows without a Development.
+    $field_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+    $visible = $this->database->select($field_table, 'scoped')->fields('scoped', [$id]);
+    $condition = $visible->orConditionGroup()->isNull('scoped.development');
+    if ($account->hasPermission('use unified process')) {
+      $condition->condition('scoped.development', $this->visibleDevelopments((int) $account->id()), 'IN');
+    }
+    $visible->condition($condition);
+    $query->condition("$alias.$id", $visible, 'IN');
   }
 
   /**

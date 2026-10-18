@@ -19,12 +19,14 @@ class ProcessConfigurationTest extends KernelTestBase {
 
   use UserCreationTrait;
 
-  protected static $modules = ['system', 'user', 'divengine_core', 'divengine_process'];
+  protected static $modules = ['system', 'user', 'datetime', 'options', 'text', 'field', 'filter', 'views', 'workflows', 'content_moderation', 'divengine_core', 'divengine_artifact', 'divengine_traceability', 'divengine_process'];
 
   protected function setUp(): void {
     parent::setUp();
     $this->installEntitySchema('user');
-    $this->installConfig(['divengine_process']);
+    $this->installEntitySchema('artifact');
+    $this->installEntitySchema('content_moderation_state');
+    $this->installConfig(['divengine_artifact', 'divengine_traceability', 'divengine_process']);
     // Take uid 1, which bypasses permission checks.
     $this->createUser();
   }

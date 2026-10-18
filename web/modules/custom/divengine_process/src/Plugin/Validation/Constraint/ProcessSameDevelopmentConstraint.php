@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraint as SymfonyConstraint;
 /**
  * References stay inside the entity's Development.
  *
- * Each listed entity reference field may only point to records of the same
- * Development as the entity. With "self", the entity is the Development and
+ * Each listed entity reference field (every one when none is listed) may
+ * only point to records of the same Development as the entity. With "self", the entity is the Development and
  * the referenced records must belong to it.
  */
 #[Constraint(

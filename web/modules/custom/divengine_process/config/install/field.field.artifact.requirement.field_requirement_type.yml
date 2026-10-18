@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.requirement
+  - field.storage.artifact.field_requirement_type
+  module:
+  - options
+id: artifact.requirement.field_requirement_type
+field_name: field_requirement_type
+entity_type: artifact
+bundle: requirement
+label: Type
+description: ''
+required: true
+translatable: false
+default_value:
+- value: functional
+default_value_callback: ''
+settings: {}
+field_type: list_string

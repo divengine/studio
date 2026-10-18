@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: business_worker
+label: Business worker
+description: A role inside the business that takes part in business use cases. Not a user and not a group.
+new_revision: true
+key_prefix: ''

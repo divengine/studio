@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.use_case
+  - field.storage.artifact.field_postconditions
+id: artifact.use_case.field_postconditions
+field_name: field_postconditions
+entity_type: artifact
+bundle: use_case
+label: Postconditions
+description: Guarantees when the use case succeeds.
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

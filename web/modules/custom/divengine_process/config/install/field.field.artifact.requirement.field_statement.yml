@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.requirement
+  - field.storage.artifact.field_statement
+id: artifact.requirement.field_statement
+field_name: field_statement
+entity_type: artifact
+bundle: requirement
+label: Statement
+description: 'What is required, stated so that it can be verified.'
+required: true
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

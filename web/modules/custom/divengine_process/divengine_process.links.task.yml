@@ -1,15 +1,29 @@
 entity.development.canonical:
-  title: 'View'
+  title: 'Overview'
   route_name: entity.development.canonical
   base_route: entity.development.canonical
+  weight: 0
+
+divengine_process.development_business:
+  title: 'Business model'
+  route_name: divengine_process.development_business
+  base_route: entity.development.canonical
+  weight: 10
+
+divengine_process.development_requirements:
+  title: 'Requirements'
+  route_name: divengine_process.development_requirements
+  base_route: entity.development.canonical
+  weight: 20
 
 entity.development.edit_form:
   title: 'Edit'
   route_name: entity.development.edit_form
   base_route: entity.development.canonical
+  weight: 50
 
 entity.development.delete_form:
   title: 'Delete'
   route_name: entity.development.delete_form
   base_route: entity.development.canonical
-  weight: 20
+  weight: 60

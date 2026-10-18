@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: business_use_case
+label: Business use case
+description: 'What the business must accomplish at its boundary, whether or not software exists.'
+new_revision: true
+key_prefix: BUC

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_rule
+  - field.storage.artifact.field_statement
+id: artifact.business_rule.field_statement
+field_name: field_statement
+entity_type: artifact
+bundle: business_rule
+label: Statement
+description: 'The rule, stated so that it can be checked against reality.'
+required: true
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

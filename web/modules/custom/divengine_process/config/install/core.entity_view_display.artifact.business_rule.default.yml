@@ -1,0 +1,99 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_rule
+  - field.field.artifact.business_rule.field_priority
+  - field.field.artifact.business_rule.field_rationale
+  - field.field.artifact.business_rule.field_risk
+  - field.field.artifact.business_rule.field_source
+  - field.field.artifact.business_rule.field_source_ref
+  - field.field.artifact.business_rule.field_statement
+  module:
+  - content_moderation
+  - divengine_core
+  - divengine_process
+  - options
+  - user
+id: artifact.business_rule.default
+targetEntityType: artifact
+bundle: business_rule
+mode: default
+content:
+  field_source_ref:
+    type: string
+    label: inline
+    settings: &id001
+      link_to_entity: false
+    third_party_settings: {}
+    weight: 2
+    region: content
+  field_statement:
+    type: basic_string
+    label: above
+    settings: &id002 {}
+    third_party_settings: {}
+    weight: 3
+    region: content
+  field_source:
+    type: string
+    label: inline
+    settings: *id001
+    third_party_settings: {}
+    weight: 4
+    region: content
+  field_rationale:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 5
+    region: content
+  field_priority:
+    type: divengine_badge
+    label: inline
+    settings:
+      tones:
+        unassessed: neutral
+        low: neutral
+        medium: info
+        high: warning
+        critical: danger
+    third_party_settings: {}
+    weight: 6
+    region: content
+  field_risk:
+    type: divengine_badge
+    label: inline
+    settings:
+      tones:
+        unassessed: neutral
+        low: neutral
+        medium: info
+        high: danger
+    third_party_settings: {}
+    weight: 7
+    region: content
+  development:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {}
+    weight: -10
+    region: content
+  uid:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {}
+    weight: 90
+    region: content
+hidden:
+  artifact_key: true
+  body: true
+  status: true
+  title: true
+  created: true
+  changed: true

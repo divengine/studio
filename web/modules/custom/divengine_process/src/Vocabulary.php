@@ -132,4 +132,24 @@ final class Vocabulary {
     };
   }
 
+  /**
+   * Artifact types of the business and system model.
+   *
+   * Artifacts of these types belong to exactly one Development.
+   *
+   * @return array<string, string>
+   *   Artifact type ID => the Development page section that lists it.
+   */
+  public static function scopedArtifactTypes(): array {
+    return [
+      'business_use_case' => 'business',
+      'business_rule' => 'business',
+      'business_actor' => 'business',
+      'business_worker' => 'business',
+      'requirement' => 'requirements',
+      'use_case' => 'requirements',
+      'system_actor' => 'requirements',
+    ];
+  }
+
 }

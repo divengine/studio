@@ -1,0 +1,170 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.use_case
+  - field.field.artifact.use_case.field_alternative_flows
+  - field.field.artifact.use_case.field_exception_flows
+  - field.field.artifact.use_case.field_iteration
+  - field.field.artifact.use_case.field_main_flow
+  - field.field.artifact.use_case.field_postconditions
+  - field.field.artifact.use_case.field_preconditions
+  - field.field.artifact.use_case.field_primary_actor
+  - field.field.artifact.use_case.field_priority
+  - field.field.artifact.use_case.field_requirements
+  - field.field.artifact.use_case.field_risk
+  - field.field.artifact.use_case.field_scope_level
+  - field.field.artifact.use_case.field_special_requirements
+  - field.field.artifact.use_case.field_supporting_actors
+  - field.field.artifact.use_case.field_trigger
+  module:
+  - content_moderation
+  - divengine_core
+  - divengine_process
+  - options
+  - user
+id: artifact.use_case.default
+targetEntityType: artifact
+bundle: use_case
+mode: default
+content:
+  summary:
+    type: basic_string
+    label: hidden
+    settings: {}
+    third_party_settings: {}
+    weight: 2
+    region: content
+  field_scope_level:
+    type: list_default
+    label: inline
+    settings: {}
+    third_party_settings: {}
+    weight: 3
+    region: content
+  field_primary_actor:
+    type: entity_reference_label
+    label: inline
+    settings: &id001
+      link: true
+    third_party_settings: {}
+    weight: 4
+    region: content
+  field_supporting_actors:
+    type: entity_reference_label
+    label: inline
+    settings: *id001
+    third_party_settings: {}
+    weight: 5
+    region: content
+  field_trigger:
+    type: basic_string
+    label: above
+    settings: &id002 {}
+    third_party_settings: {}
+    weight: 6
+    region: content
+  field_preconditions:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 7
+    region: content
+  field_postconditions:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 8
+    region: content
+  field_main_flow:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 9
+    region: content
+  field_alternative_flows:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 10
+    region: content
+  field_exception_flows:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 11
+    region: content
+  field_special_requirements:
+    type: basic_string
+    label: above
+    settings: *id002
+    third_party_settings: {}
+    weight: 12
+    region: content
+  field_requirements:
+    type: entity_reference_label
+    label: inline
+    settings: *id001
+    third_party_settings: {}
+    weight: 13
+    region: content
+  field_priority:
+    type: divengine_badge
+    label: inline
+    settings:
+      tones:
+        unassessed: neutral
+        low: neutral
+        medium: info
+        high: warning
+        critical: danger
+    third_party_settings: {}
+    weight: 14
+    region: content
+  field_risk:
+    type: divengine_badge
+    label: inline
+    settings:
+      tones:
+        unassessed: neutral
+        low: neutral
+        medium: info
+        high: danger
+    third_party_settings: {}
+    weight: 15
+    region: content
+  field_iteration:
+    type: entity_reference_label
+    label: inline
+    settings: *id001
+    third_party_settings: {}
+    weight: 16
+    region: content
+  development:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {}
+    weight: -10
+    region: content
+  uid:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {}
+    weight: 90
+    region: content
+hidden:
+  artifact_key: true
+  body: true
+  status: true
+  title: true
+  created: true
+  changed: true

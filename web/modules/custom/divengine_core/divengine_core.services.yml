@@ -1,0 +1,4 @@
+services:
+  divengine_core.sequence:
+    class: Drupal\divengine_core\Sequence
+    arguments: ['@state', '@lock.persistent']

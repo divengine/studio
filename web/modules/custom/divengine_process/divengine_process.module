@@ -7,8 +7,78 @@
 
 declare(strict_types=1);
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\divengine_process\Vocabulary;
+
+/**
+ * Entity types whose rows follow the visibility of their Development.
+ */
+const DIVENGINE_PROCESS_SCOPED_TYPES = [
+  'development',
+  'development_phase',
+  'iteration',
+  'milestone',
+  'role_assignment',
+  'artifact',
+];
+
+/**
+ * Implements hook_entity_base_field_info().
+ *
+ * Artifacts can belong to a Development; business and system model
+ * artifacts must (ProcessDevelopmentRequired).
+ */
+function divengine_process_entity_base_field_info(EntityTypeInterface $entity_type): array {
+  if ($entity_type->id() !== 'artifact') {
+    return [];
+  }
+  return [
+    'development' => BaseFieldDefinition::create('entity_reference')
+      ->setLabel(new TranslatableMarkup('Development'))
+      ->setDescription(new TranslatableMarkup('The Development this record belongs to.'))
+      ->setSetting('target_type', 'development')
+      ->setRevisionable(TRUE)
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE),
+  ];
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function divengine_process_entity_type_alter(array &$entity_types): void {
+  if (isset($entity_types['artifact'])) {
+    $entity_types['artifact']->addConstraint('ProcessDevelopmentRequired');
+    $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
+    $entity_types['artifact']->addConstraint('ProcessSameDevelopment');
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for artifact.
+ *
+ * An artifact of a Development is seen and edited only by those who see
+ * and edit the Development; its type permissions still apply on top.
+ */
+function divengine_process_artifact_access(EntityInterface $artifact, string $operation, AccountInterface $account): AccessResult {
+  $development = $artifact->get('development')->entity;
+  if (!$development) {
+    return AccessResult::neutral()->addCacheableDependency($artifact);
+  }
+  $development_operation = in_array($operation, ['view', 'view label', 'view revision', 'view all revisions'], TRUE) ? 'view' : 'update';
+  $result = $development->access($development_operation, $account, TRUE);
+  return ($result->isAllowed() ? AccessResult::neutral() : AccessResult::forbidden())
+    ->addCacheableDependency($result)
+    ->addCacheableDependency($artifact);
+}
 
 /**
  * Implements hook_query_alter().
@@ -20,16 +90,41 @@ function divengine_process_query_alter(AlterableInterface $query): void {
   if (!$query instanceof SelectInterface) {
     return;
   }
-  $scoped = [
-    'development' => 'id',
-    'development_phase' => 'development',
-    'iteration' => 'development',
-    'milestone' => 'development',
-    'role_assignment' => 'development',
-  ];
-  foreach ($scoped as $entity_type_id => $field) {
+  foreach (DIVENGINE_PROCESS_SCOPED_TYPES as $entity_type_id) {
     if ($query->hasTag($entity_type_id . '_access')) {
-      \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id, $field);
+      \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id);
     }
+  }
+}
+
+/**
+ * Implements hook_entity_prepare_form().
+ *
+ * "Add" links of a Development pass ?development=ID: the new record belongs
+ * to it.
+ */
+function divengine_process_entity_prepare_form(EntityInterface $entity, string $operation, FormStateInterface $form_state): void {
+  if ($entity->getEntityTypeId() !== 'artifact' || !$entity->isNew() || !$entity->get('development')->isEmpty()) {
+    return;
+  }
+  $id = \Drupal::request()->query->get('development');
+  if ($id && ($development = \Drupal::entityTypeManager()->getStorage('development')->load($id)) && $development->access('update')) {
+    $entity->set('development', $development->id());
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter() for artifact forms.
+ *
+ * The Development of a record is shown only while it has to be chosen.
+ */
+function divengine_process_form_artifact_form_alter(array &$form, FormStateInterface $form_state): void {
+  /** @var \Drupal\Core\Entity\ContentEntityInterface $artifact */
+  $artifact = $form_state->getFormObject()->getEntity();
+  if (isset($form['development']) && !$artifact->get('development')->isEmpty()) {
+    $form['development']['#access'] = FALSE;
+  }
+  if (isset($form['development']['widget']) && isset(Vocabulary::scopedArtifactTypes()[$artifact->bundle()])) {
+    $form['development']['widget']['#required'] = TRUE;
   }
 }

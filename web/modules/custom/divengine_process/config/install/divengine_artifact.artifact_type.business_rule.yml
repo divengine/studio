@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: business_rule
+label: Business rule
+description: 'A rule of the business or its domain (regulation, contract, policy), true whether or not software exists.'
+new_revision: true
+key_prefix: BR

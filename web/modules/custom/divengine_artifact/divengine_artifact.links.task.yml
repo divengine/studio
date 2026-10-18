@@ -1,0 +1,16 @@
+entity.artifact.canonical:
+  title: 'View'
+  route_name: entity.artifact.canonical
+  base_route: entity.artifact.canonical
+
+entity.artifact.edit_form:
+  title: 'Edit'
+  route_name: entity.artifact.edit_form
+  base_route: entity.artifact.canonical
+  weight: 10
+
+entity.artifact.delete_form:
+  title: 'Delete'
+  route_name: entity.artifact.delete_form
+  base_route: entity.artifact.canonical
+  weight: 30

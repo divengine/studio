@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.use_case
+  - field.storage.artifact.field_main_flow
+id: artifact.use_case.field_main_flow
+field_name: field_main_flow
+entity_type: artifact
+bundle: use_case
+label: Main success scenario
+description: ''
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

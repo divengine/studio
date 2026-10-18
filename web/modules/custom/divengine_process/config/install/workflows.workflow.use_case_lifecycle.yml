@@ -1,0 +1,99 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_use_case
+  - divengine_artifact.artifact_type.use_case
+  module:
+  - content_moderation
+  - divengine_artifact
+id: use_case_lifecycle
+label: Use case lifecycle
+type: content_moderation
+type_settings:
+  states:
+    draft:
+      label: Identified
+      weight: -10
+      published: false
+      default_revision: false
+    outlined:
+      label: Outlined
+      weight: -5
+      published: false
+      default_revision: false
+    detailed:
+      label: Detailed
+      weight: 0
+      published: false
+      default_revision: false
+    reviewed:
+      label: Reviewed
+      weight: 3
+      published: false
+      default_revision: false
+    published:
+      label: Baselined
+      weight: 5
+      published: true
+      default_revision: true
+    deprecated:
+      label: Deprecated
+      weight: 10
+      published: false
+      default_revision: true
+  transitions:
+    identify:
+      label: Identified
+      from:
+      - draft
+      - outlined
+      - detailed
+      - reviewed
+      - published
+      - deprecated
+      to: draft
+      weight: 0
+    outline:
+      label: Outline
+      from:
+      - draft
+      - outlined
+      to: outlined
+      weight: 1
+    detail:
+      label: Detail
+      from:
+      - outlined
+      - detailed
+      - reviewed
+      to: detailed
+      weight: 2
+    review:
+      label: Mark reviewed
+      from:
+      - detailed
+      - reviewed
+      to: reviewed
+      weight: 3
+    baseline:
+      label: Baseline
+      from:
+      - reviewed
+      to: published
+      weight: 4
+    deprecate:
+      label: Deprecate
+      from:
+      - draft
+      - outlined
+      - detailed
+      - reviewed
+      - published
+      to: deprecated
+      weight: 5
+  entity_types:
+    artifact:
+    - business_use_case
+    - use_case
+  default_moderation_state: draft

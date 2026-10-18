@@ -6,11 +6,9 @@ dependencies:
     - divengine_artifact.artifact_type.evidence
     - divengine_artifact.artifact_type.knowledge_reference
     - divengine_artifact.artifact_type.method_fragment
-    - divengine_artifact.artifact_type.requirement
     - divengine_artifact.artifact_type.risk
     - divengine_artifact.artifact_type.standard_reference
     - divengine_artifact.artifact_type.test_case
-    - divengine_artifact.artifact_type.use_case
   module:
     - content_moderation
     - divengine_artifact
@@ -83,9 +81,7 @@ type_settings:
       - evidence
       - knowledge_reference
       - method_fragment
-      - requirement
       - risk
       - standard_reference
       - test_case
-      - use_case
   default_moderation_state: draft

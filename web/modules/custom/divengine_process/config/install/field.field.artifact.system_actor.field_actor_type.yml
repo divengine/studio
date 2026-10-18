@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.system_actor
+  - field.storage.artifact.field_actor_type
+  module:
+  - options
+id: artifact.system_actor.field_actor_type
+field_name: field_actor_type
+entity_type: artifact
+bundle: system_actor
+label: Type
+description: ''
+required: true
+translatable: false
+default_value:
+- value: human
+default_value_callback: ''
+settings: {}
+field_type: list_string

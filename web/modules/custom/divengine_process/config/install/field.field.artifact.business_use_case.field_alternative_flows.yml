@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_use_case
+  - field.storage.artifact.field_alternative_flows
+id: artifact.business_use_case.field_alternative_flows
+field_name: field_alternative_flows
+entity_type: artifact
+bundle: business_use_case
+label: Alternative flows
+description: ''
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

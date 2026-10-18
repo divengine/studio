@@ -1,0 +1,63 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_actor
+  - field.field.artifact.business_actor.field_business_actor_type
+  module:
+  - divengine_process
+  - options
+id: artifact.business_actor.default
+targetEntityType: artifact
+bundle: business_actor
+mode: default
+content:
+  title:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  development:
+    type: options_select
+    weight: 1
+    region: content
+    settings: {}
+    third_party_settings: {}
+  summary:
+    type: string_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 3
+      placeholder: ''
+    third_party_settings: {}
+  field_business_actor_type:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {}
+    third_party_settings: {}
+  uid:
+    type: entity_reference_autocomplete
+    weight: 4
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {}
+  status:
+    type: boolean_checkbox
+    weight: 99
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {}
+hidden:
+  artifact_key: true
+  body: true
+  created: true

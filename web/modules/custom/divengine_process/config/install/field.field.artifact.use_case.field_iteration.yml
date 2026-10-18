@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.use_case
+  - field.storage.artifact.field_iteration
+  module:
+  - divengine_process
+id: artifact.use_case.field_iteration
+field_name: field_iteration
+entity_type: artifact
+bundle: use_case
+label: Target iteration
+description: ''
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings:
+  handler: divengine_process_development
+  handler_settings:
+    auto_create: false
+field_type: entity_reference

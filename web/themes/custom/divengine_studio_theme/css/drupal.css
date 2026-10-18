@@ -42,7 +42,6 @@
 .dv-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: var(--dv-space-3); margin: 0 0 var(--dv-space-5); }
 .dv-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr)); gap: var(--dv-space-5); align-items: start; }
 .field { margin: 0 0 var(--dv-space-4); }
-.field__item { white-space: pre-line; }
 .field__label { font-size: var(--dv-font-size-xs); text-transform: uppercase; letter-spacing: 0.04em; color: var(--dv-gray-600); font-weight: 700; }
 .field--label-inline { display: flex; gap: var(--dv-space-2); }
 .field--label-inline .field__label::after { content: ":"; }

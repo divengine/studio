@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_actor
+  - divengine_artifact.artifact_type.business_use_case
+  - field.storage.artifact.field_primary_actor
+  module:
+  - divengine_process
+id: artifact.business_use_case.field_primary_actor
+field_name: field_primary_actor
+entity_type: artifact
+bundle: business_use_case
+label: Primary actor
+description: The business actor whose goal this is.
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings:
+  handler: divengine_process_development
+  handler_settings:
+    auto_create: false
+    target_bundles:
+      business_actor: business_actor
+field_type: entity_reference

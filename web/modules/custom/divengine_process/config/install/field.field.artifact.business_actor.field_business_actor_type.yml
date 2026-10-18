@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_actor
+  - field.storage.artifact.field_business_actor_type
+  module:
+  - options
+id: artifact.business_actor.field_business_actor_type
+field_name: field_business_actor_type
+entity_type: artifact
+bundle: business_actor
+label: Type
+description: ''
+required: true
+translatable: false
+default_value:
+- value: organization
+default_value_callback: ''
+settings: {}
+field_type: list_string

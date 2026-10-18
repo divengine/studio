@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: system_actor
+label: System actor
+description: Someone or something outside the software that interacts with it.
+new_revision: true
+key_prefix: ''

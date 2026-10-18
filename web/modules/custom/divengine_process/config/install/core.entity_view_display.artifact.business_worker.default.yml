@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.business_worker
+  module:
+  - divengine_core
+  - divengine_process
+  - user
+id: artifact.business_worker.default
+targetEntityType: artifact
+bundle: business_worker
+mode: default
+content:
+  summary:
+    type: basic_string
+    label: hidden
+    settings: {}
+    third_party_settings: {}
+    weight: 2
+    region: content
+  development:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: true
+    third_party_settings: {}
+    weight: -10
+    region: content
+  uid:
+    type: entity_reference_label
+    label: inline
+    settings:
+      link: false
+    third_party_settings: {}
+    weight: 90
+    region: content
+hidden:
+  artifact_key: true
+  body: true
+  status: true
+  title: true
+  created: true
+  changed: true

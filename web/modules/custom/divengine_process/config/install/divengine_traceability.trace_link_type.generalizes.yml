@@ -1,0 +1,17 @@
+langcode: en
+status: true
+dependencies:
+  module:
+  - divengine_traceability
+id: generalizes
+label: Specializes
+inverse_label: Is specialized by
+description: The use case is a specialization of the target use case.
+source_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+target_rules:
+- 'artifact:use_case'
+- 'artifact:business_use_case'
+same_kind: true
+weight: 32

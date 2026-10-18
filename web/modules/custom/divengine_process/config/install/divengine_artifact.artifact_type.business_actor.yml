@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {}
+id: business_actor
+label: Business actor
+description: 'A party outside the business being modelled, such as a payer or a regulator.'
+new_revision: true
+key_prefix: ''

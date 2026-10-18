@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+  - divengine_artifact.artifact_type.use_case
+  - field.storage.artifact.field_exception_flows
+id: artifact.use_case.field_exception_flows
+field_name: field_exception_flows
+entity_type: artifact
+bundle: use_case
+label: Exception flows
+description: ''
+required: false
+translatable: false
+default_value: []
+default_value_callback: ''
+settings: {}
+field_type: string_long

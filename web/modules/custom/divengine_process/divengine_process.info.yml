@@ -6,6 +6,10 @@ package: 'Divengine'
 configure: divengine_process.admin
 dependencies:
   - divengine_core
+  - divengine_artifact
+  - divengine_traceability
+  - drupal:content_moderation
+  - drupal:views
   - drupal:datetime
   - drupal:options
   - drupal:user
