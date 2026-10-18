@@ -1,7 +1,7 @@
 # Divengine Studio
 
-Drupal 11 site with Divengine's custom modules for managing artifacts, traceability,
-knowledge and engineering diagrams.
+Drupal 11 distribution with Divengine's custom modules for managing artifacts,
+traceability, knowledge and engineering diagrams, packaged as recipes (ADR-0006).
 
 This repository only tracks Divengine's own code. Drupal core, contributed modules and
 `vendor/` are installed with Composer.
@@ -18,6 +18,9 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_modeler_bpmn` | BPMN 2.0 notation (bpmn-js) |
 | `web/modules/custom/divengine_modeler_uml` | UML notation (PlantUML in the browser, CodeMirror) |
 | `web/modules/custom/divengine_diagram_embed` | Diagrams in formatted text: CKEditor 5 button, `<drupal-diagram>` filter, usage |
+| `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
+| `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
+| `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
 | `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
@@ -31,17 +34,33 @@ Unified Process layer. See [docs/roadmap.md](docs/roadmap.md) and the ADRs in
 
 ## Setup
 
+Requires PHP 8.4 and PostgreSQL (with the `pg_trgm` extension).
+
 ```bash
 composer install
-cp web/sites/default/default.settings.php web/sites/default/settings.php
-# configure $databases in settings.php (PostgreSQL), then:
-vendor/bin/drush site:install --existing-config   # or import a database dump
-vendor/bin/drush en divengine_core divengine_artifact divengine_knowledge divengine_traceability \
-  divengine_modeler divengine_modeler_bpmn divengine_modeler_uml divengine_diagram_embed
+vendor/bin/drush site:install recipes/divengine_studio \
+  --db-url=pgsql://user:password@localhost/studio --account-name=admin
 ```
 
-To embed diagrams, add the "Diagram" button and the "Embed diagrams" filter to a CKEditor 5
-text format (see `web/modules/custom/divengine_diagram_embed/README.md`).
+That installs the complete suite: Standard, every Studio module, Gin as the admin theme
+and the "Diagram" button with the "Embed diagrams" filter in Basic and Full HTML. On an
+existing Drupal 11 site, apply it instead with `drush recipe $PWD/recipes/divengine_studio`.
+
+### MCP (optional)
+
+Exposes Studio, read-only, to AI clients such as Claude Code:
+
+```bash
+vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp
+vendor/bin/drush divengine:mcp-setup --uri=https://studio.example.com
+```
+
+The second command creates the `mcp_bot` account and a token in
+`private/divengine-mcp.token` (outside the web root, ignored by git) and prints the
+`claude mcp add` command. See `web/modules/custom/divengine_mcp/README.md`.
+
+To leave MCP out entirely, skip both commands and run
+`composer remove drupal/mcp drupal/jsonapi_schema`.
 
 ## Tests
 

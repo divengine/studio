@@ -1,0 +1,84 @@
+name: 'Divengine Studio'
+description: 'Engineering suite on Drupal core: artifacts, traceability, knowledge and diagram modelers (BPMN, UML), with diagrams embeddable in formatted text.'
+type: 'Site'
+recipes:
+  - core/recipes/standard
+install:
+  - divengine_core
+  - divengine_artifact
+  - divengine_knowledge
+  - divengine_traceability
+  - divengine_modeler
+  - divengine_modeler_bpmn
+  - divengine_modeler_uml
+  - divengine_diagram_embed
+  - gin
+config:
+  # Recipes only install simple config from modules; config entities
+  # (artifact and diagram types, workflows, trace link types, vocabularies,
+  # views) have to be imported explicitly.
+  import:
+    divengine_artifact: '*'
+    divengine_knowledge: '*'
+    divengine_traceability: '*'
+    divengine_modeler: '*'
+    divengine_modeler_bpmn: '*'
+    divengine_modeler_uml: '*'
+    divengine_diagram_embed: '*'
+  actions:
+    system.theme:
+      simpleConfigUpdate:
+        admin: gin
+    # The filter goes first: the CKEditor 5 "Diagram" button requires it.
+    filter.format.basic_html:
+      setFilterConfigs:
+        - instance_id: filter_html
+          configuration:
+            id: filter_html
+            provider: filter
+            status: true
+            weight: -10
+            settings:
+              allowed_html: '<br> <p> <h2 id> <h3 id> <h4 id> <h5 id> <h6 id> <cite> <dl> <dt> <dd> <a hreflang href> <blockquote cite> <ul type> <ol start type> <strong> <em> <code> <li> <img src alt data-entity-uuid data-entity-type height width data-caption data-align> <drupal-diagram data-diagram-uuid data-align>'
+              filter_html_help: false
+              filter_html_nofollow: false
+        - instance_id: divengine_diagram_embed
+          configuration:
+            id: divengine_diagram_embed
+            provider: divengine_diagram_embed
+            status: true
+            weight: 100
+            settings: {}
+    filter.format.full_html:
+      setFilterConfig:
+        instance_id: divengine_diagram_embed
+        configuration:
+          id: divengine_diagram_embed
+          provider: divengine_diagram_embed
+          status: true
+          weight: 100
+          settings: {}
+    editor.editor.basic_html:
+      addItemToToolbar: divengineDiagram
+    editor.editor.full_html:
+      addItemToToolbar: divengineDiagram
+    user.role.content_editor:
+      grantPermissions:
+        - 'access divengine'
+        - 'view divengine reports'
+        - 'view artifact'
+        - 'create artifact'
+        - 'edit artifact'
+        - 'view artifact revisions'
+        - 'view diagrams'
+        - 'create diagrams'
+        - 'edit own diagrams'
+        - 'view diagram revisions'
+        - 'view trace links'
+        - 'create trace links'
+        - 'edit trace links'
+        - 'view trace link revisions'
+        - 'use artifact_lifecycle transition create_new_draft'
+        - 'use artifact_lifecycle transition submit_for_review'
+        - 'use diagram_lifecycle transition create_new_draft'
+        - 'use diagram_lifecycle transition submit_for_review'

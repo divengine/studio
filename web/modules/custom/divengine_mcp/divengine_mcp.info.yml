@@ -1,0 +1,9 @@
+name: 'Divengine MCP'
+type: module
+description: 'Connects Divengine Studio to AI clients through the MCP module: a Drush command that creates the service account and its access token.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - key:key
+  - mcp:mcp

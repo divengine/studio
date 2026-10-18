@@ -1,0 +1,50 @@
+name: 'Divengine Studio MCP'
+description: 'Exposes Studio to AI clients (Claude Code, Claude Desktop, Cursor) as a read-only MCP server with token authentication. Run "drush divengine:mcp-setup" afterwards to create the service account and its token.'
+type: 'Integration'
+install:
+  - jsonapi
+  - jsonapi_schema
+  - key
+  - mcp
+  - divengine_mcp
+config:
+  actions:
+    # Authentication stays on even before the token exists: until
+    # divengine:mcp-setup runs, only users with a session and the "use mcp
+    # server" permission can reach /mcp/post.
+    mcp.settings:
+      simpleConfigUpdate:
+        enable_auth: true
+        auth_settings:
+          enable_token_auth: false
+          enable_basic_auth: false
+        plugins:
+          general:
+            enabled: true
+            config: {}
+          content:
+            enabled: true
+            config:
+              content_types:
+                article: article
+                page: page
+          jsonapi:
+            enabled: true
+            config:
+              allowed_resource_types: []
+    # Read-only: the MCP plugins enabled here only read, and the service
+    # account gets no write permissions.
+    user.role.mcp_agent:
+      createIfNotExists:
+        label: 'MCP agent'
+      grantPermissions:
+        - 'use mcp server'
+        - 'access content'
+        - 'access divengine'
+        - 'view divengine reports'
+        - 'view artifact'
+        - 'view artifact revisions'
+        - 'view diagrams'
+        - 'view diagram revisions'
+        - 'view trace links'
+        - 'view trace link revisions'
