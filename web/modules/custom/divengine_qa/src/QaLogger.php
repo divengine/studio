@@ -38,6 +38,7 @@ class QaLogger {
     'qa_test_step' => ['is_skippable'],
     'qa_test_run' => ['name', 'plan', 'tester', 'test_url', 'is_automated', 'state', 'last_reopened_by', 'last_reopened_at', 'last_reopen_reason'],
     'qa_test_execution' => ['run', 'test_case', 'is_case_skipped', 'state', 'actual_result', 'result_reason'],
+    'qa_issue' => ['name', 'state', 'priority', 'assignee'],
   ];
 
   /**

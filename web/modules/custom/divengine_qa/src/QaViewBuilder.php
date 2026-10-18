@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
 use Drupal\divengine_process\Lifecycle\LifecycleManager;
+use Drupal\divengine_qa\Entity\QaIssue;
 use Drupal\divengine_qa\Entity\QaStepResult;
 use Drupal\divengine_qa\Entity\QaTestCase;
 use Drupal\divengine_qa\Entity\QaTestExecution;
@@ -43,6 +44,8 @@ class QaViewBuilder extends EntityViewBuilder {
 
   protected QaLogger $logger;
 
+  protected QaIssues $issues;
+
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $instance = parent::createInstance($container, $entity_type);
     $instance->entityTypeManager = $container->get('entity_type.manager');
@@ -51,6 +54,7 @@ class QaViewBuilder extends EntityViewBuilder {
     $instance->metrics = $container->get('divengine_qa.metrics');
     $instance->runs = $container->get('divengine_qa.runs');
     $instance->logger = $container->get('divengine_qa.logger');
+    $instance->issues = $container->get('divengine_qa.issues');
     return $instance;
   }
 
@@ -70,13 +74,14 @@ class QaViewBuilder extends EntityViewBuilder {
         $entity instanceof QaTestCase => $this->testCase($entity),
         $entity instanceof QaTestRun => $this->run($entity),
         $entity instanceof QaTestExecution => $this->execution($entity),
+        $entity instanceof QaIssue => $this->issue($entity),
         default => [],
       };
       $sections['activity'] = $this->activity($entity);
       $build[$id] += $sections;
       $build[$id]['#cache']['tags'] = array_merge($build[$id]['#cache']['tags'] ?? [], [
         'qa_test_suite_list', 'qa_test_case_list', 'qa_test_step_list', 'qa_test_run_list',
-        'qa_test_execution_list', 'qa_step_result_list', 'qa_result_correction_list', 'qa_log_list',
+        'qa_test_execution_list', 'qa_step_result_list', 'qa_result_correction_list', 'qa_log_list', 'qa_issue_list',
       ]);
       $build[$id]['#cache']['contexts'][] = 'user';
       $build[$id]['#attached']['library'][] = 'divengine_qa/qa';
@@ -337,13 +342,14 @@ class QaViewBuilder extends EntityViewBuilder {
         ['data' => $this->resultBadge($execution->getResult())],
         ['data' => ['#plain_text' => $steps ? $recorded . ' / ' . count($steps) : '—']],
         ['data' => ['#plain_text' => (string) ($execution->get('result_reason')->value ?? '')]],
+        ['data' => ['#plain_text' => (string) count($this->issues->forExecution($execution))]],
         ['data' => $this->actionsContainer($row_actions)],
       ];
     }
     $add = $state === 'in_progress' && ($lead || $assigned)
       ? $this->button($this->t('Add Scenario'), Url::fromRoute('divengine_qa.add_scenario', ['qa_test_run' => $run->id()]))
       : NULL;
-    $build['executions'] = $this->section($this->t('Executions'), count($rows), $this->table([$this->t('Test Suite'), $this->t('Case Code'), $this->t('Test Case / Scenario'), $this->t('Result'), $this->t('Steps Recorded'), $this->t('Reason'), ''], $rows, $this->t('No executions.')), $add) + ['#weight' => 40];
+    $build['executions'] = $this->section($this->t('Executions'), count($rows), $this->table([$this->t('Test Suite'), $this->t('Case Code'), $this->t('Test Case / Scenario'), $this->t('Result'), $this->t('Steps Recorded'), $this->t('Reason'), $this->t('QA Issues'), ''], $rows, $this->t('No executions.')), $add) + ['#weight' => 40];
 
     if ((int) $run->get('reopen_count')->value > 0) {
       $build['reopen'] = $this->section($this->t('Reopen Audit'), (int) $run->get('reopen_count')->value, [
@@ -394,6 +400,10 @@ class QaViewBuilder extends EntityViewBuilder {
         }
       }
       $actions[] = $this->button($this->t('Add Scenario'), Url::fromRoute('divengine_qa.add_scenario', ['qa_test_run' => $run->id()]));
+    }
+    $can_report = $this->entityTypeManager->getAccessControlHandler('qa_issue')->createAccess();
+    if (in_array($result, ['failed', 'blocked'], TRUE) && $can_report) {
+      $actions[] = $this->button($this->t('Report QA Issue'), Url::fromRoute('divengine_qa.report_issue', ['qa_test_execution' => $execution->id()]), TRUE);
     }
     if ($execution->isAdHoc() && $lead) {
       $actions[] = $this->button($this->t('Promote to Test Case'), Url::fromRoute('divengine_qa.promote_scenario', ['qa_test_execution' => $execution->id()]));
@@ -452,6 +462,9 @@ class QaViewBuilder extends EntityViewBuilder {
           $step_actions[] = $this->button('✎', Url::fromRoute('divengine_qa.record_result', ['type' => 'step', 'id' => $step->id()]), FALSE, $this->t('Correct Result'));
         }
       }
+      if ($step_state === 'failed' && $can_report) {
+        $step_actions[] = $this->button('⚑', Url::fromRoute('divengine_qa.report_issue', ['qa_test_execution' => $execution->id()], ['query' => ['step' => $step->id()]]), FALSE, $this->t('Report QA Issue'));
+      }
       if (in_array($run->getState(), ['in_progress', 'completed'], TRUE) && ($lead || $assigned)) {
         $step_actions[] = $this->button('📎', Url::fromRoute('divengine_qa.add_evidence', ['type' => 'step', 'id' => $step->id()]), FALSE, $this->t('Add evidence'));
       }
@@ -494,6 +507,10 @@ class QaViewBuilder extends EntityViewBuilder {
     }
     $build['evidence'] = $this->section($this->t('Evidence'), count($files), $files ? ['#theme' => 'item_list', '#items' => $files] : ['#markup' => '<p>' . $this->t('No evidence attached.') . '</p>']) + ['#weight' => -40];
 
+    $build['issues'] = $this->section($this->t('QA Issues'), 0, $this->issueTable($this->issues->forExecution($execution)), in_array($result, ['failed', 'blocked'], TRUE) && $can_report
+      ? $this->button($this->t('Report QA Issue'), Url::fromRoute('divengine_qa.report_issue', ['qa_test_execution' => $execution->id()]))
+      : NULL) + ['#weight' => -35];
+
     $corrections = $this->children('qa_result_correction', 'execution', $execution->id(), 'created', 'DESC');
     if ($corrections) {
       $rows = [];
@@ -511,6 +528,74 @@ class QaViewBuilder extends EntityViewBuilder {
       $build['corrections'] = $this->section($this->t('Correction History'), count($rows), $this->table([$this->t('Corrected On'), $this->t('Corrected By'), $this->t('Level'), $this->t('Step'), $this->t('Previous Result'), $this->t('New Result'), $this->t('Reason')], $rows, '')) + ['#weight' => -30];
     }
     return $build;
+  }
+
+  // ---------------------------------------------------------------- Issue.
+
+  protected function issue(QaIssue $issue): array {
+    $actions = $this->transitions($issue);
+    if ($issue->access('update')) {
+      $actions[] = $this->button($this->t('Edit'), $issue->toUrl('edit-form'));
+    }
+    $origin = $issue->get('origin')->entity;
+    if ($origin && $origin->access('view')) {
+      $actions[] = $this->button($this->t('Go to Execution'), $origin->toUrl());
+    }
+    $build['status'] = $this->statusBar($issue, (string) $issue->get('code')->value, $issue->getStateLabel(), QaVocabulary::tone($issue->getState()), [
+      (string) $this->t('Development') => $issue->get('development')->entity?->label(),
+      (string) $this->t('Priority') => (string) (QaVocabulary::issuePriorities()[$issue->get('priority')->value] ?? ''),
+      (string) $this->t('Assigned to') => $issue->get('assignee')->entity?->getDisplayName(),
+      (string) $this->t('Reported by') => $issue->getOwner()?->getDisplayName(),
+      (string) $this->t('Reported on') => $this->date($issue->get('created')->value),
+    ], $actions) + ['#weight' => -100];
+    $build['context'] = $this->section($this->t('Test context'), 0, $this->facts([
+      (string) $this->t('QA Execution Origin') => $origin?->label(),
+      (string) $this->t('Related Test Case') => $issue->get('test_case')->entity?->label(),
+      (string) $this->t('Related Test Run') => $issue->get('run')->entity?->label(),
+      (string) $this->t('Related Test Plan') => $issue->get('plan')->entity?->label(),
+    ])) + ['#weight' => -90];
+    $build['description'] = $this->section($this->t('Description'), 0, $issue->get('description')->isEmpty()
+      ? ['#markup' => '<p>' . $this->t('No description.') . '</p>']
+      : ['#type' => 'processed_text', '#text' => $issue->get('description')->value, '#format' => $issue->get('description')->format]) + ['#weight' => -80];
+
+    $rows = [];
+    foreach ($issue->getExecutions() as $execution) {
+      $visible = $execution->access('view');
+      $rows[] = [
+        ['data' => $visible ? $execution->toLink()->toRenderable() : ['#plain_text' => $execution->label()]],
+        ['data' => ['#plain_text' => (string) $execution->get('run')->entity?->label()]],
+        ['data' => ['#plain_text' => (string) $execution->get('run')->entity?->get('tester')->entity?->getDisplayName()]],
+        ['data' => $this->resultBadge($execution->getResult())],
+        ['data' => ['#plain_text' => $this->date($execution->get('execution_date')->value)]],
+      ];
+    }
+    $build['executions'] = $this->section($this->t('Linked QA Executions'), count($rows), $this->table([$this->t('Execution'), $this->t('Test Run'), $this->t('Tester'), $this->t('Result'), $this->t('Recorded On')], $rows, $this->t('No execution linked.'))) + ['#weight' => -70];
+
+    $files = [];
+    foreach ($issue->get('evidence') as $item) {
+      if ($file = $item->entity) {
+        $files[] = ['#type' => 'link', '#title' => $file->getFilename(), '#url' => Url::fromUri($file->createFileUrl(FALSE))];
+      }
+    }
+    $build['evidence'] = $this->section($this->t('Attachments'), count($files), $files ? ['#theme' => 'item_list', '#items' => $files] : ['#markup' => '<p>' . $this->t('No attachment.') . '</p>']) + ['#weight' => -60];
+    return $build;
+  }
+
+  /**
+   * A list of QA Issues.
+   */
+  protected function issueTable(array $issues): array {
+    $rows = [];
+    foreach ($issues as $issue) {
+      $rows[] = [
+        ['data' => ['#plain_text' => (string) $issue->get('code')->value]],
+        ['data' => $issue->toLink($issue->get('name')->value)->toRenderable()],
+        ['data' => ['#plain_text' => (string) (QaVocabulary::issuePriorities()[$issue->get('priority')->value] ?? '')]],
+        ['data' => $this->badge($issue->getStateLabel(), QaVocabulary::tone($issue->getState()))],
+        ['data' => ['#plain_text' => (string) $issue->get('assignee')->entity?->getDisplayName()]],
+      ];
+    }
+    return $this->table([$this->t('Reference'), $this->t('QA Issue'), $this->t('Priority'), $this->t('Status'), $this->t('Assigned to')], $rows, $this->t('No QA Issue reported.'));
   }
 
   // --------------------------------------------------------------- Shared.

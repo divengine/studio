@@ -1,0 +1,44 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - filter.format.qa_issue
+  module:
+    - ckeditor5
+format: qa_issue
+editor: ckeditor5
+settings:
+  toolbar:
+    items:
+      - bold
+      - italic
+      - '|'
+      - link
+      - '|'
+      - bulletedList
+      - numberedList
+      - '|'
+      - blockQuote
+      - insertTable
+      - '|'
+      - heading
+      - code
+      - '|'
+      - sourceEditing
+  plugins:
+    ckeditor5_heading:
+      enabled_headings:
+        - heading3
+        - heading4
+        - heading5
+    ckeditor5_list:
+      properties:
+        reversed: false
+        startIndex: true
+        styles: false
+      multiBlock: true
+    ckeditor5_sourceEditing:
+      allowed_tags: {  }
+image_upload:
+  status: false
+

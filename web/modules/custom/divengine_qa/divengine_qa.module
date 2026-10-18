@@ -25,6 +25,7 @@ const DIVENGINE_QA_SCOPED_TYPES = [
   'qa_test_execution',
   'qa_step_result',
   'qa_result_correction',
+  'qa_issue',
 ];
 
 /**
@@ -47,10 +48,11 @@ function divengine_qa_divengine_process_scoped_types_alter(array &$types): void 
 /**
  * Implements hook_divengine_trace_end_types_alter().
  *
- * A test case verifies requirements and use cases.
+ * A test case verifies requirements and use cases; a QA Issue can be
+ * traced to what it affects.
  */
 function divengine_qa_divengine_trace_end_types_alter(array &$types): void {
-  $types[] = 'qa_test_case';
+  array_push($types, 'qa_test_case', 'qa_issue');
 }
 
 /**

@@ -17,3 +17,6 @@ services:
   divengine_qa.design:
     class: Drupal\divengine_qa\QaDesign
     arguments: ['@entity_type.manager', '@current_user', '@divengine_qa.logger']
+  divengine_qa.issues:
+    class: Drupal\divengine_qa\QaIssues
+    arguments: ['@entity_type.manager', '@current_user', '@file.repository', '@file_system', '@divengine_qa.logger']

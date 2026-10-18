@@ -20,6 +20,7 @@ use Drupal\divengine_qa\QaPermissions;
  * Development they do not see. On top of that:
  * - design (plans, suites, cases, steps): QA users read, Leads edit,
  *   Managers delete;
+ * - QA Issues: QA users read, Testers report and edit, Managers delete;
  * - runs and their executions, step results and corrections: Leads see
  *   all; anyone else only those of runs assigned to them. Runs are edited
  *   by Leads; Testers act on their runs through the QA services, which
@@ -45,7 +46,7 @@ class QaAccessControlHandler extends EntityAccessControlHandler {
     }
     $result = in_array($entity->getEntityTypeId(), static::RUNTIME, TRUE)
       ? $this->runtimeAccess($entity, $operation, $account)
-      : $this->designAccess($operation, $account);
+      : $this->designAccess($operation, $account, $entity->getEntityTypeId() === 'qa_issue');
     if ($operation === 'delete' && $result->isAllowed() && ($reason = QaDeletion::refusal($entity))) {
       $result = AccessResult::forbidden((string) $reason)->setCacheMaxAge(0);
     }
@@ -54,15 +55,17 @@ class QaAccessControlHandler extends EntityAccessControlHandler {
 
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return AccessResult::allowedIf(
-      !in_array($this->entityTypeId, static::RUNTIME, TRUE) && QaPermissions::isLead($account)
+      $this->entityTypeId === 'qa_issue' && QaPermissions::isTester($account)
+      || !in_array($this->entityTypeId, static::RUNTIME, TRUE) && QaPermissions::isLead($account)
       || $this->entityTypeId === 'qa_test_run' && QaPermissions::isLead($account)
     )->cachePerPermissions();
   }
 
-  protected function designAccess(string $operation, AccountInterface $account): AccessResultInterface {
+  protected function designAccess(string $operation, AccountInterface $account, bool $issue = FALSE): AccessResultInterface {
     return AccessResult::allowedIf(match ($operation) {
       'view', 'view label' => QaPermissions::isUser($account),
-      'update' => QaPermissions::isLead($account),
+      // QA Issues are worked on by everyone who tests.
+      'update' => $issue ? QaPermissions::isTester($account) : QaPermissions::isLead($account),
       'delete' => QaPermissions::isManager($account),
       default => FALSE,
     });

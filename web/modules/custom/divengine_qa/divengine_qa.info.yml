@@ -12,3 +12,4 @@ dependencies:
   - drupal:file
   - drupal:options
   - drupal:datetime
+  - drupal:filter

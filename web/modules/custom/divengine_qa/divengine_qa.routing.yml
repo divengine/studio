@@ -213,3 +213,24 @@ divengine_qa.my_runs:
     _title: 'My test runs'
   requirements:
     _permission: 'use qa+execute qa tests+manage qa+administer qa'
+
+divengine_qa.report_issue:
+  path: '/qa/execution/{qa_test_execution}/issue'
+  defaults:
+    _form: '\Drupal\divengine_qa\Form\ReportIssueForm'
+    _title: 'Create or Link QA Issue'
+  requirements:
+    _entity_access: 'qa_test_execution.view'
+    _entity_create_access: 'qa_issue'
+  options:
+    parameters:
+      qa_test_execution:
+        type: 'entity:qa_test_execution'
+
+divengine_qa.issues:
+  path: '/qa/issues'
+  defaults:
+    _controller: '\Drupal\divengine_qa\Controller\QaPagesController::issues'
+    _title: 'QA issues'
+  requirements:
+    _permission: 'use qa+execute qa tests+manage qa+administer qa'

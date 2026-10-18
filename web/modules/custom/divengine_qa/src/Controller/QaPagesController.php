@@ -8,6 +8,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
+use Drupal\divengine_qa\Entity\QaIssue;
 use Drupal\divengine_qa\QaMetrics;
 use Drupal\divengine_qa\QaPermissions;
 use Drupal\divengine_qa\QaVocabulary;
@@ -46,10 +47,14 @@ class QaPagesController extends ControllerBase {
     $figures = QaMetrics::calculate($states);
     $build = $this->cacheable();
     $build['intro'] = ['#markup' => '<p class="dv-intro">' . $this->t('Test plans describe what to verify; each test run executes a frozen copy of the Ready test cases and records the results.') . '</p>'];
+    $issues = $this->entityTypeManager->getStorage('qa_issue')->loadMultiple($this->issuesQuery()->condition('development', $development->id())->execute());
+    $open_issues = array_filter($issues, fn ($issue) => $issue->isOpen());
     $build['cards'] = $this->cards([
       [$this->t('Test Plans'), (string) count($plans), (string) $this->t('@active Active', ['@active' => count(array_filter($plans, fn ($p) => $p->getState() === 'active'))]), 'neutral'],
-      [$this->t('Runs In Progress'), (string) count(array_filter($runs, fn ($r) => $r->getState() === 'in_progress')), '', 'info'],
+      [$this->t('Test Runs'), (string) count($runs), (string) $this->t('@n In Progress', ['@n' => count(array_filter($runs, fn ($r) => $r->getState() === 'in_progress'))]), 'info'],
       [$this->t('Executions'), (string) $figures['total'], (string) $this->t('@pending pending', ['@pending' => $figures['pending']]), 'neutral'],
+      [$this->t('Failures'), (string) $figures['failed'], (string) $this->t('Cancelled runs not counted'), $figures['failed'] ? 'danger' : 'neutral'],
+      [$this->t('QA Issues'), (string) count($issues), (string) $this->t('@n open', ['@n' => count($open_issues)]), $open_issues ? 'warning' : 'neutral'],
       [$this->t('Pass Rate'), number_format($figures['pass_rate'], 1) . '%', (string) $this->t('Cancelled runs not counted'), $figures['pass_rate'] >= 80 ? 'success' : ($figures['pass_rate'] >= 50 ? 'warning' : 'danger')],
     ]);
     $add = QaPermissions::isLead($this->currentUser()) && $development->access('update')
@@ -57,6 +62,31 @@ class QaPagesController extends ControllerBase {
       : NULL;
     $build['plans'] = $this->section($this->t('Test Plans'), count($plans), $this->planTable($plans, FALSE), $add);
     $build['runs'] = $this->section($this->t('Test Runs'), count($runs), $this->runTable($runs));
+    $build['issues'] = $this->section($this->t('Open QA Issues'), count($open_issues), $this->issueTable($open_issues, FALSE));
+    return $build;
+  }
+
+  /**
+   * Every QA Issue the user may see, filtered by state.
+   */
+  public function issues(Request $request): array {
+    $state = $request->query->get('state', 'open');
+    $query = $this->issuesQuery();
+    if ($state === 'open') {
+      $query->condition('state', QaIssue::OPEN_STATES, 'IN');
+    }
+    elseif (isset(QaVocabulary::issueStates()[$state])) {
+      $query->condition('state', $state);
+    }
+    $issues = $this->entityTypeManager->getStorage('qa_issue')->loadMultiple($query->execute());
+    $build = $this->cacheable();
+    $build['#cache']['contexts'][] = 'url.query_args:state';
+    $links = [];
+    foreach (['open' => $this->t('Open'), 'all' => $this->t('All')] + QaVocabulary::issueStates() as $key => $label) {
+      $links[] = $this->button($label, Url::fromRoute('divengine_qa.issues', [], ['query' => ['state' => $key]]), $key === $state);
+    }
+    $build['filters'] = ['#type' => 'container', '#attributes' => ['class' => ['divengine-process-actions', 'dv-filters']], 'links' => $links];
+    $build['issues'] = $this->section($this->t('QA Issues'), count($issues), $this->issueTable($issues, TRUE));
     return $build;
   }
 
@@ -99,6 +129,8 @@ class QaPagesController extends ControllerBase {
       : NULL;
     $build['open'] = $this->section($this->t('To execute'), count($open), $this->runTable($open, $this->t('No open run is assigned to you.')), $add);
     $build['done'] = $this->section($this->t('Recently finished'), count($done), $this->runTable($done, $this->t('No finished run yet.')));
+    $issues = $this->entityTypeManager->getStorage('qa_issue')->loadMultiple($this->issuesQuery()->condition('assignee', $uid)->condition('state', QaIssue::OPEN_STATES, 'IN')->execute());
+    $build['issues'] = $this->section($this->t('QA issues assigned to me'), count($issues), $this->issueTable($issues, TRUE));
     return $build;
   }
 
@@ -108,6 +140,35 @@ class QaPagesController extends ControllerBase {
 
   protected function runsQuery() {
     return $this->entityTypeManager->getStorage('qa_test_run')->getQuery()->accessCheck(TRUE);
+  }
+
+  protected function issuesQuery() {
+    return $this->entityTypeManager->getStorage('qa_issue')->getQuery()->accessCheck(TRUE)->sort('priority', 'DESC')->sort('id', 'DESC');
+  }
+
+  protected function issueTable(array $issues, bool $with_development): array {
+    $rows = [];
+    foreach ($issues as $issue) {
+      $row = [
+        ['data' => ['#plain_text' => (string) $issue->get('code')->value]],
+        ['data' => $issue->toLink($issue->get('name')->value)->toRenderable()],
+      ];
+      if ($with_development) {
+        $row[] = ['data' => ['#plain_text' => (string) $issue->get('development')->entity?->label()]];
+      }
+      $rows[] = array_merge($row, [
+        ['data' => ['#plain_text' => (string) $issue->get('test_case')->entity?->label()]],
+        ['data' => ['#plain_text' => (string) (QaVocabulary::issuePriorities()[$issue->get('priority')->value] ?? '')]],
+        ['data' => $this->badge($issue->getStateLabel(), QaVocabulary::tone($issue->getState()))],
+        ['data' => ['#plain_text' => (string) $issue->get('assignee')->entity?->getDisplayName()]],
+      ]);
+    }
+    $header = [$this->t('Reference'), $this->t('QA Issue')];
+    if ($with_development) {
+      $header[] = $this->t('Development');
+    }
+    $header = array_merge($header, [$this->t('Test Case'), $this->t('Priority'), $this->t('Status'), $this->t('Assigned to')]);
+    return ['#type' => 'table', '#header' => $header, '#rows' => $rows, '#empty' => $this->t('No QA Issue.')];
   }
 
   protected function planTable(array $plans, bool $with_development): array {
@@ -161,7 +222,7 @@ class QaPagesController extends ControllerBase {
 
   protected function cacheable(): array {
     return ['#attached' => ['library' => ['divengine_qa/qa']], '#cache' => [
-      'tags' => ['qa_test_plan_list', 'qa_test_run_list', 'qa_test_case_list', 'qa_test_execution_list', 'development_list'],
+      'tags' => ['qa_test_plan_list', 'qa_test_run_list', 'qa_issue_list', 'qa_test_case_list', 'qa_test_execution_list', 'development_list'],
       'contexts' => ['user'],
     ]];
   }

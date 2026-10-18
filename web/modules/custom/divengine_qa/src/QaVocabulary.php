@@ -77,12 +77,30 @@ final class QaVocabulary {
     ];
   }
 
+  public static function issueStates(): array {
+    return [
+      'open' => new TranslatableMarkup('Open'),
+      'in_progress' => new TranslatableMarkup('In Progress'),
+      'resolved' => new TranslatableMarkup('Resolved'),
+      'cancelled' => new TranslatableMarkup('Cancelled'),
+    ];
+  }
+
+  public static function issuePriorities(): array {
+    return [
+      '0' => new TranslatableMarkup('Low'),
+      '1' => new TranslatableMarkup('Normal'),
+      '2' => new TranslatableMarkup('High'),
+      '3' => new TranslatableMarkup('Urgent'),
+    ];
+  }
+
   /**
    * Badge tone of a result or state.
    */
   public static function tone(string $key): string {
     return match ($key) {
-      'passed', 'completed', 'ready', 'active' => 'success',
+      'passed', 'completed', 'ready', 'active', 'resolved' => 'success',
       'failed', 'cancelled' => 'danger',
       'blocked', 'in_progress' => 'warning',
       'skipped', 'obsolete', 'closed' => 'neutral',
@@ -103,6 +121,8 @@ final class QaVocabulary {
       'qa_result_correction.old_state', 'qa_result_correction.new_state' => static::results(),
       'qa_test_execution.origin' => static::origins(),
       'qa_result_correction.level' => static::levels(),
+      'qa_issue.state' => static::issueStates(),
+      'qa_issue.priority' => static::issuePriorities(),
       default => [],
     };
   }

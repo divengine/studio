@@ -46,3 +46,10 @@ divengine_qa.studio.my_runs:
   route_name: divengine_qa.my_runs
   menu_name: studio
   weight: -5
+
+divengine_qa.studio.issues:
+  title: 'QA issues'
+  description: 'Defects found by testing.'
+  route_name: divengine_qa.issues
+  menu_name: studio
+  weight: 6

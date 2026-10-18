@@ -83,7 +83,7 @@ class DevelopmentVisibility {
     }
 
     // Rows whose Development is visible, plus rows without a Development.
-    $field_table = $entity_type->getDataTable() ?: $entity_type->getBaseTable();
+    $field_table = $this->fieldTable($entity_type_id);
     $visible = $this->database->select($field_table, 'scoped')->fields('scoped', [$id]);
     $condition = $visible->orConditionGroup()->isNull('scoped.development');
     if ($account->hasPermission('use unified process')) {
@@ -136,7 +136,7 @@ class DevelopmentVisibility {
   protected function hiddenRecords(string $entity_type_id, AccountInterface $account): SelectInterface {
     $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
     $id = $entity_type->getKey('id');
-    $hidden = $this->database->select($entity_type->getDataTable() ?: $entity_type->getBaseTable(), 'hidden')->fields('hidden', [$id]);
+    $hidden = $this->database->select($this->fieldTable($entity_type_id), 'hidden')->fields('hidden', [$id]);
     $uses = $account->hasPermission('use unified process');
     if ($entity_type_id === 'development') {
       if ($uses) {
@@ -149,6 +149,17 @@ class DevelopmentVisibility {
       $hidden->condition('hidden.development', $this->visibleDevelopments((int) $account->id()), 'NOT IN');
     }
     return $hidden;
+  }
+
+  /**
+   * The table that holds the base fields of an entity type.
+   *
+   * The data table of the definition exists only for translatable types.
+   */
+  protected function fieldTable(string $entity_type_id): string {
+    /** @var \Drupal\Core\Entity\Sql\DefaultTableMapping $mapping */
+    $mapping = $this->entityTypeManager->getStorage($entity_type_id)->getTableMapping();
+    return $mapping->getDataTable() ?: $mapping->getBaseTable();
   }
 
   /**

@@ -120,6 +120,7 @@ class QaReportController extends ControllerBase {
     ];
     $executions = \Drupal::service('divengine_qa.runs')->executions($run);
     $results = QaVocabulary::results();
+    $issues = \Drupal::service('divengine_qa.issues');
     $rows = [];
     foreach ($executions as $execution) {
       $evidence = count($execution->get('evidence'));
@@ -131,11 +132,12 @@ class QaReportController extends ControllerBase {
         (string) $execution->get('snapshot_name')->value,
         (string) $execution->get('suite_name')->value,
         (string) $results[$execution->getResult()],
+        (string) count($issues->forExecution($execution, FALSE)),
         (string) $evidence,
       ];
     }
     $build['executions_title'] = ['#type' => 'html_tag', '#tag' => 'h3', '#value' => $this->t('Executions (@n)', ['@n' => count($executions)])];
-    $build['executions'] = ['#type' => 'table', '#header' => [$this->t('Case Code'), $this->t('Test Case'), $this->t('Suite'), $this->t('Result'), $this->t('Evidence')], '#rows' => $rows, '#empty' => $this->t('No executions.')];
+    $build['executions'] = ['#type' => 'table', '#header' => [$this->t('Case Code'), $this->t('Test Case'), $this->t('Suite'), $this->t('Result'), $this->t('QA Issues'), $this->t('Evidence')], '#rows' => $rows, '#empty' => $this->t('No executions.')];
 
     foreach ($executions as $execution) {
       $title = trim($execution->get('snapshot_code')->value . ' - ' . $execution->get('snapshot_name')->value, ' -');
@@ -174,6 +176,11 @@ class QaReportController extends ControllerBase {
           (string) $this->t('Execution Date') => $this->date($execution->get('execution_date')->value) ?: '-',
         ]),
         'steps' => $steps ? ['#type' => 'table', '#header' => ['#', $this->t('Step / Action'), $this->t('Expected'), $this->t('Actual'), $this->t('Result'), $this->t('Evidence')], '#rows' => $steps] : [],
+        'issues' => ($linked = $issues->forExecution($execution, FALSE)) ? [
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $this->t('QA Issues (@n): @names', ['@n' => count($linked), '@names' => implode('; ', array_map(fn ($i) => $i->label(), $linked))]),
+        ] : [],
       ];
     }
     return $build;
@@ -182,7 +189,7 @@ class QaReportController extends ControllerBase {
   protected function document(string $kind, string $title): array {
     return [
       '#attached' => ['library' => ['divengine_qa/report']],
-      '#cache' => ['tags' => ['qa_test_suite_list', 'qa_test_case_list', 'qa_test_step_list', 'qa_test_execution_list', 'qa_step_result_list']],
+      '#cache' => ['tags' => ['qa_issue_list', 'qa_test_suite_list', 'qa_test_case_list', 'qa_test_step_list', 'qa_test_execution_list', 'qa_step_result_list']],
       'print' => [
         '#type' => 'html_tag',
         '#tag' => 'button',
