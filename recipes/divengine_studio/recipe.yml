@@ -17,6 +17,7 @@ install:
   - divengine_diagram_embed
   - divengine_process
   - divengine_qa
+  - divengine_project
   - gin
   - divengine_studio_theme
 config:
@@ -36,6 +37,7 @@ config:
     divengine_diagram_embed: '*'
     divengine_process: '*'
     divengine_qa: '*'
+    divengine_project: '*'
     divengine_core: '*'
     divengine_studio_theme: '*'
   actions:
@@ -120,6 +122,11 @@ config:
         - 'use work_product_lifecycle transition draft'
         - 'use work_product_lifecycle transition submit'
         - 'use work_product_lifecycle transition baseline'
+        - 'use projects'
+        - 'access comments'
+        - 'post comments'
+        - 'skip comment approval'
+        - 'edit own comments'
         - 'use qa'
     # Verification criteria of divengine_qa, after the cases are imported.
     divengine_process.development_case.standard:
@@ -183,3 +190,19 @@ config:
         - 'manage qa'
         - 'administer qa'
         - 'use text format qa_issue'
+    # Project management: content editors work on tasks (above); project
+    # managers create projects and manage any project they see.
+    user.role.project_manager:
+      createIfNotExists:
+        label: 'Project Manager'
+      grantPermissions:
+        - 'access divengine'
+        - 'use projects'
+        - 'manage projects'
+        - 'view trace links'
+        - 'create trace links'
+        - 'edit trace links'
+        - 'access comments'
+        - 'post comments'
+        - 'skip comment approval'
+        - 'edit own comments'

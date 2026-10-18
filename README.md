@@ -20,6 +20,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_diagram_embed` | Diagrams in formatted text: CKEditor 5 button, `<drupal-diagram>` filter, usage |
 | `web/modules/custom/divengine_process` | Unified Process: Developments with phases, iterations and milestones, business and system model, activities, work products, change requests, traces, readiness, baselines, My work |
 | `web/modules/custom/divengine_qa` | Test management: plans, suites, cases, steps, runs with frozen snapshots, results, corrections, evidence, QA Issues, dashboard, reports; verification of process records (ADR-0008) |
+| `web/modules/custom/divengine_project` | Project management: projects and subprojects, tasks and subtasks on Kanban boards, related tasks, comments, links to diagrams and artifacts (ADR-0009) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
@@ -58,6 +59,12 @@ assigned runs, record results and evidence, report QA Issues), **QA Lead** (desi
 create and assign runs, dashboard and reporting) or **QA Manager** (configuration, reopen
 completed runs, delete). They must also see the Development (owner, responsible or
 member).
+
+### Project management
+
+**Content editors** work on the tasks of the projects they belong to; **Project Managers**
+create projects and subprojects and manage any project they see. Add people as members of a
+project (or of a parent project) to let them see it.
 
 ### MCP (optional)
 
