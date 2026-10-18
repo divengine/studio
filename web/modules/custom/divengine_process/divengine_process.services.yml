@@ -7,3 +7,6 @@ services:
   divengine_process.development:
     class: Drupal\divengine_process\DevelopmentProcess
     arguments: ['@entity_type.manager', '@datetime.time', '@entity_field.manager']
+  divengine_process.gaps:
+    class: Drupal\divengine_process\TraceabilityGaps
+    arguments: ['@entity_type.manager']

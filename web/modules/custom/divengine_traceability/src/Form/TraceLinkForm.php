@@ -7,6 +7,9 @@ namespace Drupal\divengine_traceability\Form;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\divengine_core\Form\EntityFormLayout;
+use Drupal\divengine_traceability\TracePanel;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form for adding and editing trace links.
@@ -22,12 +25,23 @@ class TraceLinkForm extends ContentEntityForm {
   /**
    * Entity types offered as ends, when they exist on the site.
    */
-  const END_TYPES = ['artifact', 'diagram', 'node'];
+  protected TracePanel $tracePanel;
+
+  public static function create(ContainerInterface $container) {
+    $instance = parent::create($container);
+    $instance->tracePanel = $container->get('divengine_traceability.trace_panel');
+    return $instance;
+  }
 
   public function form(array $form, FormStateInterface $form_state): array {
-    $form = parent::form($form, $form_state);
     /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
     $link = $this->entity;
+    // A record's "Add trace" button may propose the relation (?type=impacts).
+    $type = (string) $this->getRequest()->query->get('type', '');
+    if ($link->isNew() && $type !== '' && $this->entityTypeManager->getStorage('trace_link_type')->load($type)) {
+      $link->set('link_type', $type);
+    }
+    $form = parent::form($form, $form_state);
 
     foreach (['source' => -20, 'target' => -15] as $end => $weight) {
       [$type, $entity] = $this->currentEnd($end);
@@ -57,6 +71,7 @@ class TraceLinkForm extends ContentEntityForm {
         ];
       }
     }
+    EntityFormLayout::apply($form, $link, ['uid', 'status', 'confidence', 'reviewed_by', 'reviewed_at'], ['link_type']);
     return $form;
   }
 
@@ -100,7 +115,8 @@ class TraceLinkForm extends ContentEntityForm {
    */
   protected function endTypes(string $current = ''): array {
     $types = [];
-    foreach (array_unique(array_filter([...static::END_TYPES, $current])) as $id) {
+    $end_types = $this->tracePanel->endTypes();
+    foreach (array_unique(array_filter([...$end_types, $current])) as $id) {
       if ($definition = $this->entityTypeManager->getDefinition($id, FALSE)) {
         $types[$id] = $definition->getSingularLabel();
       }

@@ -7,6 +7,7 @@ namespace Drupal\divengine_process;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\divengine_process\Entity\ChangeRequest;
 use Drupal\divengine_process\Entity\ProcessActivity;
 use Drupal\divengine_process\Lifecycle\LifecycleManager;
@@ -24,9 +25,12 @@ class ProcessEntityViewBuilder extends EntityViewBuilder {
 
   protected LifecycleManager $lifecycle;
 
+  protected TraceabilityGaps $gaps;
+
   public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
     $instance = parent::createInstance($container, $entity_type);
     $instance->lifecycle = $container->get('divengine_process.lifecycle');
+    $instance->gaps = $container->get('divengine_process.gaps');
     return $instance;
   }
 
@@ -118,6 +122,14 @@ class ProcessEntityViewBuilder extends EntityViewBuilder {
     }
     if ($entity instanceof ChangeRequest && $entity->getState() === 'accepted') {
       $warnings[] = $this->t('Accepted but not scheduled: choose its target iteration.');
+    }
+    if ($entity instanceof ChangeRequest && in_array($entity->getState(), ['accepted', 'scheduled'], TRUE) && !$this->gaps->hasImpact($entity)) {
+      $url = Url::fromRoute('entity.trace_link.add_form', [], ['query' => [
+        'source' => 'change_request/' . $entity->id(),
+        'type' => 'impacts',
+        'destination' => $entity->toUrl()->toString(),
+      ]]);
+      $warnings[] = $this->t('No impact analysis: <a href=":url">record what this change impacts</a>.', [':url' => $url->toString()]);
     }
     return $warnings;
   }

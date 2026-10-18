@@ -94,6 +94,64 @@ class DevelopmentVisibility {
   }
 
   /**
+   * Hides trace links with an end in a Development the user does not see.
+   *
+   * @param \Drupal\Core\Database\Query\SelectInterface $query
+   *   A query tagged trace_link_access.
+   * @param string[] $entity_types
+   *   The Development-scoped entity types (trace ends).
+   */
+  public function alterTraceQuery(SelectInterface $query, array $entity_types): void {
+    $account = $query->getMetaData('account') ?: \Drupal::currentUser();
+    if ($account->hasPermission('administer unified process')) {
+      return;
+    }
+    $definition = $this->entityTypeManager->getDefinition('trace_link');
+    $alias = NULL;
+    foreach ($query->getTables() as $table_alias => $info) {
+      if (in_array($info['table'] ?? NULL, array_filter([$definition->getBaseTable(), $definition->getDataTable()]), TRUE)) {
+        $alias = $table_alias;
+        break;
+      }
+    }
+    if ($alias === NULL) {
+      return;
+    }
+    foreach ($entity_types as $entity_type_id) {
+      if (!$this->entityTypeManager->hasDefinition($entity_type_id)) {
+        continue;
+      }
+      foreach (['source', 'target'] as $end) {
+        $group = $query->orConditionGroup()
+          ->condition("$alias.{$end}_entity_type", $entity_type_id, '<>')
+          ->condition("$alias.{$end}_entity_id", $this->hiddenRecords($entity_type_id, $account), 'NOT IN');
+        $query->condition($group);
+      }
+    }
+  }
+
+  /**
+   * A subquery of the IDs of records in Developments the user does not see.
+   */
+  protected function hiddenRecords(string $entity_type_id, AccountInterface $account): SelectInterface {
+    $entity_type = $this->entityTypeManager->getDefinition($entity_type_id);
+    $id = $entity_type->getKey('id');
+    $hidden = $this->database->select($entity_type->getDataTable() ?: $entity_type->getBaseTable(), 'hidden')->fields('hidden', [$id]);
+    $uses = $account->hasPermission('use unified process');
+    if ($entity_type_id === 'development') {
+      if ($uses) {
+        $hidden->condition("hidden.$id", $this->visibleDevelopments((int) $account->id()), 'NOT IN');
+      }
+      return $hidden;
+    }
+    $hidden->isNotNull('hidden.development');
+    if ($uses) {
+      $hidden->condition('hidden.development', $this->visibleDevelopments((int) $account->id()), 'NOT IN');
+    }
+    return $hidden;
+  }
+
+  /**
    * A subquery of the IDs of the Developments a user sees.
    *
    * The caller has checked that the user uses the Unified Process and is not

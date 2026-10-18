@@ -3,3 +3,6 @@ services:
     class: Drupal\divengine_traceability\TraceLinkValidator
     arguments: ['@entity_type.manager']
 
+  divengine_traceability.trace_panel:
+    class: Drupal\divengine_traceability\TracePanel
+    arguments: ['@entity_type.manager', '@module_handler', '@current_user']

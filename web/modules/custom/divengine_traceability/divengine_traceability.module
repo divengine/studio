@@ -8,6 +8,7 @@
 declare(strict_types=1);
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -47,5 +48,33 @@ function divengine_traceability_views_data_alter(array &$data): void {
       $data['trace_link'][$field]['filter']['field_name'] = $field;
       $data['trace_link'][$field]['filter']['entity_type'] = 'trace_link';
     }
+  }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function divengine_traceability_entity_extra_field_info(): array {
+  $extra = [];
+  $bundle_info = \Drupal::service('entity_type.bundle.info');
+  foreach (\Drupal::service('divengine_traceability.trace_panel')->endTypes() as $entity_type_id) {
+    foreach (array_keys($bundle_info->getBundleInfo($entity_type_id)) as $bundle) {
+      $extra[$entity_type_id][$bundle]['display']['divengine_traces'] = [
+        'label' => t('Traces'),
+        'description' => t('Trace links from and to this record.'),
+        'weight' => 60,
+        'visible' => TRUE,
+      ];
+    }
+  }
+  return $extra;
+}
+
+/**
+ * Implements hook_entity_view().
+ */
+function divengine_traceability_entity_view(array &$build, EntityInterface $entity, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($entity instanceof ContentEntityInterface && !$entity->isNew() && $display->getComponent('divengine_traces')) {
+    $build['divengine_traces'] = \Drupal::service('divengine_traceability.trace_panel')->build($entity);
   }
 }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Database\Query\AlterableInterface;
 use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -57,6 +58,9 @@ function divengine_process_entity_base_field_info(EntityTypeInterface $entity_ty
  * Implements hook_entity_type_alter().
  */
 function divengine_process_entity_type_alter(array &$entity_types): void {
+  if (isset($entity_types['trace_link'])) {
+    $entity_types['trace_link']->addConstraint('ProcessTrace');
+  }
   if (isset($entity_types['artifact'])) {
     $entity_types['artifact']->addConstraint('ProcessDevelopmentRequired');
     $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
@@ -97,6 +101,9 @@ function divengine_process_query_alter(AlterableInterface $query): void {
       \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id);
     }
   }
+  if ($query->hasTag('trace_link_access')) {
+    \Drupal::service('divengine_process.visibility')->alterTraceQuery($query, DIVENGINE_PROCESS_SCOPED_TYPES);
+  }
 }
 
 /**
@@ -128,5 +135,48 @@ function divengine_process_form_artifact_form_alter(array &$form, FormStateInter
   }
   if (isset($form['development']['widget']) && isset(Vocabulary::scopedArtifactTypes()[$artifact->bundle()])) {
     $form['development']['widget']['#required'] = TRUE;
+  }
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ */
+function divengine_process_divengine_trace_end_types_alter(array &$types): void {
+  array_push($types, 'change_request', 'process_activity', 'milestone');
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access() for trace_link.
+ *
+ * A trace is seen only by those who see both of its ends.
+ */
+function divengine_process_trace_link_access(EntityInterface $link, string $operation, AccountInterface $account): AccessResult {
+  /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
+  foreach ([$link->getSourceEntity(), $link->getTargetEntity()] as $end) {
+    if ($end && $end->hasField('development') && !$end->get('development')->isEmpty() && !$end->access('view', $account)) {
+      return AccessResult::forbidden()->addCacheableDependency($link)->cachePerUser();
+    }
+  }
+  return AccessResult::neutral()->addCacheableDependency($link);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view() for artifact.
+ *
+ * An approved requirement that nothing refines downstream says so.
+ */
+function divengine_process_artifact_view(array &$build, EntityInterface $artifact, EntityViewDisplayInterface $display, string $view_mode): void {
+  if ($view_mode !== 'full' || $artifact->bundle() !== 'requirement' || !in_array($artifact->get('moderation_state')->value, ['approved', 'published'], TRUE)) {
+    return;
+  }
+  $build['#cache']['tags'][] = 'trace_link_list';
+  $build['#cache']['tags'][] = 'artifact_list';
+  if (!\Drupal::service('divengine_process.gaps')->isRefined($artifact)) {
+    $build['dv_gap'] = [
+      '#theme' => 'status_messages',
+      '#message_list' => ['warning' => [t('Approved but not refined downstream: no system use case covers it and no trace refines, realizes or implements it.')]],
+      '#status_headings' => ['warning' => t('Warning message')],
+      '#weight' => -95,
+    ];
   }
 }
