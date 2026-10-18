@@ -6,6 +6,7 @@ namespace Drupal\divengine_thread;
 
 use Drupal\comment\Plugin\Field\FieldType\CommentItemInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\DestructableInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
@@ -23,7 +24,7 @@ use Drupal\field\Entity\FieldStorageConfig;
  * hook_divengine_thread_types_alter(); a type that already has a comment
  * field declares it instead of "thread".
  */
-class ThreadManager {
+class ThreadManager implements DestructableInterface {
 
   /**
    * Record types and bundles (NULL = every bundle) that get a thread.
@@ -50,6 +51,11 @@ class ThreadManager {
    * The threaded types, once collected.
    */
   protected ?array $types = NULL;
+
+  /**
+   * Whether a sync is due at the end of the request.
+   */
+  protected bool $syncScheduled = FALSE;
 
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
@@ -98,6 +104,21 @@ class ThreadManager {
       foreach ($bundles as $bundle) {
         $this->ensureHostField($entity_type_id, $bundle, $type['field'], $type['comment_type']);
       }
+    }
+  }
+
+  /**
+   * Syncs at the end of the request (see destruct()).
+   */
+  public function scheduleSync(): void {
+    $this->syncScheduled = TRUE;
+  }
+
+  public function destruct(): void {
+    if ($this->syncScheduled) {
+      $this->syncScheduled = FALSE;
+      $this->types = NULL;
+      $this->sync();
     }
   }
 

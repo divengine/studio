@@ -31,7 +31,9 @@ function divengine_thread_modules_installed(array $modules, bool $is_syncing): v
  */
 function divengine_thread_entity_bundle_create(string $entity_type_id, string $bundle): void {
   if (!\Drupal::isConfigSyncing() && isset(\Drupal::service('divengine_thread.manager')->types()[$entity_type_id])) {
-    \Drupal::service('divengine_thread.manager')->sync();
+    // At the end of the request, once the bundle and what comes with it
+    // exist.
+    \Drupal::service('divengine_thread.manager')->scheduleSync();
   }
 }
 
