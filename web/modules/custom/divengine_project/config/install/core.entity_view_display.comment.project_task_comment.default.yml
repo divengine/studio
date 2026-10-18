@@ -1,0 +1,28 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.project_task_comment
+    - field.field.comment.project_task_comment.comment_body
+  module:
+    - text
+id: comment.project_task_comment.default
+targetEntityType: comment
+bundle: project_task_comment
+mode: default
+content:
+  comment_body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  subject: true
+

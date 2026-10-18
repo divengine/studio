@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+id: project_task_comment
+label: 'Task comment'
+target_entity_type_id: project_task
+description: 'Discussion on a project task.'
+

@@ -1,0 +1,29 @@
+{#
+/**
+ * @file
+ * One comment: who, when, what, and what you can do with it.
+ */
+#}
+{%
+  set classes = [
+    'dv-comment',
+    status == 'unpublished' ? 'dv-comment--unpublished',
+    parent ? 'dv-comment--reply',
+  ]
+%}
+<article{{ attributes.addClass(classes) }}>
+  <span class="dv-comment__avatar" aria-hidden="true">{{ comment.getAuthorName()|default('?')|first|upper }}</span>
+  <div class="dv-comment__main">
+    <header class="dv-comment__header">
+      <span class="dv-comment__author">{{ author }}</span>
+      <span class="dv-comment__date">{{ created }}</span>
+      {% if parent %}<span class="dv-comment__parent">{{ 'in reply to @name'|t({'@name': parent_author}) }}</span>{% endif %}
+    </header>
+    <div{{ content_attributes.addClass('dv-comment__body') }}>
+      {{ content|without('links') }}
+    </div>
+    {% if content.links %}
+      <footer class="dv-comment__links">{{ content.links }}</footer>
+    {% endif %}
+  </div>
+</article>

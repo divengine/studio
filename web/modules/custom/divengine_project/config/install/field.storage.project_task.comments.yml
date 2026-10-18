@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - comment
+    - divengine_project
+id: project_task.comments
+field_name: comments
+entity_type: project_task
+type: comment
+settings:
+  comment_type: project_task_comment
+module: comment
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false
+
