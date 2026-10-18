@@ -1,0 +1,63 @@
+divengine_source.settings:
+  path: '/admin/divengine/source'
+  defaults:
+    _form: '\Drupal\divengine_source\Form\SourceSettingsForm'
+    _title: 'Code Source'
+  requirements:
+    _permission: 'administer source code'
+
+divengine_source.repositories:
+  path: '/source'
+  defaults:
+    _controller: '\Drupal\divengine_source\Controller\SourceController::repositories'
+    _title: 'Code'
+  requirements:
+    _permission: 'use source code+manage source code+administer source code'
+
+divengine_source.development:
+  path: '/development/{development}/code'
+  defaults:
+    _controller: '\Drupal\divengine_source\Controller\SourceController::development'
+    _title_callback: '\Drupal\divengine_source\Controller\SourceController::developmentTitle'
+  requirements:
+    _entity_access: 'development.view'
+    _permission: 'use source code+manage source code+administer source code'
+  options:
+    parameters:
+      development:
+        type: 'entity:development'
+
+divengine_source.browse:
+  path: '/source/{source_repository}/browse'
+  defaults:
+    _controller: '\Drupal\divengine_source\Controller\SourceController::browse'
+    _title: 'Browse code'
+  requirements:
+    _entity_access: 'source_repository.view'
+  options:
+    parameters:
+      source_repository:
+        type: 'entity:source_repository'
+
+divengine_source.raw:
+  path: '/source/{source_repository}/raw'
+  defaults:
+    _controller: '\Drupal\divengine_source\Controller\SourceController::raw'
+  requirements:
+    _entity_access: 'source_repository.view'
+  options:
+    parameters:
+      source_repository:
+        type: 'entity:source_repository'
+
+divengine_source.index_ref:
+  path: '/source/ref/{source_ref}/index'
+  defaults:
+    _controller: '\Drupal\divengine_source\Controller\SourceController::indexRef'
+  requirements:
+    _custom_access: '\Drupal\divengine_source\Controller\SourceController::indexAccess'
+    _csrf_token: 'TRUE'
+  options:
+    parameters:
+      source_ref:
+        type: 'entity:source_ref'

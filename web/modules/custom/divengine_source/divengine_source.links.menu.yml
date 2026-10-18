@@ -1,0 +1,13 @@
+divengine_source.settings:
+  title: 'Code Source'
+  description: 'Allowed repository roots and the size of files the viewer reads.'
+  route_name: divengine_source.settings
+  parent: divengine.admin
+  weight: 50
+
+divengine_source.studio.repositories:
+  title: 'Code'
+  description: 'The Git repositories of your Developments.'
+  route_name: divengine_source.repositories
+  menu_name: studio
+  weight: 3

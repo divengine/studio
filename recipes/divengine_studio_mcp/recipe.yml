@@ -32,6 +32,10 @@ config:
             enabled: true
             config:
               allowed_resource_types: []
+          # Code of the Developments the agent can see (divengine_source).
+          code:
+            enabled: true
+            config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:
@@ -48,3 +52,5 @@ config:
         - 'view diagram revisions'
         - 'view trace links'
         - 'view trace link revisions'
+        - 'use unified process'
+        - 'use source code'

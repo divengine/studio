@@ -24,6 +24,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_timesheet` | Time tracking: timesheet entries, allocated vs spent time on tasks, timer, weekly grid, reports (ADR-0010) |
 | `web/modules/custom/divengine_thread` | Discussion with attachments on every record, shown as a side panel (ADR-0011) |
 | `web/modules/custom/divengine_articles` | Knowledge base: hierarchical articles per Development, embedded diagrams, `[[CODE]]` links (ADR-0011) |
+| `web/modules/custom/divengine_source` | Code Source: Git repositories of a Development indexed from the object database, code browser, MCP tools for agents (ADR-0012) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
@@ -41,7 +42,7 @@ Unified Process layer. See [docs/roadmap.md](docs/roadmap.md) and the ADRs in
 
 ## Setup
 
-Requires PHP 8.4 and PostgreSQL (with the `pg_trgm` extension). Test evidence is stored
+Requires PHP 8.4, PostgreSQL (with the `pg_trgm` extension) and `git` (for Code Source). Test evidence is stored
 in the private file system: set `$settings['file_private_path'] = '../private/files';` in
 `settings.php` (or `settings.local.php`) before installing.
 
@@ -91,6 +92,19 @@ The second command creates the `mcp_bot` account and a token in
 
 To leave MCP out entirely, skip both commands and run
 `composer remove drupal/mcp drupal/jsonapi_schema`.
+
+## Checks
+
+Two scripts for you and for agents working on the repository:
+
+```bash
+scripts/test.sh             # the PHPUnit suite (arguments go to phpunit)
+scripts/check-install.sh    # clean install from the recipe in the test database, with checks
+scripts/check.sh            # both, before a commit
+```
+
+`check-install.sh` uses `SIMPLETEST_DB` from `phpunit.xml` (or `STUDIO_TEST_DB`), empties that
+database, installs into a throw-away `sites/recipecheck` and removes it afterwards.
 
 ## Tests
 

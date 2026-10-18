@@ -1,0 +1,10 @@
+services:
+  divengine_source.git:
+    class: Drupal\divengine_source\SourceGit
+    arguments: ['@config.factory']
+  divengine_source.index:
+    class: Drupal\divengine_source\SourceIndex
+    arguments: ['@database', '@entity_type.manager', '@divengine_source.git', '@datetime.time', '@logger.channel.divengine_source']
+  logger.channel.divengine_source:
+    parent: logger.channel_base
+    arguments: ['divengine_source']

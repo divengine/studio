@@ -1,0 +1,13 @@
+divengine_source.settings:
+  type: config_object
+  label: 'Code Source settings'
+  mapping:
+    allowed_roots:
+      type: text
+      label: 'Allowed repository roots, one absolute path per line'
+    viewer_max_bytes:
+      type: integer
+      label: 'Largest file the viewer reads, in bytes'
+    git_binary:
+      type: string
+      label: 'Git executable'

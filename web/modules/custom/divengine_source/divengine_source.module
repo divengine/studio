@@ -1,0 +1,41 @@
+<?php
+
+/**
+ * @file
+ * Code Source: repositories of Developments, indexed from Git.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_divengine_process_scoped_types_alter().
+ *
+ * Repositories, refs and snapshots follow the visibility of their
+ * Development.
+ */
+function divengine_source_divengine_process_scoped_types_alter(array &$types): void {
+  array_push($types, 'source_repository', 'source_ref', 'source_snapshot');
+}
+
+/**
+ * Implements hook_divengine_thread_types_alter().
+ */
+function divengine_source_divengine_thread_types_alter(array &$types): void {
+  $types['source_repository'] = ['bundles' => NULL, 'field' => 'thread', 'comment_type' => 'thread_source_repository'];
+}
+
+/**
+ * Implements hook_divengine_code_fields_alter().
+ *
+ * [[SRC-0001]] links a repository.
+ */
+function divengine_source_divengine_code_fields_alter(array &$fields): void {
+  $fields['source_repository'] = 'code';
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ */
+function divengine_source_divengine_trace_end_types_alter(array &$types): void {
+  $types[] = 'source_repository';
+}

@@ -1,0 +1,10 @@
+use source code:
+  title: 'Browse source code'
+  description: 'See the repositories of the Developments the user can see, browse their indexed refs and read files.'
+manage source code:
+  title: 'Manage source code'
+  description: 'Register repositories and refs and index them.'
+administer source code:
+  title: 'Administer source code'
+  description: 'Set the allowed repository roots and the viewer limit.'
+  restrict access: true

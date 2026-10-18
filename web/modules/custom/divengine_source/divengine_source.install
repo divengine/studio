@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @file
+ * Schema of the Code Source index.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ *
+ * The index of the repositories: file identities, their revisions (one per
+ * blob) and the state of each file in each ref. Metadata only: the code is
+ * read from Git when someone looks at it.
+ */
+function divengine_source_schema(): array {
+  return [
+    'divengine_source_file' => [
+      'description' => 'A path of a repository: the durable identity of a source file.',
+      'fields' => [
+        'fid' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'repository_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'path' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE],
+        'directory' => ['type' => 'varchar', 'length' => 1024, 'not null' => TRUE, 'default' => ''],
+        'filename' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE],
+        'extension' => ['type' => 'varchar', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+      ],
+      'primary key' => ['fid'],
+      'unique keys' => ['repository_path' => ['repository_id', 'path']],
+      'indexes' => ['directory' => ['repository_id', 'directory']],
+    ],
+    'divengine_source_revision' => [
+      'description' => 'A version of a file: one per blob, metadata only.',
+      'fields' => [
+        'rid' => ['type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE],
+        'fid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'blob_sha' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+        'mode' => ['type' => 'varchar_ascii', 'length' => 6, 'not null' => TRUE],
+        'entry_type' => ['type' => 'varchar_ascii', 'length' => 16, 'not null' => TRUE],
+        'size' => ['type' => 'int', 'size' => 'big', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+        'first_snapshot_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'first_commit' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+      ],
+      'primary key' => ['rid'],
+      'unique keys' => ['file_blob' => ['fid', 'blob_sha']],
+    ],
+    'divengine_source_state' => [
+      'description' => 'Whether a file is present in a ref, and its current revision there.',
+      'fields' => [
+        'fid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'ref_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'present' => ['type' => 'int', 'size' => 'tiny', 'not null' => TRUE, 'default' => 1],
+        'rid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'first_snapshot_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'last_snapshot_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'first_commit' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+        'last_commit' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE],
+      ],
+      'primary key' => ['fid', 'ref_id'],
+      'indexes' => ['ref_present' => ['ref_id', 'present']],
+    ],
+  ];
+}

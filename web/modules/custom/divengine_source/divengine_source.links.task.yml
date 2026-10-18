@@ -1,0 +1,23 @@
+divengine_source.development:
+  title: 'Code'
+  route_name: divengine_source.development
+  base_route: entity.development.canonical
+  weight: 9
+
+entity.source_repository.canonical:
+  title: 'Overview'
+  route_name: entity.source_repository.canonical
+  base_route: entity.source_repository.canonical
+  weight: 0
+
+divengine_source.browse:
+  title: 'Browse code'
+  route_name: divengine_source.browse
+  base_route: entity.source_repository.canonical
+  weight: 1
+
+entity.source_repository.edit_form:
+  title: 'Edit'
+  route_name: entity.source_repository.edit_form
+  base_route: entity.source_repository.canonical
+  weight: 10

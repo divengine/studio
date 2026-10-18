@@ -1,0 +1,3 @@
+allowed_roots: '/opt/repos'
+viewer_max_bytes: 524288
+git_binary: 'git'

@@ -21,6 +21,7 @@ install:
   - divengine_timesheet
   - divengine_thread
   - divengine_articles
+  - divengine_source
   - gin
   - divengine_studio_theme
 config:
@@ -164,6 +165,7 @@ config:
         - 'delete own knowledge_article content'
         - 'view knowledge_article revisions'
         - 'revert knowledge_article revisions'
+        - 'use source code'
         - 'use qa'
     # Verification criteria of divengine_qa, after the cases are imported.
     divengine_process.development_case.standard:
@@ -251,6 +253,7 @@ config:
         - 'manage projects'
         - 'log time'
         - 'manage timesheets'
+        - 'use source code'
         - 'view trace links'
         - 'create trace links'
         - 'edit trace links'
@@ -265,6 +268,8 @@ config:
       createIfNotExists:
         label: 'Studio Manager'
       grantPermissions:
+        - 'use source code'
+        - 'manage source code'
         - 'access comments'
         - 'access content'
         - 'access divengine'

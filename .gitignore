@@ -9,6 +9,7 @@
 !/bootstrap.kernel.php
 !/phpunit.xml.dist
 !/docs/
+!/scripts/
 !/recipes/
 
 !/web/
