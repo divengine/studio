@@ -1,15 +1,15 @@
 /**
- * Divengine identity: navy, black, gray and white; Verdana.
+ * Divengine identity: Divengine blue (#335999), black, gray and white; Verdana.
  *
  * Components read these custom properties, so this file is the single place
  * to change the look.
  */
 :root {
-  --dv-navy: #13294b;
-  --dv-navy-700: #0d1d36;
-  --dv-navy-300: #8ea2c3;
-  --dv-navy-200: #b9c5d9;
-  --dv-navy-50: #eef2f8;
+  --dv-navy: #335999;
+  --dv-navy-700: #24426f;
+  --dv-navy-300: #8fa6cc;
+  --dv-navy-200: #bccbe3;
+  --dv-navy-50: #eef3fa;
   --dv-black: #111111;
   --dv-white: #ffffff;
   --dv-gray-900: #1f2329;

@@ -11,7 +11,7 @@
   padding: var(--dv-space-4) var(--dv-space-3);
   overflow-y: auto;
   color: var(--dv-gray-200);
-  background: var(--dv-navy);
+  background: var(--dv-navy-700);
   border-right: 4px solid var(--dv-black);
 }
 .dv-sidebar a { color: var(--dv-white); }

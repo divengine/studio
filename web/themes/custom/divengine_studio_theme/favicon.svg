@@ -1,4 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Divengine">
-  <rect x="2" y="2" width="60" height="60" fill="#13294b" stroke="#000" stroke-width="4"/>
-  <text x="32" y="41" fill="#fff" font-family="Verdana, Geneva, sans-serif" font-size="24" font-weight="700" text-anchor="middle">[[]]</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" width="144" height="144" role="img" aria-label="Divengine">
+  <rect width="144" height="144" fill="#335999"/>
+  <g fill="#fff">
+    <rect x="20" y="28" width="7" height="79"/>
+    <rect x="20" y="28" width="19" height="3"/>
+    <rect x="20" y="104" width="19" height="3"/>
+    <rect x="50" y="28" width="7" height="79"/>
+    <rect x="50" y="28" width="19" height="3"/>
+    <rect x="50" y="104" width="19" height="3"/>
+    <rect x="87" y="28" width="7" height="79"/>
+    <rect x="75" y="28" width="19" height="3"/>
+    <rect x="75" y="104" width="19" height="3"/>
+    <rect x="117" y="28" width="7" height="79"/>
+    <rect x="105" y="28" width="19" height="3"/>
+    <rect x="105" y="104" width="19" height="3"/>
+  </g>
 </svg>
