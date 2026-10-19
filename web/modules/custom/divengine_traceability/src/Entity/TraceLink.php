@@ -26,6 +26,7 @@ use Drupal\user\EntityOwnerTrait;
   label_singular: new TranslatableMarkup('trace link'),
   label_plural: new TranslatableMarkup('trace links'),
   handlers: [
+    'storage' => 'Drupal\divengine_traceability\TraceLinkStorage',
     'list_builder' => 'Drupal\divengine_traceability\TraceLinkListBuilder',
     'views_data' => 'Drupal\views\EntityViewsData',
     'access' => 'Drupal\divengine_traceability\TraceLinkAccessControlHandler',
@@ -106,6 +107,13 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
    */
   public function preSave(EntityStorageInterface $storage): void {
     parent::preSave($storage);
+    if (!$this->isNew()) {
+      if (!$this->isNewRevision()) {
+        $this->setRevisionUserId((int) \Drupal::currentUser()->id());
+        $this->setRevisionCreationTime(\Drupal::time()->getRequestTime());
+      }
+      $this->setNewRevision(TRUE);
+    }
     $reviewer = $this->get('reviewed_by')->target_id;
     $previous = $this->getOriginal() ? $this->getOriginal()->get('reviewed_by')->target_id : NULL;
     if ($reviewer && $reviewer !== $previous) {
