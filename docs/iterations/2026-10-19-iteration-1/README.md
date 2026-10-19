@@ -2,6 +2,8 @@
 
 Fecha: 19 de octubre de 2026. Alcance autorizado: **C01, C02 y C03** del informe `ad535bc`. Rama: `fix/iteration-1-trace-access-history`. Este documento registra implementación y validación para revisión; no autoriza desplegar ni continuar la Iteración 2.
 
+Complemento posterior: [revisión del PR #21 sobre rendimiento, retención y reproducción de sondas](PR-REVIEW.md). No modifica los resultados de implementación registrados aquí ni el código funcional de `735df0f`.
+
 ## Cambios y contratos
 
 | Corrección | Archivos principales | Contrato resultante |

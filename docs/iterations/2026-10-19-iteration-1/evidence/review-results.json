@@ -1,0 +1,268 @@
+{
+  "date": "2026-10-19",
+  "purpose": "Bounded PR review diagnostics; no product optimization or deployment",
+  "implementation_commit": "735df0fed9cda56c0d05f576969e009a993b1fb4",
+  "environment": {
+    "php": "8.4.26",
+    "phpunit": "11.5.55",
+    "drupal": "11.3.12",
+    "postgresql": "16.15",
+    "database": "Fresh disposable database, removed after run",
+    "deployed_checkout_unchanged": "b6607ae81efa5cead00f4c26342bc1be4ebf6f8f"
+  },
+  "probe_sha256": "77a50a1d358fd6ef8ea64693581cb9d94e0af78f25681fc91dd00f46f635ff9a",
+  "run": {
+    "exit_code": 0,
+    "tests": 2,
+    "assertions": 84,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "deprecations_reported": 7,
+    "seconds": 71.192565
+  },
+  "cases": [
+    {
+      "name": "testReviewTraceVisibilityScaling",
+      "file": "/tmp/studio-iteration1-JVEdkN/TraceVisibilityReviewProbeTest.php",
+      "line": "46",
+      "class": "Drupal\\Tests\\studio_review\\Kernel\\TraceVisibilityReviewProbeTest",
+      "classname": "Drupal.Tests.studio_review.Kernel.TraceVisibilityReviewProbeTest",
+      "assertions": "52",
+      "time": "49.446792"
+    },
+    {
+      "name": "testReviewRetentionUninstallValidation",
+      "file": "/tmp/studio-iteration1-JVEdkN/TraceVisibilityReviewProbeTest.php",
+      "line": "129",
+      "class": "Drupal\\Tests\\studio_review\\Kernel\\TraceVisibilityReviewProbeTest",
+      "classname": "Drupal.Tests.studio_review.Kernel.TraceVisibilityReviewProbeTest",
+      "assertions": "32",
+      "time": "21.745773"
+    }
+  ],
+  "measurements": [
+    {
+      "entities": 100,
+      "traces": 100,
+      "mode": "page_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 72.105,
+      "sql_queries": 11,
+      "access_calls": 204,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 7033,
+      "final_sql_parameters": 209,
+      "cache_tags": 103
+    },
+    {
+      "entities": 100,
+      "traces": 100,
+      "mode": "count_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 40.343,
+      "sql_queries": 10,
+      "access_calls": 204,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 7012,
+      "final_sql_parameters": 209,
+      "cache_tags": 103
+    },
+    {
+      "entities": 100,
+      "traces": 100,
+      "mode": "page_warm",
+      "returned_or_count": 1,
+      "elapsed_ms": 16.708,
+      "sql_queries": 9,
+      "access_calls": 204,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 7033,
+      "final_sql_parameters": 209,
+      "cache_tags": 103
+    },
+    {
+      "entities": 1000,
+      "traces": 1000,
+      "mode": "page_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 429.445,
+      "sql_queries": 19,
+      "access_calls": 2004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 65934,
+      "final_sql_parameters": 2027,
+      "cache_tags": 1003
+    },
+    {
+      "entities": 1000,
+      "traces": 1000,
+      "mode": "count_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 392.225,
+      "sql_queries": 21,
+      "access_calls": 2004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 65913,
+      "final_sql_parameters": 2027,
+      "cache_tags": 1003
+    },
+    {
+      "entities": 1000,
+      "traces": 1000,
+      "mode": "page_warm",
+      "returned_or_count": 1,
+      "elapsed_ms": 149.387,
+      "sql_queries": 9,
+      "access_calls": 2004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 65934,
+      "final_sql_parameters": 2027,
+      "cache_tags": 1003
+    },
+    {
+      "entities": 3000,
+      "traces": 3000,
+      "mode": "page_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 1651.161,
+      "sql_queries": 41,
+      "access_calls": 6004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 198574,
+      "final_sql_parameters": 6067,
+      "cache_tags": 3003
+    },
+    {
+      "entities": 3000,
+      "traces": 3000,
+      "mode": "count_cold",
+      "returned_or_count": 1,
+      "elapsed_ms": 1691.561,
+      "sql_queries": 41,
+      "access_calls": 6004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 198553,
+      "final_sql_parameters": 6067,
+      "cache_tags": 3003
+    },
+    {
+      "entities": 3000,
+      "traces": 3000,
+      "mode": "page_warm",
+      "returned_or_count": 1,
+      "elapsed_ms": 910.912,
+      "sql_queries": 9,
+      "access_calls": 6004,
+      "filtered_aliases": [
+        {
+          "alias": "base_table",
+          "table": "trace_link"
+        },
+        {
+          "alias": "trace_link",
+          "table": "trace_link"
+        }
+      ],
+      "final_sql_bytes": 198574,
+      "final_sql_parameters": 6067,
+      "cache_tags": 3003
+    },
+    {
+      "probe": "retention_uninstall",
+      "blocked": true,
+      "baseline_reason_present": true,
+      "empty_baseline": true,
+      "uninstall_executed": false
+    }
+  ],
+  "invalid_initial_attempt": {
+    "exit_code": 1,
+    "tests": 2,
+    "assertions": 68,
+    "failures": 1,
+    "reason": "The review probe initially assumed one SQL alias. Entity Query joins trace_link twice, causing 204 access calls rather than 102 at N=100. Only the probe expectation/instrumentation was corrected; product code unchanged. This attempt is not counted as passed."
+  },
+  "limitations": [
+    "One sample per mode and dataset; synthetic single-context artifact endpoints, all visible. No concurrency or production SLO benchmark.",
+    "Cold modes reset artifact memory cache and artifact/development access caches plus visibility service, not database/persistent caches. Warm mode immediately follows count_cold.",
+    "Calls count access() entries including Core cache hits, not only uncached policy computations.",
+    "No uninstall, migration, schema update or recovery operation executed. Uninstall validator was invoked read-only against the disposable fixture.",
+    "The prior 153 implementation test cases were not rerun for PR preparation."
+  ],
+  "temporary_databases_remaining_after_run": 0,
+  "executed_probe_sha256": "fcec5e087110dd06b65acc4c5b585c177c2bca9a0494346c5b399e6edfeaf4e3",
+  "source_line_endings": "The executed temporary copy used CRLF; the committed copy normalizes LF only. Both hashes are recorded; PHP code is otherwise identical."
+}
