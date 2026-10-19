@@ -64,14 +64,20 @@ class TracePanel {
       ->execute();
 
     $rows = [];
+    $cacheability = \Drupal::service('divengine_traceability.visibility')->queryCacheability($this->currentUser);
     /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
     foreach ($storage->loadMultiple($ids) as $link) {
+      $access = $link->access('view', $this->currentUser, TRUE);
+      $cacheability->addCacheableDependency($access)->addCacheableDependency($link);
+      if (!$access->isAllowed()) {
+        continue;
+      }
       $outgoing = $link->getSourceEntityType() === $entity->getEntityTypeId() && (string) $link->getSourceEntityId() === (string) $entity->id();
       $type = $link->getLinkType();
       $relation = $type ? ($outgoing ? $type->label() : ($type->getInverseLabel() ?: $type->label())) : $link->get('link_type')->value;
       $other = $outgoing ? $link->getTargetEntity() : $link->getSourceEntity();
       $other_cell = ['#plain_text' => (string) $this->t('(restricted)')];
-      if ($other && $other->access('view')) {
+      if ($other && $other->access('view', $this->currentUser)) {
         $other_cell = $other->hasLinkTemplate('canonical') ? $other->toLink()->toRenderable() : ['#plain_text' => (string) $other->label()];
       }
       $rows[] = [
@@ -93,7 +99,7 @@ class TracePanel {
         + ['#attributes' => ['class' => ['button', 'button--small']]];
     }
 
-    return [
+    $build = [
       '#type' => 'component',
       '#component' => 'divengine_core:section',
       '#props' => ['title' => (string) $this->t('Traces'), 'count' => (string) count($rows)],
@@ -111,6 +117,8 @@ class TracePanel {
         'contexts' => ['user.permissions', 'user'],
       ],
     ];
+    $cacheability->applyTo($build);
+    return $build;
   }
 
 

@@ -45,6 +45,9 @@ class TraceLinkListBuilder extends EntityListBuilder {
   }
 
   public function buildRow(EntityInterface $entity): array {
+    if (!$entity->access('view')) {
+      return [];
+    }
     /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $entity */
     return [
       'source' => $this->resolveEntityLabel(
@@ -69,6 +72,9 @@ class TraceLinkListBuilder extends EntityListBuilder {
     if ($entity_type_id === 'artifact' && $this->entityTypeManager->hasDefinition('artifact')) {
       $artifact = $this->entityTypeManager->getStorage('artifact')->load($entity_id);
       if ($artifact) {
+        if (!$artifact->access('view')) {
+          return (string) $this->t('(restricted)');
+        }
         return Link::createFromRoute(
           $artifact->getArtifactKey() ?: $artifact->label(),
           'entity.artifact.canonical',
@@ -85,6 +91,12 @@ class TraceLinkListBuilder extends EntityListBuilder {
       $operations['edit']['query']['destination'] = $entity->toUrl('collection')->toString();
     }
     return $operations;
+  }
+
+  public function render() {
+    $build = parent::render();
+    \Drupal::service('divengine_traceability.visibility')->queryCacheability(\Drupal::currentUser())->applyTo($build);
+    return $build;
   }
 
 }

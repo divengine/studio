@@ -124,9 +124,6 @@ function divengine_process_query_alter(AlterableInterface $query): void {
       \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id);
     }
   }
-  if ($query->hasTag('trace_link_access')) {
-    \Drupal::service('divengine_process.visibility')->alterTraceQuery($query, $scoped);
-  }
 }
 
 /**
@@ -171,17 +168,11 @@ function divengine_process_divengine_trace_end_types_alter(array &$types): void 
 /**
  * Implements hook_ENTITY_TYPE_access() for trace_link.
  *
- * A trace is seen only by those who see both of its ends.
+ * Baseline retention is additional to Traceability's endpoint access policy.
  */
 function divengine_process_trace_link_access(EntityInterface $link, string $operation, AccountInterface $account): AccessResult {
   if ($protected = divengine_process_baseline_protection($link, $operation)) {
     return $protected;
-  }
-  /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
-  foreach ([$link->getSourceEntity(), $link->getTargetEntity()] as $end) {
-    if ($end && $end->hasField('development') && !$end->get('development')->isEmpty() && !$end->access('view', $account)) {
-      return AccessResult::forbidden()->addCacheableDependency($link)->cachePerUser();
-    }
   }
   return AccessResult::neutral()->addCacheableDependency($link);
 }

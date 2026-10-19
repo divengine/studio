@@ -89,6 +89,9 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
    * {@inheritdoc}
    */
   public function label(): string {
+    if (!$this->access('view')) {
+      return (string) new TranslatableMarkup('Restricted trace');
+    }
     $source = $this->getSourceEntity();
     $target = $this->getTargetEntity();
     $type = $this->getLinkType();
