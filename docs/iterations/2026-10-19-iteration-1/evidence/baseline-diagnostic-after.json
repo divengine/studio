@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "read_only": true,
+  "transaction_read_only": "on",
+  "transaction_isolation": "repeatable read",
+  "generated_at": "2026-10-19T08:24:38+00:00",
+  "baselines": 1,
+  "items": 3,
+  "issues": [],
+  "limitations": [
+    "No historical hashes or independent copies exist: in-place overwrites before this diagnostic cannot be ruled out.",
+    "Empty baselines and revision timestamps after capture are review signals, not proof of corruption.",
+    "Current identities, captured revisions and internal trace membership are checked; this is not a full configuration snapshot audit."
+  ],
+  "issue_counts": []
+}
