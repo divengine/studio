@@ -1,0 +1,2 @@
+{"probe":"trace_revision_overwrite","same_revision":true,"baseline_rationale_now":"Changed rationale","protected":true}
+{"probe":"private_project_trace","project_visible":false,"trace_visible":true,"trace_in_access_filtered_query":true,"label":"[AUDIT] Private project title references RSK-0001"}

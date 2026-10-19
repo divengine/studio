@@ -1,0 +1,5 @@
+{"probe":"direct_state_save","violations":["Audit activity can only change state through its transitions."],"saved_state":"completed"}
+{"probe":"artifact_key","before":"REQ-0001","after":"CHANGED-BY-DIRECT-SAVE"}
+{"probe":"cross_development_trace","violations":["Traces between records of a Development stay inside that Development."],"saved":true}
+{"probe":"baseline_history","items":[{"entity_type":"artifact","entity_id":"1","revision_id":"2"}],"new_revision_created":true,"new_default_state":"published","old_title_before_delete":"Original","was_protected":true,"protected_revision_exists_after_delete":false}
+{"probe":"baseline_empty_delete","items":[],"deleted":true}

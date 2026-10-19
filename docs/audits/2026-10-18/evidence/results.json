@@ -1,0 +1,46 @@
+{
+  "date": "2026-10-18",
+  "studio_commit": "b6607ae81efa5cead00f4c26342bc1be4ebf6f8f",
+  "kernel": {
+    "environment": "VM PHP 8.4.26, disposable PostgreSQL database",
+    "exit_code": 0,
+    "tests": 143,
+    "assertions": 2386,
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "deprecation_categories": 12,
+    "seconds": 457.028577
+  },
+  "diagnostic_probes": {
+    "environment": "VM, two additional disposable PostgreSQL databases",
+    "tests": 7,
+    "assertions": 224,
+    "exit_codes": [
+      0,
+      0
+    ],
+    "meaning": "Assertions reproduce unsafe behavior, not successful remediation."
+  },
+  "codedocs_local": {
+    "php": "8.3.7",
+    "database": ":memory: SQLite",
+    "exit_code": 0,
+    "checks": 41
+  },
+  "codedocs_vm": {
+    "php": "8.4.26",
+    "exit_code": 255,
+    "status": "blocked",
+    "reason": "Class Pdo\\Sqlite not found"
+  },
+  "javascript": {
+    "suites": 4,
+    "status": "not run",
+    "reason": "node_modules absent"
+  },
+  "install_upgrade_functional_browser": {
+    "status": "not run"
+  },
+  "cleanup": "Disposable audit databases removed by execution drivers."
+}

@@ -1,0 +1,685 @@
+{
+  "studio_commit": "b6607ae81efa5cead00f4c26342bc1be4ebf6f8f",
+  "modules": [
+    {
+      "module": "divengine_articles",
+      "info": "web/modules/custom/divengine_articles/divengine_articles.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_knowledge",
+        "divengine_process",
+        "divengine_traceability",
+        "drupal:node",
+        "drupal:text",
+        "drupal:taxonomy",
+        "drupal:menu_ui"
+      ],
+      "entities": [],
+      "declared_service_ids": [
+        "divengine_articles.tree",
+        "divengine_articles.breadcrumb"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_artifact",
+      "info": "web/modules/custom/divengine_artifact/divengine_artifact.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "drupal:text",
+        "drupal:options",
+        "drupal:user",
+        "drupal:content_moderation",
+        "drupal:workflows",
+        "drupal:views"
+      ],
+      "entities": [
+        {
+          "id": "artifact",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_artifact/src/Entity/Artifact.php"
+        },
+        {
+          "id": "artifact_type",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_artifact/src/Entity/ArtifactType.php"
+        }
+      ],
+      "declared_service_ids": [],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactLifecycleTest.php",
+        "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+        "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php"
+      ],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_codedocs",
+      "info": "web/modules/custom/divengine_codedocs/divengine_codedocs.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_process",
+        "divengine_traceability",
+        "divengine_source",
+        "drupal:basic_auth"
+      ],
+      "entities": [
+        {
+          "id": "codedoc_set",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_codedocs/src/Entity/CodeDocSet.php"
+        },
+        {
+          "id": "codedoc_snapshot",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_codedocs/src/Entity/CodeDocSnapshot.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_codedocs.adapters",
+        "divengine_codedocs.adapter.contract",
+        "divengine_codedocs.adapter.javadoc",
+        "divengine_codedocs.adapter.tsdoc",
+        "divengine_codedocs.index",
+        "divengine_codedocs.importer"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": [
+        "web/modules/custom/divengine_codedocs/tests/run.php"
+      ]
+    },
+    {
+      "module": "divengine_core",
+      "info": "web/modules/custom/divengine_core/divengine_core.info.yml",
+      "dependencies": [],
+      "entities": [],
+      "declared_service_ids": [
+        "divengine_core.sequence"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_database",
+      "info": "web/modules/custom/divengine_database/divengine_database.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_process",
+        "divengine_traceability"
+      ],
+      "entities": [
+        {
+          "id": "schema_database",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_database/src/Entity/SchemaDatabase.php"
+        },
+        {
+          "id": "schema_snapshot",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_database/src/Entity/SchemaSnapshot.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_database.adapters",
+        "divengine_database.adapter.contract",
+        "divengine_database.adapter.schemaspy",
+        "divengine_database.facts",
+        "divengine_database.findings",
+        "divengine_database.importer",
+        "logger.channel.divengine_database"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_diagram_embed",
+      "info": "web/modules/custom/divengine_diagram_embed/divengine_diagram_embed.info.yml",
+      "dependencies": [
+        "divengine_modeler",
+        "drupal:filter",
+        "drupal:editor",
+        "drupal:ckeditor5"
+      ],
+      "entities": [],
+      "declared_service_ids": [
+        "divengine_diagram_embed.usage"
+      ],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/CKEditor5DiagramPluginTest.php",
+        "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedControllerTest.php",
+        "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+        "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+        "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTranslationTest.php"
+      ],
+      "js_test_files": [
+        "web/modules/custom/divengine_diagram_embed/tests/js/diagram.test.js"
+      ],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_knowledge",
+      "info": "web/modules/custom/divengine_knowledge/divengine_knowledge.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "drupal:taxonomy",
+        "drupal:text",
+        "drupal:options"
+      ],
+      "entities": [],
+      "declared_service_ids": [],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_mcp",
+      "info": "web/modules/custom/divengine_mcp/divengine_mcp.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "key:key",
+        "mcp:mcp"
+      ],
+      "entities": [],
+      "declared_service_ids": [],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_modeler",
+      "info": "web/modules/custom/divengine_modeler/divengine_modeler.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "drupal:user",
+        "drupal:content_moderation",
+        "drupal:workflows",
+        "drupal:views"
+      ],
+      "entities": [
+        {
+          "id": "diagram",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_modeler/src/Entity/Diagram.php"
+        },
+        {
+          "id": "diagram_type",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_modeler/src/Entity/DiagramType.php"
+        }
+      ],
+      "declared_service_ids": [
+        "plugin.manager.modeler_notation",
+        "divengine_modeler.svg_safety",
+        "divengine_modeler.link_index",
+        "divengine_modeler.entity_resolver",
+        "divengine_modeler.preview_builder",
+        "divengine_modeler.model_saver",
+        "divengine_modeler.backlinks"
+      ],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramAccessTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/EntityReferenceResolverTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/PreviewBuilderTest.php",
+        "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php"
+      ],
+      "js_test_files": [
+        "web/modules/custom/divengine_modeler/tests/js/modeler.test.js"
+      ],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_modeler_bpmn",
+      "info": "web/modules/custom/divengine_modeler_bpmn/divengine_modeler_bpmn.info.yml",
+      "dependencies": [
+        "divengine_modeler"
+      ],
+      "entities": [],
+      "declared_service_ids": [],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php"
+      ],
+      "js_test_files": [
+        "web/modules/custom/divengine_modeler_bpmn/tests/js/bpmn-notation.test.js"
+      ],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_modeler_uml",
+      "info": "web/modules/custom/divengine_modeler_uml/divengine_modeler_uml.info.yml",
+      "dependencies": [
+        "divengine_modeler"
+      ],
+      "entities": [],
+      "declared_service_ids": [],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php"
+      ],
+      "js_test_files": [
+        "web/modules/custom/divengine_modeler_uml/tests/js/uml-notation.test.js"
+      ],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_process",
+      "info": "web/modules/custom/divengine_process/divengine_process.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_artifact",
+        "divengine_traceability",
+        "drupal:content_moderation",
+        "drupal:views",
+        "drupal:datetime",
+        "drupal:link",
+        "drupal:options",
+        "drupal:user"
+      ],
+      "entities": [
+        {
+          "id": "activity_definition",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/ActivityDefinition.php"
+        },
+        {
+          "id": "baseline",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/Baseline.php"
+        },
+        {
+          "id": "change_request",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_process/src/Entity/ChangeRequest.php"
+        },
+        {
+          "id": "development",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_process/src/Entity/Development.php"
+        },
+        {
+          "id": "development_case",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/DevelopmentCase.php"
+        },
+        {
+          "id": "development_phase",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/DevelopmentPhase.php"
+        },
+        {
+          "id": "iteration",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/Iteration.php"
+        },
+        {
+          "id": "milestone",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/Milestone.php"
+        },
+        {
+          "id": "process_activity",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/ProcessActivity.php"
+        },
+        {
+          "id": "process_discipline",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/ProcessDiscipline.php"
+        },
+        {
+          "id": "process_phase_type",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/ProcessPhaseType.php"
+        },
+        {
+          "id": "process_role",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/ProcessRole.php"
+        },
+        {
+          "id": "role_assignment",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/RoleAssignment.php"
+        },
+        {
+          "id": "work_product_definition",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_process/src/Entity/WorkProductDefinition.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_process.lifecycle",
+        "divengine_process.visibility",
+        "divengine_process.development",
+        "divengine_process.gaps",
+        "plugin.manager.divengine_readiness",
+        "divengine_process.readiness",
+        "divengine_process.baselines",
+        "divengine_process.breadcrumb"
+      ],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+        "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php"
+      ],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_project",
+      "info": "web/modules/custom/divengine_project/divengine_project.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_traceability",
+        "drupal:datetime",
+        "drupal:options",
+        "drupal:text",
+        "drupal:taxonomy",
+        "drupal:comment"
+      ],
+      "entities": [
+        {
+          "id": "project",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_project/src/Entity/Project.php"
+        },
+        {
+          "id": "project_stage",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_project/src/Entity/ProjectStage.php"
+        },
+        {
+          "id": "project_task",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_project/src/Entity/ProjectTask.php"
+        },
+        {
+          "id": "project_task_type",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_project/src/Entity/TaskType.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_project.visibility",
+        "divengine_project.task_table",
+        "divengine_project.breadcrumb"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_qa",
+      "info": "web/modules/custom/divengine_qa/divengine_qa.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_process",
+        "divengine_artifact",
+        "divengine_traceability",
+        "drupal:file",
+        "drupal:options",
+        "drupal:datetime",
+        "drupal:filter"
+      ],
+      "entities": [
+        {
+          "id": "qa_environment",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaEnvironment.php"
+        },
+        {
+          "id": "qa_issue",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaIssue.php"
+        },
+        {
+          "id": "qa_log",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaLog.php"
+        },
+        {
+          "id": "qa_priority",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaPriority.php"
+        },
+        {
+          "id": "qa_result_correction",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaResultCorrection.php"
+        },
+        {
+          "id": "qa_stage",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaStage.php"
+        },
+        {
+          "id": "qa_step_result",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaStepResult.php"
+        },
+        {
+          "id": "qa_tag",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTag.php"
+        },
+        {
+          "id": "qa_test_case",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestCase.php"
+        },
+        {
+          "id": "qa_test_execution",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestExecution.php"
+        },
+        {
+          "id": "qa_test_plan",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestPlan.php"
+        },
+        {
+          "id": "qa_test_run",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestRun.php"
+        },
+        {
+          "id": "qa_test_step",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestStep.php"
+        },
+        {
+          "id": "qa_test_suite",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_qa/src/Entity/QaTestSuite.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_qa.logger",
+        "divengine_qa.metrics",
+        "divengine_qa.snapshot",
+        "divengine_qa.runs",
+        "divengine_qa.results",
+        "divengine_qa.design",
+        "divengine_qa.issues",
+        "divengine_qa.dashboard",
+        "divengine_qa.verification"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_source",
+      "info": "web/modules/custom/divengine_source/divengine_source.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_process",
+        "divengine_traceability"
+      ],
+      "entities": [
+        {
+          "id": "source_ref",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_source/src/Entity/SourceRef.php"
+        },
+        {
+          "id": "source_repository",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_source/src/Entity/SourceRepository.php"
+        },
+        {
+          "id": "source_snapshot",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_source/src/Entity/SourceSnapshot.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_source.git",
+        "divengine_source.index",
+        "logger.channel.divengine_source"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_thread",
+      "info": "web/modules/custom/divengine_thread/divengine_thread.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "drupal:comment",
+        "drupal:file",
+        "drupal:text"
+      ],
+      "entities": [],
+      "declared_service_ids": [
+        "divengine_thread.manager",
+        "divengine_thread.view"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_timesheet",
+      "info": "web/modules/custom/divengine_timesheet/divengine_timesheet.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_project",
+        "drupal:datetime"
+      ],
+      "entities": [
+        {
+          "id": "timesheet",
+          "kind": "ContentEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_timesheet/src/Entity/Timesheet.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_timesheet.stats",
+        "divengine_timesheet.timer",
+        "divengine_timesheet.view"
+      ],
+      "kernel_test_files": [],
+      "js_test_files": [],
+      "standalone_runners": []
+    },
+    {
+      "module": "divengine_traceability",
+      "info": "web/modules/custom/divengine_traceability/divengine_traceability.info.yml",
+      "dependencies": [
+        "divengine_core",
+        "divengine_artifact",
+        "drupal:text",
+        "drupal:options",
+        "drupal:user",
+        "drupal:content_moderation",
+        "drupal:views"
+      ],
+      "entities": [
+        {
+          "id": "trace_link",
+          "kind": "ContentEntityType",
+          "revision_table": true,
+          "file": "web/modules/custom/divengine_traceability/src/Entity/TraceLink.php"
+        },
+        {
+          "id": "trace_link_type",
+          "kind": "ConfigEntityType",
+          "revision_table": false,
+          "file": "web/modules/custom/divengine_traceability/src/Entity/TraceLinkType.php"
+        }
+      ],
+      "declared_service_ids": [
+        "divengine_traceability.trace_link_validator",
+        "divengine_traceability.trace_panel",
+        "divengine_traceability.code_resolver",
+        "divengine_traceability.reference_index"
+      ],
+      "kernel_test_files": [
+        "web/modules/custom/divengine_traceability/tests/src/Kernel/InstallConfigTest.php",
+        "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+        "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php"
+      ],
+      "js_test_files": [],
+      "standalone_runners": []
+    }
+  ],
+  "custom_dependency_graph_acyclic": true,
+  "counts": {
+    "modules": 18,
+    "kernel_classes": 22,
+    "js_files": 4,
+    "standalone_runners": 1
+  }
+}
