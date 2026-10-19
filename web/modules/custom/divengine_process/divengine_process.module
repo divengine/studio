@@ -77,14 +77,25 @@ function divengine_process_entity_base_field_info(EntityTypeInterface $entity_ty
  */
 function divengine_process_entity_type_alter(array &$entity_types): void {
   if (isset($entity_types['trace_link'])) {
+    $entity_types['trace_link']->setHandlerClass('storage', \Drupal\divengine_process\Storage\BaselineTraceLinkStorage::class);
     $entity_types['trace_link']->addConstraint('ProcessTrace');
   }
   if (isset($entity_types['artifact'])) {
+    $entity_types['artifact']->setHandlerClass('storage', \Drupal\divengine_process\Storage\BaselineArtifactStorage::class);
     $entity_types['artifact']->addConstraint('ProcessDevelopmentRequired');
     $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
     $entity_types['artifact']->addConstraint('ProcessSameDevelopment');
     $entity_types['artifact']->addConstraint('ProcessUniqueInDevelopment');
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function divengine_process_baseline_access(EntityInterface $baseline, string $operation, AccountInterface $account): AccessResult {
+  return $operation === 'delete'
+    ? AccessResult::forbidden('Baselines are retained as historical records.')->addCacheableDependency($baseline)
+    : AccessResult::neutral();
 }
 
 /**
