@@ -84,6 +84,22 @@ class BaselineRetentionTest extends KernelTestBase {
     $this->assertSame('First', $storage->loadUnchanged($artifact->id())->label());
   }
 
+  public function testEndpointDeletionRollsBackIfCascadeWouldDeleteProtectedTrace(): void {
+    [$baseline, $trace, $artifacts] = $this->baselineFixture();
+    $revision = $trace->getRevisionId();
+    $new_end = Artifact::create(['type' => 'requirement', 'title' => 'Later endpoint', 'development' => $artifacts[0]->get('development')->target_id, 'moderation_state' => 'published']);
+    $new_end->save();
+    $trace->set('target_entity_id', $new_end->id())->save();
+    // This artifact is not captured, but its deletion would cascade to a trace
+    // whose older revision is captured. The whole delete must roll back.
+    $this->assertRefused(fn () => $new_end->delete());
+    $manager = $this->container->get('entity_type.manager');
+    $this->assertNotNull($manager->getStorage('artifact')->loadUnchanged($new_end->id()));
+    $this->assertSame((int) $new_end->id(), $manager->getStorage('trace_link')->loadUnchanged($trace->id())->getTargetEntityId());
+    $this->assertSame((int) $artifacts[1]->id(), $manager->getStorage('trace_link')->loadRevision($revision)->getTargetEntityId());
+    $this->assertCount(4, $this->container->get('divengine_process.baselines')->items($baseline));
+  }
+
   public function testReadOnlyDiagnosticReportsMissingHistoryWithoutRepair(): void {
     [$baseline, $trace, $artifacts] = $this->baselineFixture();
     $db = $this->container->get('database');
