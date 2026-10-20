@@ -21,3 +21,6 @@ services:
   divengine_codedocs.importer:
     class: Drupal\divengine_codedocs\SnapshotImporter
     arguments: ['@database', '@entity_type.manager', '@divengine_codedocs.adapters', '@divengine_codedocs.index', '@current_user', '@lock']
+  divengine_codedocs.pages:
+    class: Drupal\divengine_codedocs\CodeDocsPages
+    arguments: ['@divengine_codedocs.index', '@entity_type.manager', '@request_stack', '@date.formatter']

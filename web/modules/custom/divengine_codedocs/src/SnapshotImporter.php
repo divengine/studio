@@ -81,9 +81,11 @@ class SnapshotImporter {
       'producer' => $meta['producer'] ?? '', 'commit_sha' => $meta['commit'] ?? '', 'branch' => $meta['branch'] ?? '',
       'captured_at' => $captured, 'source_hash' => $header['content_hash'] ?? '',
     ]);
-    $violations = $snapshot->validate();
+    // The importer sets these references itself, after mayPublish(): a
+    // publisher account may not be able to view what it publishes into.
+    $violations = $snapshot->validate()->filterByFields(['uid', 'development', 'doc_set']);
     if ($violations->count()) {
-      throw new ContractException((string) $violations);
+      throw new ContractException(strip_tags((string) $violations->get(0)->getMessage()));
     }
     $snapshot->save();
     return $snapshot;

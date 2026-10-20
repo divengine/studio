@@ -1,11 +1,12 @@
 # Shop Code Docs examples
 
-Creates two small, invented projects in `~/workspace/codedocs-demo`: a PHP catalog
-and checkout library, and a TypeScript basket and API client. The sources in this
+Creates three small, invented projects in `~/workspace/codedocs-demo`: a PHP catalog
+and checkout library, a TypeScript basket and API client, and Java order services. The sources in this
 folder are templates: existing workspace projects are never overwritten.
 
 Requirements: a working Studio installation with Code Docs, Code Source and MCP,
-PHP CLI, Python 3, Git, Node/npm, and CodeIntel's existing TypeScript extractor.
+PHP CLI, Python 3, Git, Node/npm, a JDK (javac, javadoc), and CodeIntel's existing
+TypeScript extractor and Javadoc JSON doclet.
 
 ```bash
 bash scripts/codedocs-demo/refresh.sh
@@ -16,7 +17,8 @@ bash scripts/codedocs-demo/refresh.sh
 
 Set `CODEDOCS_DEMO_ROOT` to change the workspace path; set
 `CODEINTEL_TS_EXTRACTOR` to change the extractor path (default:
-`~/workspace/dev/tsdoc/extractor/extract.mjs`). The TS project installs its own
+`~/workspace/dev/tsdoc/extractor/extract.mjs`) and `CODEINTEL_JAVADOC_DOCLET` for the
+doclet (default: `~/workspace/dev/javadoc/doclet`; built on first use). The TS project installs its own
 TypeScript compiler. The PHP reflection extractor loads only the three known,
 trusted demo classes; it is an example, not a general parser for untrusted PHP.
 

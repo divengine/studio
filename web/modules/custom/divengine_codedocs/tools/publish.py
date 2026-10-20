@@ -52,7 +52,7 @@ def main():
     size = int(args.chunk_mb * 1024 * 1024)
     # Count without keeping a second copy of every batch in memory.
     count = sum(1 for _ in batches(document, keys, size))
-    print(f"{document.get('project', '?')}: {fmt}, {count} chunks")
+    print(f"{document.get('project', '?')}: {fmt}, {count} chunks", flush=True)
     if args.dry_run:
         return 0
     user, password = os.getenv("STUDIO_USER"), os.getenv("STUDIO_PASSWORD")
@@ -96,5 +96,11 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except urllib.error.HTTPError as error:
-        print(f"HTTP {error.code}: {error.read().decode(errors='replace')}", file=sys.stderr)
+        body = error.read().decode(errors="replace")
+        try:
+            message = json.loads(body).get("message", body)
+        except ValueError:
+            # Drupal answers authentication failures with an HTML page.
+            message = {401: "wrong user or password", 403: "access denied: check the account's permission and its membership in the Development"}.get(error.code, error.reason)
+        print(f"HTTP {error.code}: {message}", file=sys.stderr)
         sys.exit(1)

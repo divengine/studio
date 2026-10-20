@@ -35,7 +35,7 @@ divengine_codedocs.symbol:
   path: '/docs/snapshot/{codedoc_snapshot}/symbol/{symbol}'
   defaults:
     _controller: '\Drupal\divengine_codedocs\Controller\CodeDocsController::symbol'
-    _title: 'Symbol'
+    _title_callback: '\Drupal\divengine_codedocs\Controller\CodeDocsController::symbolTitle'
   requirements:
     _entity_access: 'codedoc_snapshot.view'
     symbol: '\d+'

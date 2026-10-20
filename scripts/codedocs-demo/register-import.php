@@ -29,7 +29,9 @@ try {
     $source->set('allowed_roots', implode("\n", array_filter($roots)))->save();
   }
   $manifest = ['development' => (int) $development->id(), 'projects' => []];
-  foreach (['php' => ['php-shop', 'Shop backend', 'php'], 'ts' => ['ts-shop', 'Shop frontend', 'typescript']] as $file => [$folder, $label, $language]) {
+  // Folder of the extractor's file paths inside each repository.
+  $roots = ['php' => '', 'ts' => '', 'java' => 'src/main/java'];
+  foreach (['php' => ['php-shop', 'Shop backend', 'php'], 'ts' => ['ts-shop', 'Shop frontend', 'typescript'], 'java' => ['java-shop', 'Shop services', 'java']] as $file => [$folder, $label, $language]) {
     $identifier = 'demo-shop-' . $file;
     $repositories = $entities->getStorage('source_repository');
     $found = $repositories->loadByProperties(['path' => $root . '/' . $folder]);
@@ -42,7 +44,7 @@ try {
     \Drupal::service('divengine_source.index')->index($ref);
     $sets = $entities->getStorage('codedoc_set');
     $found = $sets->loadByProperties(['identifier' => $identifier]);
-    $set = reset($found) ?: $sets->create(['development' => $development->id(), 'uid' => 1, 'name' => $label, 'identifier' => $identifier, 'language' => $language, 'repository' => $repository->id(), 'description' => 'Generated from the runnable shop example. Refresh with scripts/codedocs-demo/refresh.sh.']);
+    $set = reset($found) ?: $sets->create(['development' => $development->id(), 'uid' => 1, 'name' => $label, 'identifier' => $identifier, 'language' => $language, 'repository' => $repository->id(), 'source_root' => $roots[$file], 'description' => 'Generated from the runnable shop example. Refresh with scripts/codedocs-demo/refresh.sh.']);
     if ((string) $set->get('development')->target_id !== (string) $development->id()) {
       throw new RuntimeException('Demo identifier is already registered in another Development: ' . $identifier);
     }
@@ -50,7 +52,7 @@ try {
     $document = json_decode(file_get_contents($root . '/output/' . $file . '.json'), TRUE, 512, JSON_THROW_ON_ERROR);
     $result = \Drupal::service('divengine_codedocs.importer')->import($document);
     $snapshot = $result['snapshot'];
-    $symbol = \Drupal::service('divengine_codedocs.index')->search((int) $snapshot->id(), $file === 'php' ? '::total' : 'cartTotal')[0] ?? NULL;
+    $symbol = \Drupal::service('divengine_codedocs.index')->search((int) $snapshot->id(), ['php' => '::total', 'ts' => 'cartTotal', 'java' => 'place'][$file])[0] ?? NULL;
     $manifest['projects'][$identifier] = ['set' => (int) $set->id(), 'snapshot' => (int) $snapshot->id(), 'symbol' => $symbol ? (int) $symbol['id'] : NULL, 'repository' => (int) $repository->id(), 'status' => $result['status']];
     echo $identifier . ': ' . $result['status'] . ', ' . ($snapshot->count('symbol_count') + $snapshot->count('member_count')) . " symbols\n";
   }

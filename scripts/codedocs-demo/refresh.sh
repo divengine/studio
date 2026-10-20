@@ -10,7 +10,7 @@ if ! command -v node >/dev/null && [[ -s "$HOME/.nvm/nvm.sh" ]]; then
 fi
 [[ -f "$CODEINTEL_TS_EXTRACTOR" ]] || { echo "Set CODEINTEL_TS_EXTRACTOR to CodeIntel's tsdoc/extractor/extract.mjs" >&2; exit 1; }
 mkdir -p "$CODEDOCS_DEMO_ROOT/output"
-for project in php-shop ts-shop; do
+for project in php-shop ts-shop java-shop; do
   target="$CODEDOCS_DEMO_ROOT/$project"
   if [[ ! -d "$target" ]]; then
     cp -R "$SCRIPT_DIR/$project" "$target"
@@ -27,6 +27,7 @@ for project in php-shop ts-shop; do
   fi
 done
 php "$SCRIPT_DIR/extract-php.php" "$CODEDOCS_DEMO_ROOT/php-shop" demo-shop-php > "$CODEDOCS_DEMO_ROOT/output/php.json"
+bash "$SCRIPT_DIR/extract-java.sh" "$CODEDOCS_DEMO_ROOT/java-shop" demo-shop-java > "$CODEDOCS_DEMO_ROOT/output/java.json"
 node "$CODEINTEL_TS_EXTRACTOR" --root "$CODEDOCS_DEMO_ROOT/ts-shop" --out "$CODEDOCS_DEMO_ROOT/output/ts.json" --project demo-shop-ts --commit "$(git -C "$CODEDOCS_DEMO_ROOT/ts-shop" rev-parse HEAD)" --branch main
 cd "$STUDIO_ROOT"
 vendor/bin/drush php:script "$SCRIPT_DIR/register-import.php"

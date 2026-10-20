@@ -72,11 +72,11 @@ echo "› Checking the installed site"
 (cd "$WEB" && "$DRUSH" -l "$SITE" php:eval '
 $checks = [];
 $mh = \Drupal::moduleHandler();
-foreach (["divengine_core", "divengine_artifact", "divengine_traceability", "divengine_process", "divengine_qa", "divengine_project", "divengine_timesheet", "divengine_thread", "divengine_articles", "divengine_source", "divengine_database", "basic_auth"] as $module) {
+foreach (["divengine_core", "divengine_artifact", "divengine_traceability", "divengine_process", "divengine_qa", "divengine_project", "divengine_timesheet", "divengine_thread", "divengine_articles", "divengine_source", "divengine_database", "divengine_codedocs", "basic_auth"] as $module) {
   $checks["module $module"] = $mh->moduleExists($module);
 }
 $checks["default theme is the Studio theme"] = \Drupal::config("system.theme")->get("default") === "divengine_studio_theme";
-foreach (["content_editor", "studio_manager", "project_manager", "qa_tester", "qa_lead", "qa_manager", "database_analyzer"] as $role) {
+foreach (["content_editor", "studio_manager", "project_manager", "qa_tester", "qa_lead", "qa_manager", "database_analyzer", "code_docs_publisher"] as $role) {
   $checks["role $role"] = (bool) \Drupal\user\Entity\Role::load($role);
 }
 $checks["every record type has a discussion"] = count(\Drupal::service("divengine_thread.manager")->types()) >= 17
@@ -85,6 +85,9 @@ $checks["[[CODE]] filter on Basic HTML"] = (bool) \Drupal\filter\Entity\FilterFo
 $checks["articles are edited in the Studio theme"] = \Drupal::config("node.settings")->get("use_admin_theme") === FALSE;
 $checks["Development cases recommend verification"] = in_array("requirements_verified", array_column(\Drupal::entityTypeManager()->getStorage("development_case")->load("standard")->getLines(), "target"), TRUE);
 $checks["database facts tables"] = \Drupal::database()->schema()->tableExists("divengine_db_fk_column");
+$checks["code docs facts tables"] = \Drupal::database()->schema()->tableExists("divengine_codedoc_ref") && \Drupal::database()->schema()->tableExists("divengine_codedoc_batch");
+$adapters = \Drupal::service("divengine_codedocs.adapters");
+$checks["code docs adapters: contract, javadoc, tsdoc"] = $adapters->resolve(["contract" => "divengine.codedocs"])->id() === "contract" && $adapters->resolve([], "javadoc")->id() === "javadoc" && $adapters->resolve([], "tsdoc")->id() === "tsdoc";
 try {
   $demo = file_get_contents(\Drupal::moduleHandler()->getModule("divengine_database")->getPath() . "/tests/fixtures/demo_shop_v1.json");
   \Drupal::service("divengine_database.importer")->validate(\Drupal::service("divengine_database.adapters")->toContract($demo));

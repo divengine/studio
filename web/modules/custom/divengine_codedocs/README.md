@@ -163,6 +163,13 @@ extraction/import scripts, real MCP reads and authenticated screenshot capture.
 
 ## Development checks
 
+`tests/src/Kernel/SnapshotImporterTest.php` runs the real importer on the
+configured test database (PostgreSQL): whole imports with parent and reference
+resolution, idempotent and unchanged results, refused revisions with other content,
+chunked uploads that stay invisible until complete, retried and conflicting chunks,
+immutability of ready snapshots, and publishers limited to their Developments.
+It runs with the rest of the suite (`scripts/test.sh`).
+
 `tests/fixtures` contains neutral Java, TypeScript and PHP contract examples.
 `php web/modules/custom/divengine_codedocs/tests/run.php` runs isolated contract
 and database integration checks using Drupal's database API with SQLite in memory.
