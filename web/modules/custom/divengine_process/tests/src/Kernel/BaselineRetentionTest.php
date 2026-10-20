@@ -41,9 +41,19 @@ class BaselineRetentionTest extends KernelTestBase {
     foreach ([$artifacts[0], $trace] as $record) {
       $storage = $this->container->get('entity_type.manager')->getStorage($record->getEntityTypeId());
       $protected = $record->getRevisionId();
-      $record->set($record->getEntityTypeId() === 'artifact' ? 'title' : 'rationale', 'Second revision')->save();
+      // Approved content changes through its workflow (C05): deprecating it
+      // and drafting again both make new default revisions.
+      $record->set($record->getEntityTypeId() === 'artifact' ? 'title' : 'rationale', 'Second revision');
+      if ($record->getEntityTypeId() === 'artifact') {
+        $record->set('moderation_state', 'deprecated')->setNewRevision();
+      }
+      $record->save();
       $unprotected = $record->getRevisionId();
-      $record->set($record->getEntityTypeId() === 'artifact' ? 'title' : 'rationale', 'Third revision')->save();
+      $record->set($record->getEntityTypeId() === 'artifact' ? 'title' : 'rationale', 'Third revision');
+      if ($record->getEntityTypeId() === 'artifact') {
+        $record->set('moderation_state', 'draft')->setNewRevision();
+      }
+      $record->save();
       $this->assertRefused(fn () => $storage->deleteRevision($protected));
       $this->assertNotNull($storage->loadRevision($protected));
       $this->assertSame('Third revision', $storage->loadUnchanged($record->id())->get($record->getEntityTypeId() === 'artifact' ? 'title' : 'rationale')->value);
@@ -129,7 +139,12 @@ class BaselineRetentionTest extends KernelTestBase {
     }
     [$baseline, $trace, $artifacts] = $this->baselineFixture();
     $artifact = $artifacts[0];
-    $artifact->set('field_history_note', 'Captured value')->save();
+    // The captured value reaches the approved revision through the workflow (C05).
+    $artifact->set('field_history_note', 'Captured value');
+    foreach (['draft', 'proposed', 'approved', 'published'] as $state) {
+      $artifact->set('moderation_state', $state)->setNewRevision();
+      $artifact->save();
+    }
     $development = $artifact->get('development')->entity;
     \Drupal::service('divengine_process.baselines')->take($development, 'With field value');
     $loose = Artifact::create(['type' => 'risk', 'title' => 'Loose field value', 'field_history_note' => 'Not captured']); $loose->save();

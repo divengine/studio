@@ -37,3 +37,18 @@ function divengine_process_update_10001(): void {
     $schema->createTable('divengine_process_baseline_item', divengine_process_schema()['divengine_process_baseline_item']);
   }
 }
+
+/**
+ * Adds the captured item count to baselines.
+ *
+ * Existing baselines keep an empty count: it was not recorded when they were
+ * taken, and it is not inferred from their items.
+ */
+function divengine_process_update_11001(): void {
+  $definition = \Drupal\Core\Field\BaseFieldDefinition::create('integer')
+    ->setLabel(new \Drupal\Core\StringTranslation\TranslatableMarkup('Captured items'))
+    ->setDescription(new \Drupal\Core\StringTranslation\TranslatableMarkup('Written with the items in the same transaction: zero is a valid empty baseline. Empty for baselines taken before it was recorded.'))
+    ->setSetting('unsigned', TRUE)
+    ->setReadOnly(TRUE);
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('item_count', 'baseline', 'divengine_process', $definition);
+}

@@ -85,7 +85,15 @@ class TraceVisibilityTest extends KernelTestBase {
     $private->set('members', [$outsider->id()])->save();
     $this->assertFalse($cache->get('trace-collection-test'), 'Changing membership invalidates cached trace collections.');
     // A trace with a missing endpoint fails closed, even with view permission.
-    $broken = TraceLink::create(['source_entity_type' => 'project', 'source_entity_id' => 999999, 'target_entity_type' => 'artifact', 'target_entity_id' => $public->id(), 'link_type' => 'references']); $broken->save();
+    // Storage refuses to write such a trace (C08), so it stands for damaged
+    // data stored earlier: the end is broken with SQL in the disposable test
+    // database only.
+    $broken = TraceLink::create(['source_entity_type' => 'artifact', 'source_entity_id' => $other->id(), 'target_entity_type' => 'artifact', 'target_entity_id' => $public->id(), 'link_type' => 'references']); $broken->save();
+    foreach (['trace_link', 'trace_link_revision'] as $table) {
+      Database::getConnection()->update($table)->fields(['source_entity_type' => 'project', 'source_entity_id' => 999999])->condition('id', $broken->id())->execute();
+    }
+    $this->container->get('entity_type.manager')->getStorage('trace_link')->resetCache();
+    $broken = TraceLink::load($broken->id());
     $this->assertFalse($broken->access('view', $outsider));
     $this->assertSame('Restricted trace', $broken->label());
   }

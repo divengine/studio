@@ -175,6 +175,27 @@ class Development extends ContentEntityBase implements DevelopmentInterface {
     }
   }
 
+  /**
+   * A Development is deleted only once no record belongs to it any more.
+   *
+   * Its phases, iterations, milestones and role assignments go with it;
+   * engineering records, knowledge, code, schemas, tests and baselines are
+   * never deleted or orphaned with it, whatever the writer.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities): void {
+    parent::preDelete($storage, $entities);
+    $references = \Drupal::service('divengine_process.development_references');
+    foreach ($entities as $development) {
+      if ($dependents = $references->dependents($development->id())) {
+        $types = \Drupal::entityTypeManager();
+        $described = array_map(fn ($entity_type_id, $count) => $count . ' ' . $types->getDefinition($entity_type_id)->getCountLabel($count), array_keys($dependents), $dependents);
+        throw new \Drupal\Core\Entity\EntityStorageException(sprintf('%s cannot be deleted while records belong to it: %s.', $development->label(), implode(', ', $described)));
+      }
+    }
+  }
+
   public static function postDelete(EntityStorageInterface $storage, array $entities): void {
     parent::postDelete($storage, $entities);
     // The structure of a Development goes with it.
