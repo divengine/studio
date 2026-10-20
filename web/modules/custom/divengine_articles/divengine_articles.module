@@ -151,3 +151,12 @@ function divengine_articles_form_node_form_alter(array &$form, \Drupal\Core\Form
   // right.
   \Drupal\divengine_core\Form\EntityFormLayout::apply($form, $node, ['kb_parent', 'kb_development', 'kb_topics', 'kb_weight', 'status'], ['body']);
 }
+
+/**
+ * Implements hook_divengine_process_development_references_alter().
+ *
+ * Knowledge articles belong to their Development through kb_development.
+ */
+function divengine_articles_divengine_process_development_references_alter(array &$references): void {
+  $references['node'] = 'kb_development';
+}

@@ -76,6 +76,20 @@ class Baseline extends ContentEntityBase implements EntityOwnerInterface {
     if ($this->isNew() && (string) $this->get('code')->value === '') {
       $this->set('code', \Drupal::service('divengine_core.sequence')->next('BL'));
     }
+    // The count is written with the items it describes; name and notes stay
+    // editable, what was captured does not.
+    if (!$this->isNew() && ($original = $this->getOriginal()) && (string) $original->get('item_count')->value !== (string) $this->get('item_count')->value) {
+      throw new \Drupal\Core\Entity\EntityStorageException('The captured item count of a baseline cannot change.');
+    }
+  }
+
+  /**
+   * How many items were captured, or NULL for a baseline taken before the
+   * count was recorded.
+   */
+  public function getItemCount(): ?int {
+    $count = $this->get('item_count')->value;
+    return $count === NULL ? NULL : (int) $count;
   }
 
   public static function postDelete(EntityStorageInterface $storage, array $entities): void {
@@ -108,6 +122,11 @@ class Baseline extends ContentEntityBase implements EntityOwnerInterface {
       ->setDescription(new TranslatableMarkup('The milestone whose reaching took it, if any.'))
       ->setDisplayOptions('form', ['region' => 'hidden']);
     $fields['notes'] = ProcessFields::text(new TranslatableMarkup('Notes'), 0);
+    $fields['item_count'] = BaseFieldDefinition::create('integer')
+      ->setLabel(new TranslatableMarkup('Captured items'))
+      ->setDescription(new TranslatableMarkup('Written with the items in the same transaction: zero is a valid empty baseline. Empty for baselines taken before it was recorded.'))
+      ->setSetting('unsigned', TRUE)
+      ->setReadOnly(TRUE);
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(new TranslatableMarkup('Taken on'))
       ->setDisplayOptions('view', ['label' => 'inline', 'type' => 'timestamp', 'weight' => 5])

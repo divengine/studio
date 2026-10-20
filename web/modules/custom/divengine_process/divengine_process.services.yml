@@ -1,6 +1,7 @@
 services:
   divengine_process.lifecycle:
     class: Drupal\divengine_process\Lifecycle\LifecycleManager
+    arguments: ['@database', '@lock', '@entity_type.manager']
   divengine_process.visibility:
     class: Drupal\divengine_process\Access\DevelopmentVisibility
     arguments: ['@database', '@entity_type.manager']
@@ -18,8 +19,14 @@ services:
     arguments: ['@plugin.manager.divengine_readiness', '@divengine_process.development']
   divengine_process.baselines:
     class: Drupal\divengine_process\BaselineRecorder
-    arguments: ['@entity_type.manager', '@database']
+    arguments: ['@entity_type.manager', '@database', '@lock']
   divengine_process.breadcrumb:
     class: Drupal\divengine_process\ProcessBreadcrumbBuilder
     tags:
       - { name: breadcrumb_builder, priority: 100 }
+  divengine_process.development_references:
+    class: Drupal\divengine_process\DevelopmentReferences
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@module_handler']
+  divengine_process.trace_rules:
+    class: Drupal\divengine_process\TraceRules
+    arguments: ['@entity_type.manager', '@divengine_process.development_references', '@database', '@lock']

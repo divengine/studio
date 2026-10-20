@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_artifact\Entity;
 
+use Drupal\content_moderation\Entity\ContentModerationState;
 use Drupal\Core\Entity\Attribute\ContentEntityType;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Entity\RevisionableStorageInterface;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
 use Drupal\Core\Entity\Form\RevisionRevertForm;
 use Drupal\Core\Entity\RevisionLogEntityTrait;
@@ -67,6 +70,7 @@ use Drupal\user\EntityOwnerTrait;
   field_ui_base_route: 'entity.artifact_type.edit_form',
   constraints: [
     'UniqueArtifactKey' => [],
+    'StableArtifactKey' => [],
   ],
   common_reference_target: true,
   links: [
@@ -96,9 +100,80 @@ class Artifact extends ContentEntityBase implements ArtifactInterface {
     parent::preSave($storage);
     // Keys are identifiers: surrounding whitespace never makes them distinct.
     $this->set('artifact_key', trim($this->getArtifactKey()));
+    if (!$this->isNew()) {
+      $this->keepAssignedKey($storage);
+      $this->assertModerationTransition();
+    }
     if ($this->getArtifactKey() === '' && ($type = $this->get('type')->entity) && $type->getKeyPrefix() !== '') {
       $this->set('artifact_key', \Drupal::service('divengine_core.sequence')->next($type->getKeyPrefix()));
     }
+  }
+
+  /**
+   * Once assigned, the code of an artifact does not change.
+   *
+   * Saving an older revision as the current one (a revert) keeps the current
+   * code; any other attempt to change it is refused. A record saved before it
+   * had a code may still receive one.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function keepAssignedKey(EntityStorageInterface $storage): void {
+    $current = $storage->loadUnchanged($this->id());
+    $assigned = $current ? trim((string) $current->get('artifact_key')->value) : '';
+    if ($assigned === '' || $assigned === $this->getArtifactKey()) {
+      return;
+    }
+    // An older revision saved as the current one (a revert); editing the
+    // latest revision, a pending draft included, is an ordinary save.
+    if ($storage instanceof RevisionableStorageInterface && (int) $this->getLoadedRevisionId() !== (int) $storage->getLatestRevisionId($this->id())) {
+      $this->set('artifact_key', $assigned);
+      return;
+    }
+    throw new EntityStorageException(sprintf('The code of artifact %s cannot change to "%s": codes are permanent once assigned.', $assigned, $this->getArtifactKey()));
+  }
+
+  /**
+   * A moderated artifact changes state only through its workflow.
+   *
+   * Content Moderation checks transitions when an entity is validated; this
+   * keeps the same structural rule for writers that save without validating
+   * (who may use a transition stays a matter of validation and permissions).
+   * An approved revision therefore stays the default until a new revision is
+   * moved through the workflow again: editing it means a new draft, which is
+   * stored as a pending revision. Synchronizing writers keep Drupal's
+   * semantics and are not checked.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function assertModerationTransition(): void {
+    if ($this->isSyncing() || !\Drupal::hasService('content_moderation.moderation_information')) {
+      return;
+    }
+    $information = \Drupal::service('content_moderation.moderation_information');
+    if (!$information->isModeratedEntity($this) || $this->get('moderation_state')->isEmpty()) {
+      return;
+    }
+    $workflow = $information->getWorkflowForEntity($this)->getTypePlugin();
+    $to = (string) $this->get('moderation_state')->value;
+    // The stored state of the revision being edited: the loaded object may
+    // be the same instance the caller changed.
+    $stored = $this->isNew() ? NULL : ContentModerationState::loadFromModeratedEntity($this)?->get('moderation_state')->value;
+    $from = $stored && $workflow->hasState($stored) ? $workflow->getState($stored) : $information->getOriginalState($this);
+    if (!$workflow->hasState($to) || !$from->canTransitionTo($to)) {
+      throw new EntityStorageException(sprintf('Artifact %s cannot move from %s to %s: its workflow has no such transition.', $this->getArtifactKey() ?: $this->id(), $from->id(), $to));
+    }
+  }
+
+  /**
+   * The code currently stored for this artifact, or an empty string.
+   */
+  public function assignedKey(EntityStorageInterface $storage): string {
+    if ($this->isNew()) {
+      return '';
+    }
+    $current = $storage->loadUnchanged($this->id());
+    return $current ? trim((string) $current->get('artifact_key')->value) : '';
   }
 
   public function getTitle(): string {

@@ -17,6 +17,8 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\divengine_process\Lifecycle\StateGuard;
+use Drupal\divengine_process\Lifecycle\StatefulInterface;
 use Drupal\divengine_process\Vocabulary;
 
 /**
@@ -86,6 +88,22 @@ function divengine_process_entity_type_alter(array &$entity_types): void {
     $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
     $entity_types['artifact']->addConstraint('ProcessSameDevelopment');
     $entity_types['artifact']->addConstraint('ProcessUniqueInDevelopment');
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ *
+ * Unified Process records keep their lifecycle whatever the writer (see
+ * StateGuard), and trace links its rules (see TraceRules).
+ */
+function divengine_process_entity_presave(EntityInterface $entity): void {
+  if ($entity instanceof StatefulInterface) {
+    StateGuard::assertPersistable($entity);
+  }
+  // Trace rules hold for every writer, not only validated forms.
+  if ($entity instanceof \Drupal\divengine_traceability\Entity\TraceLink && $entity->endsChanged()) {
+    \Drupal::service('divengine_process.trace_rules')->assertStorable($entity);
   }
 }
 

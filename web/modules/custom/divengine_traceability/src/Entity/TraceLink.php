@@ -9,6 +9,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Form\RevisionDeleteForm;
@@ -65,6 +66,7 @@ use Drupal\user\EntityOwnerTrait;
   ],
   constraints: [
     'ValidTraceLink' => [],
+    'TraceEndpointAccess' => [],
   ],
   common_reference_target: true,
   links: [
@@ -107,6 +109,9 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
    */
   public function preSave(EntityStorageInterface $storage): void {
     parent::preSave($storage);
+    if ($this->endsChanged()) {
+      $this->assertIntegrity();
+    }
     if (!$this->isNew()) {
       if (!$this->isNewRevision()) {
         $this->setRevisionUserId((int) \Drupal::currentUser()->id());
@@ -121,6 +126,63 @@ class TraceLink extends ContentEntityBase implements TraceLinkInterface {
     }
     elseif (!$reviewer) {
       $this->set('reviewed_at', NULL);
+    }
+  }
+
+  /**
+   * Whether this save creates the link or changes its ends or type.
+   */
+  public function endsChanged(): bool {
+    $original = $this->isNew() ? NULL : $this->getOriginal();
+    if (!$original) {
+      return TRUE;
+    }
+    foreach (['link_type', 'source_entity_type', 'source_entity_id', 'target_entity_type', 'target_entity_id'] as $field) {
+      if ((string) $original->get($field)->value !== (string) $this->get($field)->value) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Persistent integrity, whatever the writer: both ends exist and differ,
+   * the type accepts them, and no other link records the same source, type
+   * and target. Concurrent writers of the same triple are serialized until
+   * the first one's transaction ends, so the second sees it.
+   *
+   * Whether the writer may reference the ends is authorization, checked by
+   * the TraceEndpointAccess constraint when the link is validated.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  protected function assertIntegrity(): void {
+    $database = \Drupal::database();
+    $lock_backend = \Drupal::lock();
+    $lock = 'divengine_trace_link:' . hash('sha256', implode('|', [$this->get('link_type')->value, $this->getSourceEntityType(), $this->getSourceEntityId(), $this->getTargetEntityType(), $this->getTargetEntityId()]));
+    $deadline = time() + 30;
+    while (!$lock_backend->acquire($lock)) {
+      if (time() >= $deadline) {
+        throw new EntityStorageException('Another request is writing the same trace link. Try again.');
+      }
+      $lock_backend->wait($lock, 5);
+    }
+    if ($database->inTransaction()) {
+      $database->transactionManager()->addPostTransactionCallback(fn () => $lock_backend->release($lock));
+    }
+    $errors = \Drupal::service('divengine_traceability.trace_link_validator')->validateAll(
+      $this->getSourceEntityType(),
+      $this->getSourceEntityId(),
+      $this->getTargetEntityType(),
+      $this->getTargetEntityId(),
+      (string) $this->get('link_type')->value,
+      $this->isNew() ? NULL : (int) $this->id(),
+    );
+    if (!$database->inTransaction()) {
+      $lock_backend->release($lock);
+    }
+    if ($errors) {
+      throw new EntityStorageException('The trace link cannot be stored: ' . implode(' ', $errors));
     }
   }
 

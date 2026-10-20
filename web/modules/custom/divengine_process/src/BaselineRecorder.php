@@ -6,7 +6,9 @@ namespace Drupal\divengine_process;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityStorageException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\divengine_process\Entity\Baseline;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
 use Drupal\divengine_process\Entity\Milestone;
@@ -19,20 +21,62 @@ use Drupal\divengine_process\Entity\Milestone;
  * revision is Baselined, artifacts without a lifecycle (actors, workers)
  * that are active, and the trace links between records of the baseline.
  * Traceability points to records; baselines point to revisions.
+ *
+ * A capture is one outcome: the selection, the header with its item count
+ * and the items are written in one transaction, so a failure leaves no
+ * baseline at all and a stored header always has exactly the items it
+ * counts (zero for a valid empty baseline). Captures of the same Development
+ * are serialized.
  */
 class BaselineRecorder {
 
   const TABLE = 'divengine_process_baseline_item';
 
+  /**
+   * Seconds to wait for another capture of the same Development.
+   */
+  const LOCK_WAIT = 30;
+
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected Connection $database,
+    protected LockBackendInterface $lock,
   ) {}
 
   /**
    * Takes a baseline of a Development.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   *   When the capture cannot complete; nothing is stored then.
    */
   public function take(DevelopmentInterface $development, string $name, ?Milestone $milestone = NULL, string $notes = ''): Baseline {
+    $lock = 'divengine_process_baseline:' . $development->id();
+    $deadline = time() + static::LOCK_WAIT;
+    while (!$this->lock->acquire($lock)) {
+      if (time() >= $deadline) {
+        throw new EntityStorageException(sprintf('Another baseline of Development %s is being taken. Try again.', $development->id()));
+      }
+      $this->lock->wait($lock, 5);
+    }
+    $transaction = $this->database->startTransaction();
+    // Held until the outermost transaction ends (that of a milestone that is
+    // being reached, if any), so the next capture reads committed data.
+    $this->database->transactionManager()->addPostTransactionCallback(fn () => $this->lock->release($lock));
+    try {
+      $baseline = $this->capture($development, $name, $milestone, $notes);
+    }
+    catch (\Throwable $e) {
+      $transaction->rollBack();
+      throw $e instanceof EntityStorageException ? $e : new EntityStorageException('The baseline could not be taken; nothing was stored. ' . $e->getMessage(), 0, $e);
+    }
+    unset($transaction);
+    return $baseline;
+  }
+
+  /**
+   * Selects the revisions in force and writes the header and its items.
+   */
+  protected function capture(DevelopmentInterface $development, string $name, ?Milestone $milestone, string $notes): Baseline {
     $items = [];
     $artifacts = $this->entityTypeManager->getStorage('artifact');
     $ids = $artifacts->getQuery()->accessCheck(FALSE)->condition('development', $development->id())->execute();
@@ -61,6 +105,7 @@ class BaselineRecorder {
       'name' => $name,
       'milestone' => $milestone?->id(),
       'notes' => $notes,
+      'item_count' => count($items),
     ]);
     $baseline->save();
     $insert = $this->database->insert(static::TABLE)->fields(['baseline_id', 'entity_type', 'entity_id', 'revision_id']);
