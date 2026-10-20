@@ -1,0 +1,6 @@
+trace_access_test.mcp:
+  path: '/trace-access-test/mcp/{uuid}'
+  defaults:
+    _controller: '\Drupal\trace_access_test\Controller\McpReadController::read'
+  requirements:
+    _permission: 'use mcp server'

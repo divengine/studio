@@ -1,0 +1,113 @@
+{
+  "date": "2026-10-19",
+  "base_commit": "ad535bc",
+  "branch": "fix/iteration-1-trace-access-history",
+  "environment": {
+    "php": "8.4.26",
+    "drupal": "11.3.12",
+    "database": "Disposable PostgreSQL databases, one per run",
+    "http": "Loopback-only server, temporary docroot",
+    "development_packages_added": {
+      "behat/mink": "v1.13.0",
+      "behat/mink-browserkit-driver": "v2.3.0",
+      "symfony/browser-kit": "v7.4.21",
+      "symfony/css-selector": "v7.4.18",
+      "symfony/dom-crawler": "v7.4.17"
+    },
+    "runtime_dependencies_changed": false
+  },
+  "runs": {
+    "kernel-final": {
+      "label": "Full Kernel suite",
+      "exit_code": 0,
+      "deprecations_reported": 14,
+      "source_product_commit": "4f842c4",
+      "tests": 151,
+      "assertions": 2746,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "time": 564.521631
+    },
+    "c01-http-final": {
+      "label": "Functional JSON:API and real MCP reader",
+      "exit_code": 0,
+      "deprecations_reported": 17,
+      "source_product_commit": "4f842c4",
+      "tests": 1,
+      "assertions": 38,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "time": 32.967655
+    },
+    "c03-cascade": {
+      "label": "Additional C03 cascade regression added after full suite; no product code change",
+      "exit_code": 0,
+      "deprecations_reported": 8,
+      "tests": 1,
+      "assertions": 35,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "time": 10.114725,
+      "source_commit": "b59dfd9"
+    },
+    "c03-field-purge": {
+      "label": "Focused purge validation, also included in full suite",
+      "exit_code": 0,
+      "deprecations_reported": 7,
+      "tests": 1,
+      "assertions": 35,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "time": 19.535462
+    },
+    "iteration1-focused": {
+      "label": "Earlier focused C01-C03 validation; not an additional distinct-case count",
+      "exit_code": 0,
+      "deprecations_reported": 9,
+      "tests": 7,
+      "assertions": 323,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "time": 96.798147
+    }
+  },
+  "distinct_final_cases": {
+    "kernel": 152,
+    "functional": 1,
+    "total": 153,
+    "assertions": 2819,
+    "note": "151 full-suite cases plus one later cascade case plus one Functional case; earlier focused runs are not added again."
+  },
+  "invalid_environment_attempts": {
+    "full_suite_duplicate_core": {
+      "errors": 150,
+      "reason": "Composer without Drupal installation plugins created a second Core path; repeated using physical copy with normal plugin paths. Not a product regression run."
+    },
+    "other_setup_failures": [
+      "Missing Node body field in initial fixture setup, corrected before final regression execution.",
+      "Symlinked Core resolved the previous checkout during initial isolated setup; replaced with a physical copy.",
+      "Missing Mink BrowserKit driver before installing development test dependencies.",
+      "Functional assertions passed but strict output reported the known jsonrpc PHP deprecation; exact known output is now expected and deprecation remains reported."
+    ]
+  },
+  "limitations": [
+    "Existing Core/Symfony/contrib deprecations remain.",
+    "Form save and revert use Kernel/API checks; the complete trace edit form was not driven in a browser.",
+    "MCP JSON:API reader was tested via a test-only session transport; token provisioning and full MCP JSON-RPC protocol were not exercised.",
+    "No load benchmark or concurrent capture/delete test; C04 remains out of scope.",
+    "Historical overwrites cannot be ruled out without independent hashes/backups."
+  ],
+  "cleanup": {
+    "test_databases_remaining": 0,
+    "temporary_loopback_servers_stopped": 2,
+    "deployed_checkout_commit": "b6607ae",
+    "deployed_checkout_clean": true,
+    "main_not_merged": true,
+    "production_services_restarted": false
+  }
+}

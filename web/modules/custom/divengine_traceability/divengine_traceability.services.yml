@@ -1,4 +1,8 @@
 services:
+  divengine_traceability.visibility:
+    class: Drupal\divengine_traceability\TraceVisibility
+    arguments: ['@database', '@entity_type.manager']
+
   divengine_traceability.trace_link_validator:
     class: Drupal\divengine_traceability\TraceLinkValidator
     arguments: ['@entity_type.manager']

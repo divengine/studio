@@ -77,14 +77,25 @@ function divengine_process_entity_base_field_info(EntityTypeInterface $entity_ty
  */
 function divengine_process_entity_type_alter(array &$entity_types): void {
   if (isset($entity_types['trace_link'])) {
+    $entity_types['trace_link']->setHandlerClass('storage', \Drupal\divengine_process\Storage\BaselineTraceLinkStorage::class);
     $entity_types['trace_link']->addConstraint('ProcessTrace');
   }
   if (isset($entity_types['artifact'])) {
+    $entity_types['artifact']->setHandlerClass('storage', \Drupal\divengine_process\Storage\BaselineArtifactStorage::class);
     $entity_types['artifact']->addConstraint('ProcessDevelopmentRequired');
     $entity_types['artifact']->addConstraint('ProcessDevelopmentEditable');
     $entity_types['artifact']->addConstraint('ProcessSameDevelopment');
     $entity_types['artifact']->addConstraint('ProcessUniqueInDevelopment');
   }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ */
+function divengine_process_baseline_access(EntityInterface $baseline, string $operation, AccountInterface $account): AccessResult {
+  return $operation === 'delete'
+    ? AccessResult::forbidden('Baselines are retained as historical records.')->addCacheableDependency($baseline)
+    : AccessResult::neutral();
 }
 
 /**
@@ -123,9 +134,6 @@ function divengine_process_query_alter(AlterableInterface $query): void {
     if ($query->hasTag($entity_type_id . '_access')) {
       \Drupal::service('divengine_process.visibility')->alterQuery($query, $entity_type_id);
     }
-  }
-  if ($query->hasTag('trace_link_access')) {
-    \Drupal::service('divengine_process.visibility')->alterTraceQuery($query, $scoped);
   }
 }
 
@@ -171,17 +179,11 @@ function divengine_process_divengine_trace_end_types_alter(array &$types): void 
 /**
  * Implements hook_ENTITY_TYPE_access() for trace_link.
  *
- * A trace is seen only by those who see both of its ends.
+ * Baseline retention is additional to Traceability's endpoint access policy.
  */
 function divengine_process_trace_link_access(EntityInterface $link, string $operation, AccountInterface $account): AccessResult {
   if ($protected = divengine_process_baseline_protection($link, $operation)) {
     return $protected;
-  }
-  /** @var \Drupal\divengine_traceability\Entity\TraceLinkInterface $link */
-  foreach ([$link->getSourceEntity(), $link->getTargetEntity()] as $end) {
-    if ($end && $end->hasField('development') && !$end->get('development')->isEmpty() && !$end->access('view', $account)) {
-      return AccessResult::forbidden()->addCacheableDependency($link)->cachePerUser();
-    }
   }
   return AccessResult::neutral()->addCacheableDependency($link);
 }

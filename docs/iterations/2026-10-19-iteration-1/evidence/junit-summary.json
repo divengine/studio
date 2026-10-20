@@ -1,0 +1,1300 @@
+{
+  "kernel-final": [
+    {
+      "name": "testWorkflowCoversEveryArtifactType",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactLifecycleTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactLifecycleTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactLifecycleTest",
+      "assertions": "10",
+      "time": "1.804304"
+    },
+    {
+      "name": "testNewArtifactsStartAsUnpublishedDrafts",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactLifecycleTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactLifecycleTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactLifecycleTest",
+      "assertions": "11",
+      "time": "1.504724"
+    },
+    {
+      "name": "testReviewApproveAndDeprecate",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactLifecycleTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactLifecycleTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactLifecycleTest",
+      "assertions": "14",
+      "time": "1.761574"
+    },
+    {
+      "name": "testInvalidTransitionIsRejected",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactLifecycleTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactLifecycleTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactLifecycleTest",
+      "assertions": "10",
+      "time": "1.720956"
+    },
+    {
+      "name": "testTypesCreateRevisionsByDefault",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactRevisionAccessTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactRevisionAccessTest",
+      "assertions": "11",
+      "time": "1.729246"
+    },
+    {
+      "name": "testRevisionsKeepHistoryAndLogMessages",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactRevisionAccessTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactRevisionAccessTest",
+      "assertions": "13",
+      "time": "1.794833"
+    },
+    {
+      "name": "testRevisionRoutesExist",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactRevisionAccessTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactRevisionAccessTest",
+      "assertions": "14",
+      "time": "2.206405"
+    },
+    {
+      "name": "testPermissionsAreGeneratedPerType",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactRevisionAccessTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactRevisionAccessTest",
+      "assertions": "14",
+      "time": "1.624269"
+    },
+    {
+      "name": "testBundlePermissionsOnlyCoverTheirType",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/ArtifactRevisionAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\ArtifactRevisionAccessTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.ArtifactRevisionAccessTest",
+      "assertions": "23",
+      "time": "2.346211"
+    },
+    {
+      "name": "testUniqueKeySucceeds",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "13",
+      "time": "1.914150"
+    },
+    {
+      "name": "testDuplicateKeyFails",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "14",
+      "time": "2.911510"
+    },
+    {
+      "name": "testSameKeyOnUpdateSucceeds",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "13",
+      "time": "4.663732"
+    },
+    {
+      "name": "testEmptyKeyIsAssignedFromTheTypePrefix",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "15",
+      "time": "2.047605"
+    },
+    {
+      "name": "testDifferentKeysSucceed",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "13",
+      "time": "1.998232"
+    },
+    {
+      "name": "testKeyWithSurroundingWhitespaceIsDuplicate",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "14",
+      "time": "2.026629"
+    },
+    {
+      "name": "testKeyIsTrimmedOnSave",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "13",
+      "time": "2.083428"
+    },
+    {
+      "name": "testMultipleUniqueKeysSucceed",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "17",
+      "time": "2.439328"
+    },
+    {
+      "name": "testKeyWithSpecialCharacters",
+      "file": "web/modules/custom/divengine_artifact/tests/src/Kernel/UniqueArtifactKeyConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_artifact\\Kernel\\UniqueArtifactKeyConstraintTest",
+      "classname": "Drupal.Tests.divengine_artifact.Kernel.UniqueArtifactKeyConstraintTest",
+      "assertions": "13",
+      "time": "1.984072"
+    },
+    {
+      "name": "testValidPairAndDynamicConfig",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/CKEditor5DiagramPluginTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\CKEditor5DiagramPluginTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.CKEditor5DiagramPluginTest",
+      "assertions": "22",
+      "time": "5.159888"
+    },
+    {
+      "name": "testTheButtonRequiresTheFilter",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/CKEditor5DiagramPluginTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\CKEditor5DiagramPluginTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.CKEditor5DiagramPluginTest",
+      "assertions": "18",
+      "time": "4.885169"
+    },
+    {
+      "name": "testSearchAndLookupHonourAccess",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedControllerTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedControllerTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedControllerTest",
+      "assertions": "31",
+      "time": "4.225406"
+    },
+    {
+      "name": "testDiagramWithPreviewRendersAFrame",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "31",
+      "time": "4.564718"
+    },
+    {
+      "name": "testAlignmentFromTheAlignFilter",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "19",
+      "time": "5.219956"
+    },
+    {
+      "name": "testDiagramWithoutPreview",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "21",
+      "time": "3.078479"
+    },
+    {
+      "name": "testRestrictedAndMissingDiagramsRevealNothing",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "24",
+      "time": "3.674609"
+    },
+    {
+      "name": "testTextWithoutEmbedsIsUntouched",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "19",
+      "time": "3.071339"
+    },
+    {
+      "name": "testPreviewFitsItsFrame",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramEmbedFilterTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramEmbedFilterTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramEmbedFilterTest",
+      "assertions": "22",
+      "time": "3.458706"
+    },
+    {
+      "name": "testHostSavesAndDeletesKeepTheTableInSync",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "23",
+      "time": "3.251829"
+    },
+    {
+      "name": "testOnlyTheDefaultRevisionCounts",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "19",
+      "time": "3.566137"
+    },
+    {
+      "name": "testDeletedDiagramIsForgotten",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "19",
+      "time": "3.560855"
+    },
+    {
+      "name": "testRebuildAllFindsExistingContent",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "21",
+      "time": "3.443251"
+    },
+    {
+      "name": "testEmbeddedInListShowsOnlyViewableHosts",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "25",
+      "time": "4.077975"
+    },
+    {
+      "name": "testDeleteFormWarnsAboutEmbeds",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "18",
+      "time": "3.596318"
+    },
+    {
+      "name": "testUuidsInHtml",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTest",
+      "assertions": "19",
+      "time": "3.200944"
+    },
+    {
+      "name": "testTranslationsAreTrackedSeparately",
+      "file": "web/modules/custom/divengine_diagram_embed/tests/src/Kernel/DiagramUsageTranslationTest.php",
+      "class": "Drupal\\Tests\\divengine_diagram_embed\\Kernel\\DiagramUsageTranslationTest",
+      "classname": "Drupal.Tests.divengine_diagram_embed.Kernel.DiagramUsageTranslationTest",
+      "assertions": "18",
+      "time": "3.838019"
+    },
+    {
+      "name": "testViewNeedsPermission",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramAccessTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramAccessTest",
+      "assertions": "20",
+      "time": "2.531081"
+    },
+    {
+      "name": "testOwnAndAny",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramAccessTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramAccessTest",
+      "assertions": "33",
+      "time": "2.946404"
+    },
+    {
+      "name": "testPerTypePermissions",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramAccessTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramAccessTest",
+      "assertions": "28",
+      "time": "4.657163"
+    },
+    {
+      "name": "testRevisionOperations",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramAccessTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramAccessTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramAccessTest",
+      "assertions": "24",
+      "time": "3.683833"
+    },
+    {
+      "name": "testDiagramTypesJoinTheLifecycle",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "16",
+      "time": "2.541321"
+    },
+    {
+      "name": "testTypeDependsOnTheNotationModule",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "15",
+      "time": "2.239921"
+    },
+    {
+      "name": "testNewDiagramStartsFromTemplateAsDraft",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "17",
+      "time": "2.438927"
+    },
+    {
+      "name": "testSearchTextComesFromTheSource",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "15",
+      "time": "2.350979"
+    },
+    {
+      "name": "testInvalidSourceIsRejected",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "16",
+      "time": "2.294111"
+    },
+    {
+      "name": "testOversizedSourceIsRejected",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "15",
+      "time": "2.354742"
+    },
+    {
+      "name": "testBindingsMustPointToEntityUris",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "17",
+      "time": "2.835561"
+    },
+    {
+      "name": "testUnsafePreviewIsRejected",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "15",
+      "time": "2.464425"
+    },
+    {
+      "name": "testPreviewFreshnessFollowsTheSource",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "17",
+      "time": "2.373476"
+    },
+    {
+      "name": "testBindingsRoundTrip",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramEntityTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramEntityTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramEntityTest",
+      "assertions": "16",
+      "time": "2.747824"
+    },
+    {
+      "name": "testSaveWritesRevisionWithPreview",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "18",
+      "time": "2.514797"
+    },
+    {
+      "name": "testUnsafeSvgSavesNothing",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "16",
+      "time": "2.417575"
+    },
+    {
+      "name": "testInvalidSourceSavesNothing",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "15",
+      "time": "3.468146"
+    },
+    {
+      "name": "testFailedExportKeepsSourceAndMarksPreviewStale",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "17",
+      "time": "2.786100"
+    },
+    {
+      "name": "testApprovedDiagramIsReopenedAsDraft",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "19",
+      "time": "2.779734"
+    },
+    {
+      "name": "testStoredPreviewMustMatchTheSource",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/DiagramModelSaverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\DiagramModelSaverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.DiagramModelSaverTest",
+      "assertions": "17",
+      "time": "2.473525"
+    },
+    {
+      "name": "testResolvesUrisPathsAndLocalUrls",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/EntityReferenceResolverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\EntityReferenceResolverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.EntityReferenceResolverTest",
+      "assertions": "23",
+      "time": "3.037301"
+    },
+    {
+      "name": "testSearchReturnsOnlyViewableMatches",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/EntityReferenceResolverTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\EntityReferenceResolverTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.EntityReferenceResolverTest",
+      "assertions": "30",
+      "time": "4.382840"
+    },
+    {
+      "name": "testIndexIsRebuiltFromSourceAndBindings",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "23",
+      "time": "2.849919"
+    },
+    {
+      "name": "testMissingTargetsAreIndexedAsBroken",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "18",
+      "time": "2.668933"
+    },
+    {
+      "name": "testDeletedTargetIsFlaggedAndDocumentKept",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "16",
+      "time": "3.642004"
+    },
+    {
+      "name": "testDeletedDiagramLeavesNoRows",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "16",
+      "time": "3.554534"
+    },
+    {
+      "name": "testBacklinksOnlyListViewableDiagrams",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "21",
+      "time": "2.926049"
+    },
+    {
+      "name": "testPendingDraftIsWhatTheIndexDescribes",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/LinkIndexTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\LinkIndexTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.LinkIndexTest",
+      "assertions": "16",
+      "time": "3.180301"
+    },
+    {
+      "name": "testLinkedElementsHonourTargetAccess",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/PreviewBuilderTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\PreviewBuilderTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.PreviewBuilderTest",
+      "assertions": "24",
+      "time": "4.055957"
+    },
+    {
+      "name": "testSafe with data set \"shapes and text\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.739851"
+    },
+    {
+      "name": "testSafe with data set \"marker by fragment\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.806128"
+    },
+    {
+      "name": "testSafe with data set \"fragment use\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.799925"
+    },
+    {
+      "name": "testSafe with data set \"web link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.697444"
+    },
+    {
+      "name": "testSafe with data set \"entity link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.668854"
+    },
+    {
+      "name": "testSafe with data set \"site path link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.677255"
+    },
+    {
+      "name": "testSafe with data set \"embedded png\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.658863"
+    },
+    {
+      "name": "testSafe with data set \"plantuml source\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.893935"
+    },
+    {
+      "name": "testSafe with data set \"style sheet\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.761338"
+    },
+    {
+      "name": "testUnsafe with data set \"script\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.681969"
+    },
+    {
+      "name": "testUnsafe with data set \"foreign object\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.707765"
+    },
+    {
+      "name": "testUnsafe with data set \"event handler\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.705767"
+    },
+    {
+      "name": "testUnsafe with data set \"javascript link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.702739"
+    },
+    {
+      "name": "testUnsafe with data set \"obfuscated javascript link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.723332"
+    },
+    {
+      "name": "testUnsafe with data set \"remote image\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.681563"
+    },
+    {
+      "name": "testUnsafe with data set \"remote use\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.710671"
+    },
+    {
+      "name": "testUnsafe with data set \"protocol relative link\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.692023"
+    },
+    {
+      "name": "testUnsafe with data set \"svg data uri\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.658845"
+    },
+    {
+      "name": "testUnsafe with data set \"css import\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.660697"
+    },
+    {
+      "name": "testUnsafe with data set \"css remote url\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.662525"
+    },
+    {
+      "name": "testUnsafe with data set \"animation\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "1.076777"
+    },
+    {
+      "name": "testUnsafe with data set \"iframe\"",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "1",
+      "time": "0.671739"
+    },
+    {
+      "name": "testDocumentLevelRejections",
+      "file": "web/modules/custom/divengine_modeler/tests/src/Kernel/SvgSafetyTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler\\Kernel\\SvgSafetyTest",
+      "classname": "Drupal.Tests.divengine_modeler.Kernel.SvgSafetyTest",
+      "assertions": "6",
+      "time": "0.715658"
+    },
+    {
+      "name": "testTemplateIsValidAndUsedForNewDiagrams",
+      "file": "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_bpmn\\Kernel\\BpmnNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_bpmn.Kernel.BpmnNotationTest",
+      "assertions": "17",
+      "time": "2.282977"
+    },
+    {
+      "name": "testInvalidDocumentsAreRejected",
+      "file": "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_bpmn\\Kernel\\BpmnNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_bpmn.Kernel.BpmnNotationTest",
+      "assertions": "21",
+      "time": "2.348071"
+    },
+    {
+      "name": "testLinksComeFromDivengineAttributes",
+      "file": "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_bpmn\\Kernel\\BpmnNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_bpmn.Kernel.BpmnNotationTest",
+      "assertions": "15",
+      "time": "2.612797"
+    },
+    {
+      "name": "testSearchTextHasNamesAndDocumentation",
+      "file": "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_bpmn\\Kernel\\BpmnNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_bpmn.Kernel.BpmnNotationTest",
+      "assertions": "15",
+      "time": "2.498256"
+    },
+    {
+      "name": "testSavedDiagramIndexesItsLinks",
+      "file": "web/modules/custom/divengine_modeler_bpmn/tests/src/Kernel/BpmnNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_bpmn\\Kernel\\BpmnNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_bpmn.Kernel.BpmnNotationTest",
+      "assertions": "17",
+      "time": "2.485467"
+    },
+    {
+      "name": "testTemplateIsValidAndUsedForNewDiagrams",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "18",
+      "time": "2.362371"
+    },
+    {
+      "name": "testOtherPlantUmlDiagramsAreAccepted",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "16",
+      "time": "2.348057"
+    },
+    {
+      "name": "testInvalidSources with data set \"no start\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.226855"
+    },
+    {
+      "name": "testInvalidSources with data set \"no end\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.299298"
+    },
+    {
+      "name": "testInvalidSources with data set \"mismatched end\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.149394"
+    },
+    {
+      "name": "testInvalidSources with data set \"include url\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.295657"
+    },
+    {
+      "name": "testInvalidSources with data set \"include file\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.614424"
+    },
+    {
+      "name": "testInvalidSources with data set \"include stdlib\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.832323"
+    },
+    {
+      "name": "testInvalidSources with data set \"includeurl\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.544685"
+    },
+    {
+      "name": "testInvalidSources with data set \"import\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.386618"
+    },
+    {
+      "name": "testInvalidSources with data set \"remote theme\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.341003"
+    },
+    {
+      "name": "testInvalidSources with data set \"load json\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.237302"
+    },
+    {
+      "name": "testInvalidSources with data set \"remote image\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.551316"
+    },
+    {
+      "name": "testInvalidSources with data set \"absolute image\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.172978"
+    },
+    {
+      "name": "testInvalidSources with data set \"script link\"",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.830619"
+    },
+    {
+      "name": "testOversizedSourceIsRejected",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "5.657375"
+    },
+    {
+      "name": "testLinksComeFromBindingsAndNativeSyntax",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.350695"
+    },
+    {
+      "name": "testSearchTextSkipsDirectivesAndComments",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "15",
+      "time": "2.408948"
+    },
+    {
+      "name": "testBindingsAreIndexedAndRenderedForViewers",
+      "file": "web/modules/custom/divengine_modeler_uml/tests/src/Kernel/UmlNotationTest.php",
+      "class": "Drupal\\Tests\\divengine_modeler_uml\\Kernel\\UmlNotationTest",
+      "classname": "Drupal.Tests.divengine_modeler_uml.Kernel.UmlNotationTest",
+      "assertions": "20",
+      "time": "3.073004"
+    },
+    {
+      "name": "testProtectedAndUnprotectedRevisionDeletion",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "39",
+      "time": "13.407913"
+    },
+    {
+      "name": "testEntityAndBatchDeletionPreserveAllRecordsAndItems",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "40",
+      "time": "13.096363"
+    },
+    {
+      "name": "testProtectedArtifactCannotBeOverwrittenDuringSync",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "33",
+      "time": "13.144054"
+    },
+    {
+      "name": "testReadOnlyDiagnosticReportsMissingHistoryWithoutRepair",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "37",
+      "time": "13.397049"
+    },
+    {
+      "name": "testFieldPurgeRetainsCapturedValuesButAllowsUnprotectedValues",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "35",
+      "time": "14.562182"
+    },
+    {
+      "name": "testNewDevelopmentGetsPhasesMilestonesAndCase",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "47",
+      "time": "13.740892"
+    },
+    {
+      "name": "testCaseChangesNeverRetailorARunningDevelopment",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "35",
+      "time": "13.328020"
+    },
+    {
+      "name": "testDevelopmentLifecycle",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "34",
+      "time": "13.359748"
+    },
+    {
+      "name": "testIterationsStayInTheirDevelopment",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "35",
+      "time": "13.953582"
+    },
+    {
+      "name": "testMilestoneReachIsAdvisory",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "34",
+      "time": "14.218834"
+    },
+    {
+      "name": "testRoleAssignmentsAreUniqueAndGrantNoAccess",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "35",
+      "time": "9.579888"
+    },
+    {
+      "name": "testVisibility",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/DevelopmentTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\DevelopmentTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.DevelopmentTest",
+      "assertions": "64",
+      "time": "10.620252"
+    },
+    {
+      "name": "testSeedData",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "47",
+      "time": "8.893093"
+    },
+    {
+      "name": "testCaseVersionIncrementsOncePerSaveThatChangesLines",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "30",
+      "time": "9.360298"
+    },
+    {
+      "name": "testSingleDefaultCase",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "30",
+      "time": "9.809244"
+    },
+    {
+      "name": "testLineValidation",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "28",
+      "time": "10.726913"
+    },
+    {
+      "name": "testAccess",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "41",
+      "time": "9.719854"
+    },
+    {
+      "name": "testCaseFormBuildsAndKeepsLines",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "33",
+      "time": "10.359303"
+    },
+    {
+      "name": "testCaseFormSaveKeepsLinesAndVersion",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/ProcessConfigurationTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\ProcessConfigurationTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.ProcessConfigurationTest",
+      "assertions": "34",
+      "time": "9.425422"
+    },
+    {
+      "name": "testEditsPreserveCapturedRationaleTypeAndEnds",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/TraceHistoryTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\TraceHistoryTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.TraceHistoryTest",
+      "assertions": "41",
+      "time": "10.288439"
+    },
+    {
+      "name": "testRevertAndFormSaveAppendHistory",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/TraceHistoryTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\TraceHistoryTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.TraceHistoryTest",
+      "assertions": "36",
+      "time": "10.618048"
+    },
+    {
+      "name": "testFreshInstallProvidesWorkingConfiguration",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/InstallConfigTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\InstallConfigTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.InstallConfigTest",
+      "assertions": "17",
+      "time": "2.837375"
+    },
+    {
+      "name": "testDefaultTypesAreOrderedAllowedValues",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "17",
+      "time": "1.708052"
+    },
+    {
+      "name": "testUnknownLinkTypeFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "16",
+      "time": "1.922727"
+    },
+    {
+      "name": "testDuplicateLinkFailsButResavingSucceeds",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "18",
+      "time": "1.694416"
+    },
+    {
+      "name": "testSourceAndTargetRules",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "17",
+      "time": "1.697279"
+    },
+    {
+      "name": "testSupersedesRequiresSameKind",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "16",
+      "time": "1.746589"
+    },
+    {
+      "name": "testDeletingAnEndDeletesItsLinks",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "15",
+      "time": "1.840442"
+    },
+    {
+      "name": "testLabelAndReviewTimestamp",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceLinkTypeRulesTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceLinkTypeRulesTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceLinkTypeRulesTest",
+      "assertions": "19",
+      "time": "1.767705"
+    },
+    {
+      "name": "testPrivateEndpointsAreAbsentFromAccessQueriesAndReferences",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceVisibilityTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceVisibilityTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceVisibilityTest",
+      "assertions": "99",
+      "time": "18.824813"
+    },
+    {
+      "name": "testValidTraceLinkSucceeds",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.766458"
+    },
+    {
+      "name": "testNonexistentSourceFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.569452"
+    },
+    {
+      "name": "testNonexistentTargetFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.661722"
+    },
+    {
+      "name": "testSameSourceAndTargetFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.628754"
+    },
+    {
+      "name": "testNonexistentSourceEntityTypeFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.578396"
+    },
+    {
+      "name": "testNonexistentTargetEntityTypeFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.736353"
+    },
+    {
+      "name": "testBothInvalidSourceAndTarget",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.557969"
+    },
+    {
+      "name": "testBothEntityTypesInvalid",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.612160"
+    },
+    {
+      "name": "testSourceIdZeroFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.660987"
+    },
+    {
+      "name": "testTargetIdZeroFails",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/ValidTraceLinkConstraintTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\ValidTraceLinkConstraintTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.ValidTraceLinkConstraintTest",
+      "assertions": "15",
+      "time": "1.802149"
+    }
+  ],
+  "c01-http-final": [
+    {
+      "name": "testPrivateTraceAndMembershipChanges",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Functional/TraceAccessHttpTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Functional\\TraceAccessHttpTest",
+      "classname": "Drupal.Tests.divengine_traceability.Functional.TraceAccessHttpTest",
+      "assertions": "38",
+      "time": "32.967655"
+    }
+  ],
+  "c03-cascade": [
+    {
+      "name": "testEndpointDeletionRollsBackIfCascadeWouldDeleteProtectedTrace",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "35",
+      "time": "10.114725"
+    }
+  ],
+  "c03-field-purge": [
+    {
+      "name": "testFieldPurgeRetainsCapturedValuesButAllowsUnprotectedValues",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "35",
+      "time": "19.535462"
+    }
+  ],
+  "iteration1-focused": [
+    {
+      "name": "testProtectedAndUnprotectedRevisionDeletion",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "39",
+      "time": "20.504684"
+    },
+    {
+      "name": "testEntityAndBatchDeletionPreserveAllRecordsAndItems",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "40",
+      "time": "13.254219"
+    },
+    {
+      "name": "testProtectedArtifactCannotBeOverwrittenDuringSync",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "33",
+      "time": "11.810867"
+    },
+    {
+      "name": "testReadOnlyDiagnosticReportsMissingHistoryWithoutRepair",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/BaselineRetentionTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\BaselineRetentionTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.BaselineRetentionTest",
+      "assertions": "35",
+      "time": "10.766771"
+    },
+    {
+      "name": "testEditsPreserveCapturedRationaleTypeAndEnds",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/TraceHistoryTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\TraceHistoryTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.TraceHistoryTest",
+      "assertions": "41",
+      "time": "11.130212"
+    },
+    {
+      "name": "testRevertAndFormSaveAppendHistory",
+      "file": "web/modules/custom/divengine_process/tests/src/Kernel/TraceHistoryTest.php",
+      "class": "Drupal\\Tests\\divengine_process\\Kernel\\TraceHistoryTest",
+      "classname": "Drupal.Tests.divengine_process.Kernel.TraceHistoryTest",
+      "assertions": "36",
+      "time": "10.539253"
+    },
+    {
+      "name": "testPrivateEndpointsAreAbsentFromAccessQueriesAndReferences",
+      "file": "web/modules/custom/divengine_traceability/tests/src/Kernel/TraceVisibilityTest.php",
+      "class": "Drupal\\Tests\\divengine_traceability\\Kernel\\TraceVisibilityTest",
+      "classname": "Drupal.Tests.divengine_traceability.Kernel.TraceVisibilityTest",
+      "assertions": "99",
+      "time": "18.792142"
+    }
+  ]
+}

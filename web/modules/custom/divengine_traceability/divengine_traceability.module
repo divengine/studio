@@ -10,6 +10,31 @@ declare(strict_types=1);
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
+use Drupal\Core\Database\Query\AlterableInterface;
+use Drupal\Core\Database\Query\SelectInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\divengine_traceability\Entity\TraceLinkInterface;
+
+/**
+ * Implements hook_ENTITY_TYPE_access().
+ *
+ * A forbidden endpoint must prevail even over another module's access grant.
+ */
+function divengine_traceability_trace_link_access(TraceLinkInterface $link, string $operation, AccountInterface $account): AccessResultInterface {
+  $access = \Drupal::service('divengine_traceability.visibility')->endsAccess($link, $account);
+  return $access->isAllowed() ? AccessResult::neutral()->addCacheableDependency($access) : $access;
+}
+
+/**
+ * Implements hook_query_TAG_alter().
+ */
+function divengine_traceability_query_trace_link_access_alter(AlterableInterface $query): void {
+  if ($query instanceof SelectInterface) {
+    \Drupal::service('divengine_traceability.visibility')->alterQuery($query);
+  }
+}
 
 /**
  * Implements hook_entity_delete().
@@ -18,6 +43,7 @@ use Drupal\Core\Entity\EntityInterface;
  * deleted entity.
  */
 function divengine_traceability_entity_delete(EntityInterface $entity): void {
+  divengine_traceability_invalidate_trace_access($entity);
   if (!$entity instanceof ContentEntityInterface || $entity->getEntityTypeId() === 'trace_link') {
     return;
   }
@@ -94,6 +120,7 @@ function divengine_traceability_entity_view(array &$build, EntityInterface $enti
  * Records the [[CODE]] mentions of the new record's texts.
  */
 function divengine_traceability_entity_insert(EntityInterface $entity): void {
+  divengine_traceability_invalidate_trace_access($entity);
   if ($entity instanceof ContentEntityInterface && $entity->getEntityTypeId() !== 'trace_link') {
     \Drupal::service('divengine_traceability.reference_index')->index($entity);
   }
@@ -103,7 +130,22 @@ function divengine_traceability_entity_insert(EntityInterface $entity): void {
  * Implements hook_entity_update().
  */
 function divengine_traceability_entity_update(EntityInterface $entity): void {
+  divengine_traceability_invalidate_trace_access($entity);
   if ($entity instanceof ContentEntityInterface && $entity->getEntityTypeId() !== 'trace_link') {
     \Drupal::service('divengine_traceability.reference_index')->index($entity);
+  }
+}
+
+/**
+ * Invalidates collections when endpoints or their access dependencies change.
+ *
+ * SQL access also affects empty lists/counts, which have no returned entities
+ * from which JSON:API or Views could collect endpoint cache tags. Membership may
+ * live on a parent/context rather than the endpoint itself.
+ */
+function divengine_traceability_invalidate_trace_access(EntityInterface $entity): void {
+  if ($entity instanceof ContentEntityInterface) {
+    \Drupal\Core\Cache\Cache::invalidateTags(['trace_link_list']);
+    \Drupal::entityTypeManager()->getAccessControlHandler('trace_link')->resetCache();
   }
 }

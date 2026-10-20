@@ -1,0 +1,8 @@
+name: 'Trace access test transport'
+type: module
+description: 'Test-only route for exercising the real MCP JSON:API reader.'
+package: Testing
+core_version_requirement: ^11
+dependencies:
+  - mcp:mcp
+  - drupal:jsonapi

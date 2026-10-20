@@ -85,6 +85,12 @@ class Baseline extends ContentEntityBase implements EntityOwnerInterface {
       ->execute();
   }
 
+  public static function preDelete(EntityStorageInterface $storage, array $entities): void {
+    // Removing the header would erase its items and release all revision
+    // protections. Retention cannot depend on the absence of a delete form.
+    throw new \Drupal\Core\Entity\EntityStorageException('Baselines are retained as historical records and cannot be deleted.');
+  }
+
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::ownerBaseFieldDefinitions($entity_type);
