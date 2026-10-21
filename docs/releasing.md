@@ -119,8 +119,15 @@ issue; a failed step stops the release.
    covers a new Standard site. Also apply `recipes/divengine_studio_base` to a copy of a
    Standard site installed with the previous Drupal minor, if the release changes the
    core minor.
-7. **Upgrade test.** In a throw-away site and database: install the previous release (for
-   the first release, the previous tested commit), add representative content (a
+7. **Upgrade test.** First run the scripted path from the previous release (for the first
+   release, the previous tested commit):
+
+   ```bash
+   STUDIO_UPGRADE_FROM=<previous tag or commit> STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh upgrade
+   ```
+
+   It covers configuration and schema updates of an empty site. Then, by hand, in a
+   throw-away site and database: install the previous release, add representative content (a
    Development with an iteration and a baseline, artifacts, trace links, a diagram, a QA
    run, a project task), switch to the release commit and run the update steps above.
    Then:

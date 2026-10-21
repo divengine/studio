@@ -152,7 +152,11 @@ afterwards, and a throw-away site directory under `web/sites/`:
 
 - `profile`: the installation profile, MCP not selected;
 - `profile-mcp`: the installation profile with the MCP integration;
-- `recipe-on-standard`: a Standard site with `recipes/divengine_studio_base` applied.
+- `recipe-on-standard`: a Standard site with `recipes/divengine_studio_base` applied;
+- `upgrade` (only when named): a site set up with the code of an earlier commit
+  (`STUDIO_UPGRADE_FROM`, by default `869526c`, the last one on Drupal 11.3) as existing
+  sites were, then updated with this checkout as the README's "Update an existing site"
+  describes. It runs a second `composer install` for the earlier code.
 
 ```bash
 STUDIO_INSTALLCHECK_SERVER=pgsql://studio_test:password@127.0.0.1:5432 scripts/check-install-paths.sh
@@ -164,13 +168,21 @@ STUDIO_INSTALLCHECK_PG_ADMIN="sudo -n -u postgres" STUDIO_INSTALLCHECK_SERVER=..
 It never resets or reuses an existing database. Logs are written to
 `private/installcheck-<path>.log`.
 
-### Scripts that empty the test database
+### Database safety
 
-`scripts/check-install.sh` and `scripts/check.sh` (which runs `scripts/test.sh` and then
-`check-install.sh`) **drop and recreate the `public` schema of the database in
-`SIMPLETEST_DB`** (or `STUDIO_TEST_DB`). Run them only when that database is dedicated
-to tests and disposable. Prefer `scripts/check-install-paths.sh`, which covers the same
-installation with new databases. CI does not run these two scripts.
+No script resets or reuses an existing database:
+
+- `scripts/test.sh` checks the effective `SIMPLETEST_DB` (the environment variable, or
+  `phpunit.xml`) with `scripts/test-db-guard.php`. The guard refuses the database of a
+  site configured under `web/sites/` and any database that already holds a Drupal
+  installation (Drupal tables without a test prefix).
+- `scripts/check-install-paths.sh` removes only the databases, site directories and code
+  copies it created, even when a run is interrupted.
+- `scripts/check-install.sh` runs the `profile` path, and `scripts/check.sh` runs
+  `scripts/test.sh` and then every installation path. Both take the server from
+  `STUDIO_INSTALLCHECK_SERVER`, or from the server part of `SIMPLETEST_DB`.
+
+All of them refuse PostgreSQL servers older than 16.
 
 ### JavaScript tests
 

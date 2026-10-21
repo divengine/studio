@@ -157,7 +157,7 @@ jobs:
   install-paths:
     name: install paths
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 60
     services:
       postgres:
         image: postgres:16
@@ -176,6 +176,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # The upgrade path installs an earlier commit with git archive.
+          fetch-depth: 0
       - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
         with:
           php-version: ${{ env.PHP_VERSION }}
@@ -199,6 +201,10 @@ jobs:
         env:
           STUDIO_INSTALLCHECK_SERVER: pgsql://studio_ci:studio_ci@127.0.0.1:5432
         run: scripts/check-install-paths.sh
+      - name: Check the upgrade path
+        env:
+          STUDIO_INSTALLCHECK_SERVER: pgsql://studio_ci:studio_ci@127.0.0.1:5432
+        run: scripts/check-install-paths.sh upgrade
       - name: Show installation logs
         if: failure()
         run: |
