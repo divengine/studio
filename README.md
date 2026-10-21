@@ -34,10 +34,11 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `recipes/divengine_studio` | Site recipe for new sites: Drupal's Standard recipe + `divengine_studio_base` |
 | `recipes/divengine_studio_base` | All Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions; re-applied to update existing sites |
 | `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
-| `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
+| `docs/` | Architecture decisions, roadmap, development and release guides, MVP scope, research and handoff notes |
 | `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
+| `.github/` | Issue forms, pull request template, CODEOWNERS and CI |
 
 ## Direction
 
@@ -252,9 +253,11 @@ The second command creates the `mcp_bot` account and a token in
 To leave MCP out entirely, skip both commands and run
 `composer remove drupal/mcp drupal/jsonapi_schema`.
 
-## Checks
+## Checks and tests
 
-Scripts for working on the repository:
+[docs/development.md](docs/development.md) describes the development setup and every
+kind of test. Run them against a dedicated, disposable PostgreSQL database, never one
+that holds data you want to keep.
 
 ```bash
 scripts/test.sh                # the PHPUnit suite (arguments go to phpunit)
@@ -262,6 +265,10 @@ scripts/check-install-paths.sh # every installation path, each in a new database
 scripts/check-install.sh       # only the installation profile path
 scripts/check.sh               # the suite, then every installation path, before a commit
 ```
+
+`scripts/test.sh` needs `phpunit.xml`: copy `phpunit.xml.dist` and set `SIMPLETEST_DB`
+(`phpunit.xml` is ignored by git). The Functional tests, including the installer
+profile's, need a web server for the test site (`SIMPLETEST_BASE_URL`).
 
 No script resets or reuses an existing database:
 
@@ -289,20 +296,6 @@ STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh upgrade
 STUDIO_INSTALLCHECK_PG_ADMIN="sudo -n -u postgres" STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh
 ```
 
-The interactive installer screens are covered by Functional tests in the profile, which
-need a web server for the test site (`SIMPLETEST_BASE_URL`):
-
-```bash
-vendor/bin/phpunit -c phpunit.xml web/profiles/custom/divengine_studio_installer/tests
-```
-
-## Tests
-
-Copy `phpunit.xml.dist` to `phpunit.xml` and set `SIMPLETEST_DB` to an empty database created for the tests (never the database of a site). `phpunit.xml` is ignored by git.
-
-```bash
-vendor/bin/phpunit -c phpunit.xml web/modules/custom
-```
 
 The JavaScript is tested with Node.js and jsdom, against the vendored engines and the
 CKEditor 5 build of core:
@@ -316,6 +309,31 @@ done
 Diagram engines are vendored in each notation module (`js/vendor/`) with their license
 and a provenance note; nothing is loaded from a CDN.
 
+Every pull request runs these checks in [CI](.github/workflows/ci.yml).
+
+## Contributing and governance
+
+Contributions are welcome. Divengine Studio is maintainer-led: the maintainer
+([@rafageist](https://github.com/rafageist)) decides scope, architecture, roadmap,
+releases and merges, and reviews every pull request. An issue or pull request is a
+proposal, not approved work.
+
+| Document | Purpose |
+|---|---|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes, coding standards, tests and review |
+| [GOVERNANCE.md](GOVERNANCE.md) | Roles, decisions and triage |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Expected behavior in the project's spaces |
+| [SECURITY.md](SECURITY.md) | Reporting vulnerabilities privately |
+| [docs/development.md](docs/development.md) | Local setup, tests and troubleshooting |
+| [docs/releasing.md](docs/releasing.md) | Versioning, compatibility and the release checklist |
+| [CHANGELOG.md](CHANGELOG.md) | Changes on `main` and known limitations |
+
+To get started, look for issues labelled
+[`good first issue`](https://github.com/divengine/studio/labels/good%20first%20issue) or
+[`help wanted`](https://github.com/divengine/studio/labels/help%20wanted), and open an
+issue before starting a substantial change. Do not report security problems in public
+issues.
+
 ## License
 
-GPL-3.0. See [LICENSE](LICENSE).
+GPL-3.0-or-later. See [LICENSE](LICENSE).
