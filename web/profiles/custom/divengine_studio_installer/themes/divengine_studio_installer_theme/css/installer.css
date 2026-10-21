@@ -1,0 +1,76 @@
+/**
+ * @file
+ * Divengine identity on Claro's installation page.
+ *
+ * Only Claro's custom properties are redefined, so its layout, widgets and
+ * forced-colors support stay intact. Colours come from the Studio theme
+ * tokens; every text/background pair meets WCAG AA: navy #335999 is 6.9:1 on
+ * white and 6.2:1 on navy-50, gray-700 is 9.1:1 and navy-700 9.5:1 on gray-50.
+ */
+
+.install-page {
+  --dv-navy: #335999;
+  --dv-navy-700: #24426f;
+  --dv-navy-50: #eef3fa;
+  --dv-gray-700: #3f4550;
+  --dv-gray-50: #f7f8fa;
+
+  --color-absolutezero: var(--dv-navy);
+  --color-absolutezero-hover: var(--dv-navy-700);
+  --color-absolutezero-active: var(--dv-navy-700);
+  --color-bgblue-active: var(--dv-navy-50);
+  --color-bgblue-hover: var(--dv-navy-50);
+  /* A dark focus ring: at least 3:1 against every installer background. */
+  --color-focus: var(--dv-navy-700);
+
+  background-color: var(--dv-gray-50);
+  font-family: Verdana, Geneva, "DejaVu Sans", sans-serif;
+}
+
+.install-page .dv-installer__header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.install-page .dv-installer__logo {
+  flex: none;
+  width: 3rem;
+  height: auto;
+}
+
+.install-page .dv-installer__header .site-name {
+  margin: 0;
+  color: var(--dv-navy);
+  font-weight: 700;
+}
+
+.install-page .task-list .done {
+  color: var(--dv-gray-700);
+}
+
+/* Keyboard focus stays visible on links, buttons and form controls. */
+.install-page a:focus-visible,
+.install-page .button:focus-visible,
+.install-page input:focus-visible,
+.install-page select:focus-visible,
+.install-page textarea:focus-visible {
+  outline: 3px solid var(--dv-navy-700);
+  outline-offset: 2px;
+}
+
+.install-page .skip-link:focus {
+  position: absolute;
+  z-index: 10;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  color: #fff;
+  background: var(--dv-navy-700);
+}
+
+@media (max-width: 30rem) {
+  .install-page .dv-installer__logo {
+    width: 2.25rem;
+  }
+}

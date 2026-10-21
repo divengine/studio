@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * @file
+ * Installation tasks of the Divengine Studio distribution.
+ *
+ * The profile adds no modules or configuration of its own: it applies
+ * recipes/divengine_studio, and optionally recipes/divengine_studio_mcp,
+ * with the same Core recipe batch operations the installer uses for
+ * ?recipe= installations.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Batch\BatchBuilder;
+use Drupal\Core\Recipe\Recipe;
+use Drupal\Core\Recipe\RecipeRunner;
+use Drupal\divengine_studio_installer\Form\IntegrationsForm;
+
+/**
+ * Implements hook_install_tasks().
+ */
+function divengine_studio_installer_install_tasks(array &$install_state): array {
+  return [
+    'divengine_studio_installer_integrations' => [
+      'display_name' => t('Choose integrations'),
+      'type' => 'form',
+      'function' => IntegrationsForm::class,
+    ],
+    'divengine_studio_installer_apply_studio' => [
+      'display_name' => t('Install Divengine Studio'),
+      'type' => 'batch',
+    ],
+    'divengine_studio_installer_apply_mcp' => [
+      'display_name' => t('Install MCP integration'),
+      'type' => 'batch',
+      'display' => _divengine_studio_installer_mcp_selected($install_state),
+    ],
+    'divengine_studio_installer_next_steps' => [
+      'display' => FALSE,
+    ],
+  ];
+}
+
+/**
+ * Implements hook_install_tasks_alter().
+ *
+ * The recipes are applied right after the profile itself, before the site
+ * configuration form, as Core does for recipe installations. The values the
+ * operator enters there (site name, e-mail, account) are therefore saved
+ * after the recipe and are never overwritten by it.
+ */
+function divengine_studio_installer_install_tasks_alter(array &$tasks, array $install_state): void {
+  $ours = array_intersect_key($tasks, array_flip([
+    'divengine_studio_installer_integrations',
+    'divengine_studio_installer_apply_studio',
+    'divengine_studio_installer_apply_mcp',
+  ]));
+  $tasks = array_diff_key($tasks, $ours);
+  $position = array_search('install_install_profile', array_keys($tasks), TRUE) + 1;
+  $tasks = array_slice($tasks, 0, $position, TRUE) + $ours + array_slice($tasks, $position, NULL, TRUE);
+}
+
+/**
+ * Installation task: applies the Divengine Studio recipe.
+ */
+function divengine_studio_installer_apply_studio(array &$install_state): array {
+  return _divengine_studio_installer_recipe_batch('divengine_studio', (string) t('Installing Divengine Studio'));
+}
+
+/**
+ * Installation task: applies the MCP recipe when it was selected.
+ */
+function divengine_studio_installer_apply_mcp(array &$install_state): array {
+  if (!_divengine_studio_installer_mcp_selected($install_state)) {
+    return [];
+  }
+  return _divengine_studio_installer_recipe_batch('divengine_studio_mcp', (string) t('Installing the MCP integration'));
+}
+
+/**
+ * Installation task: tells how to finish the MCP setup.
+ *
+ * The service account and its token are created by an operator with
+ * "drush divengine:mcp-setup", never during installation.
+ */
+function divengine_studio_installer_next_steps(array &$install_state): void {
+  if (_divengine_studio_installer_mcp_selected($install_state)) {
+    \Drupal::messenger()->addStatus(t('The MCP integration is installed. To create its service account and token, run <code>drush divengine:mcp-setup --uri=https://your-studio-address</code> on the server, then connect your MCP client as the command explains.'));
+  }
+  // The choice only matters during installation.
+  \Drupal::state()->delete(IntegrationsForm::STATE_MCP);
+}
+
+/**
+ * Builds the installer batch for a recipe of this repository.
+ */
+function _divengine_studio_installer_recipe_batch(string $name, string $title): array {
+  $recipe = Recipe::createFromDirectory(dirname(\Drupal::root()) . '/recipes/' . $name);
+  $batch = (new BatchBuilder())
+    ->setTitle($title)
+    ->setInitMessage(t('Starting @recipe.', ['@recipe' => $recipe->name]))
+    ->setErrorMessage(t('@recipe could not be installed.', ['@recipe' => $recipe->name]));
+  foreach (RecipeRunner::toBatchOperations($recipe) as $operation) {
+    $batch->addOperation(...$operation);
+  }
+  return $batch->toArray();
+}
+
+/**
+ * Whether the MCP integration was selected.
+ *
+ * The choice is kept in State, which exists once the base system is
+ * installed; earlier in the installation nothing is selected yet.
+ */
+function _divengine_studio_installer_mcp_selected(array $install_state): bool {
+  if (empty($install_state['base_system_verified'])) {
+    return FALSE;
+  }
+  return (bool) \Drupal::state()->get(IntegrationsForm::STATE_MCP, FALSE);
+}

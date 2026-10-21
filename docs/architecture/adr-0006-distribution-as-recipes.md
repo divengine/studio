@@ -2,7 +2,11 @@
 
 ## Status
 
-Accepted
+Accepted. Partially superseded by
+[ADR-0014](adr-0014-installation-profile-entry-point.md): the branded installation
+profile is now the primary way to install Studio and applies these recipes; the
+recipe-based installation paths and the rejection of an install profile below are kept
+for history.
 
 ## Context
 

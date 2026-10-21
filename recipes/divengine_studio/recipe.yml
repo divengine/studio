@@ -50,6 +50,21 @@ config:
     divengine_articles: '*'
     divengine_core: '*'
     divengine_studio_theme: '*'
+    # Optional configuration of core and contributed extensions is not
+    # created when a recipe installs them; import what Studio relies on.
+    content_moderation:
+      - views.view.moderated_content
+    file:
+      - views.view.files
+    gin:
+      - block.block.gin_breadcrumbs
+      - block.block.gin_content
+      - block.block.gin_help
+      - block.block.gin_local_actions
+      - block.block.gin_messages
+      - block.block.gin_page_title
+      - block.block.gin_primary_local_tasks
+      - block.block.gin_secondary_local_tasks
   actions:
     system.theme:
       simpleConfigUpdate:
@@ -63,9 +78,10 @@ config:
     node.settings:
       simpleConfigUpdate:
         use_admin_theme: false
+    # The site name is the operator's: the installation profile suggests
+    # "Divengine Studio", and applying the recipe keeps an existing name.
     system.site:
       simpleConfigUpdate:
-        name: 'Divengine Studio'
         page.front: /studio
     # The filter goes first: the CKEditor 5 "Diagram" button requires it.
     filter.format.basic_html:

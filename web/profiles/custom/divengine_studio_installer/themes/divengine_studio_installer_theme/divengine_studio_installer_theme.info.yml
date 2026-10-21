@@ -1,0 +1,10 @@
+name: 'Divengine Studio installer'
+type: theme
+description: 'Installation screens of Divengine Studio. Self-contained: it relies only on Core, because no Studio module or theme exists yet while installing.'
+core_version_requirement: ^11.3
+base theme: claro
+hidden: true
+logo: logo.svg
+libraries-extend:
+  claro/install-page:
+    - divengine_studio_installer_theme/installer
