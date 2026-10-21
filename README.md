@@ -2,7 +2,7 @@
 
 Drupal 11 distribution with Divengine's custom modules for managing artifacts,
 traceability, knowledge and engineering diagrams. It installs from its own web installer;
-the recipes define what is installed (ADR-0006, ADR-0014).
+the recipes define what is installed and how sites are updated (ADR-0006, ADR-0014, ADR-0015).
 
 This repository only tracks Divengine's own code. Drupal core, contributed modules and
 `vendor/` are installed with Composer.
@@ -31,7 +31,8 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `web/profiles/custom/divengine_studio_installer` | Installation profile: the branded web installer, which applies the recipes, and its installer theme |
-| `recipes/divengine_studio` | Site recipe: Standard + all Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions |
+| `recipes/divengine_studio` | Site recipe for new sites: Drupal's Standard recipe + `divengine_studio_base` |
+| `recipes/divengine_studio_base` | All Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions; re-applied to update existing sites |
 | `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
 | `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
 | `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
@@ -53,8 +54,8 @@ Divengine Studio is a complete distribution: install it as it is, then customize
 
 | Requirement | Notes |
 |---|---|
-| PHP 8.4 | Studio is tested with PHP 8.4. Drupal 11.3 itself requires at least PHP 8.3 and recommends 8.4; PHP 8.3 is not tested for Studio. |
-| PostgreSQL 16 or later | The minimum Drupal 11.3 accepts. The `pg_trgm` extension is required by Drupal's PostgreSQL driver. |
+| PHP 8.4 | Studio is tested with PHP 8.4. Drupal 11.4 itself requires at least PHP 8.3 and recommends 8.4; PHP 8.3 is not tested for Studio. |
+| PostgreSQL 16 or later | The minimum Drupal 11.4 accepts. The `pg_trgm` extension is required by Drupal's PostgreSQL driver. |
 | `git` | Used by Code Source to index repositories. |
 | Private file system | Test evidence, attachments and the MCP token are private files. Set `$settings['file_private_path']` to a directory outside the web root **before installing**. |
 | Composer 2 | To install Drupal core, contributed modules and `vendor/`. |
@@ -120,20 +121,44 @@ vendor/bin/drush site:install divengine_studio_installer \
 
 ### Apply Studio to an existing Drupal 11 site
 
-The `recipes/divengine_studio` recipe remains the definition of what Studio installs, and
-it can be applied to an existing Drupal 11 site (for example a Standard installation):
+`recipes/divengine_studio_base` is the definition of what Studio installs. It can be
+applied to an existing Drupal 11 site that has what the Standard recipe or profile provides
+(the Basic and Full HTML formats with their editors and the Content editor role):
 
 ```bash
-vendor/bin/drush recipe $PWD/recipes/divengine_studio
+vendor/bin/drush recipe $PWD/recipes/divengine_studio_base
 vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp   # optional
 ```
+
+`recipes/divengine_studio` adds Drupal's Standard recipe in front of it and is what the
+installer applies to new sites. Do not re-apply it to an existing site: the Standard
+recipe's configuration changes between Drupal releases (in 11.4, for example, the type of
+the basic block body field) and Drupal refuses to apply it over the earlier version.
+
+### Update an existing site
+
+Deploy the new code, then apply database updates and re-apply the base recipe, which
+imports the configuration that new features bring and keeps what the site already has:
+
+```bash
+composer install
+vendor/bin/drush updatedb --yes
+vendor/bin/drush recipe $PWD/recipes/divengine_studio_base
+vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp   # if MCP is installed
+vendor/bin/drush cache:rebuild
+```
+
+Re-applying the recipe also sets again the values it defines for existing configuration:
+the front page, the default and administration themes and the editor buttons and filters
+of Basic and Full HTML.
 
 Applying the recipe keeps the site's name and sets `/studio` as the front page, the
 Studio theme as default and Gin as administration theme. In a multisite installation,
 Drupal's recipe command uses `sites/default` unless `DRUPAL_DEV_SITE_PATH` names the
 site directory (for example `DRUPAL_DEV_SITE_PATH=sites/studio`).
 See [ADR-0014](docs/architecture/adr-0014-installation-profile-entry-point.md) for how the
-installer and the recipes relate.
+installer and the recipes relate, and [ADR-0015](docs/architecture/adr-0015-base-recipe-for-updates.md)
+for why existing sites are updated with the base recipe.
 
 ### Web server security
 
@@ -242,7 +267,7 @@ scripts/check-install-paths.sh # both supported installation paths, each in a ne
 database, installs into a throw-away `sites/recipecheck` and removes it afterwards.
 
 `check-install-paths.sh` installs with the installation profile (with and without the MCP
-integration) and applies the recipe to a Standard site. Each path gets a new database
+integration) and applies the base recipe to a Standard site. Each path gets a new database
 named `studio_installcheck_*`, dropped afterwards, and a throw-away site directory. It
 checks requirements, pending entity definition updates, the expected configuration,
 themes and the `/studio` front page:

@@ -5,7 +5,7 @@
 #   profile             Fresh installation with the divengine_studio_installer
 #                       profile (what /core/install.php does), MCP not selected.
 #   profile-mcp         The same with the MCP integration selected.
-#   recipe-on-standard  A Standard installation, then recipes/divengine_studio
+#   recipe-on-standard  A Standard installation, then recipes/divengine_studio_base
 #                       applied to it.
 #
 # Each database is named studio_installcheck_<path>_<random>, created for
@@ -90,10 +90,10 @@ PHP
       (cd "$WEB" && "${site_install[@]:0:4}" divengine_studio_installer divengine_studio_installer_integrations_form.mcp=1 "${site_install[@]:4}") >"$log" 2>&1 ;;
     recipe-on-standard)
       # Core's recipe command boots sites/default unless told otherwise.
-      (cd "$WEB" && "${site_install[@]:0:4}" standard "${site_install[@]:4}" && DRUPAL_DEV_SITE_PATH="sites/$SITE" "$DRUSH" -l "$SITE" recipe ../recipes/divengine_studio) >"$log" 2>&1 ;;
+      (cd "$WEB" && "${site_install[@]:0:4}" standard "${site_install[@]:4}" && DRUPAL_DEV_SITE_PATH="sites/$SITE" "$DRUSH" -l "$SITE" recipe ../recipes/divengine_studio_base) >"$log" 2>&1 ;;
     *)
       echo "Unknown path $path" >&2; return 2 ;;
-  esac || { echo "  ✗ installation failed, see $log" >&2; return 1; }
+  esac || { echo "  ✗ installation failed, see $log" >&2; cleanup; return 1; }
 
   local failed=0
   (cd "$WEB" && "$DRUSH" -l "$SITE" php:script "$ROOT/scripts/install-check.php" -- "$expect_mcp" "$name") | tee -a "$log" | grep -q '^FAILED_CHECKS=0$' || failed=1

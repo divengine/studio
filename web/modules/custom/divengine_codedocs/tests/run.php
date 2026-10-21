@@ -117,5 +117,5 @@ $check(!$index->rows('unit', 23), 'A failed batch rolls back all its rows');
 $index->forget([2]);
 $check(!$index->rows('symbol', 2) && $index->fingerprints(1) === $before, 'Deletion is isolated to the requested snapshot');
 foreach (glob(dirname(__DIR__) . '/*.yml') as $file) { Yaml::parseFile($file); }
-Yaml::parseFile($root . '/recipes/divengine_studio/recipe.yml');
+foreach (glob($root . '/recipes/*/recipe.yml') as $file) { Yaml::parseFile($file); }
 echo "Code docs: $checks checks passed (adapters, real SQLite schema/queries, resolution, coverage, diff, rollback, isolation, YAML).\n";
