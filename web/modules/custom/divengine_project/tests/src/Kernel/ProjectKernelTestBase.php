@@ -24,7 +24,7 @@ abstract class ProjectKernelTestBase extends KernelTestBase {
 
   protected function setUp(): void {
     parent::setUp();
-    foreach (['user', 'comment', 'project', 'project_task'] as $type) {
+    foreach (['user', 'comment', 'trace_link', 'project', 'project_task'] as $type) {
       $this->installEntitySchema($type);
     }
     $this->installSchema('comment', ['comment_entity_statistics']);
