@@ -136,7 +136,7 @@ PHP
       (cd "$web" && "${site_install[@]:0:4}" standard "${site_install[@]:4}" \
         && DRUPAL_DEV_SITE_PATH="sites/$SITE" "$drush" -l "$SITE" recipe ../recipes/divengine_studio \
         && DRUPAL_DEV_SITE_PATH="sites/$SITE" "$drush" -l "$SITE" recipe ../recipes/divengine_studio_mcp) >>"$log" 2>&1 \
-      && rm -rf -- "${WEB:?}/sites/$SITE" && mv "$web/sites/$SITE" "$WEB/sites/$SITE" \
+      && rm -rf -- "${WEB:?}/sites/$SITE" && chmod u+w "$web/sites/$SITE" && mv "$web/sites/$SITE" "$WEB/sites/$SITE" \
       && echo "  updating with this checkout" \
       && (cd "$WEB" && "$DRUSH" -l "$SITE" updatedb -y \
         && "$DRUSH" -l "$SITE" cache:rebuild \
