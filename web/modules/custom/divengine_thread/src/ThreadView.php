@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_thread;
 
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -44,6 +45,11 @@ class ThreadView {
 
   /**
    * The files posted in the thread, with who and when.
+   *
+   * Only the files the viewer may download are listed. Core's download
+   * access result carries no cache context although it depends on who asks
+   * (private files follow the entities that use them), so the list varies
+   * by user.
    */
   protected function attachments(ContentEntityInterface $entity, string $field): array {
     $rows = $this->manager->attachments($entity, $field);
@@ -52,10 +58,16 @@ class ThreadView {
     }
     $files = $this->entityTypeManager->getStorage('file')->loadMultiple(array_column($rows, 'fid'));
     $users = $this->entityTypeManager->getStorage('user')->loadMultiple(array_unique(array_column($rows, 'uid')));
+    $cacheability = (new CacheableMetadata())->addCacheContexts(['user']);
     $items = [];
     foreach ($rows as $row) {
       $file = $files[$row['fid']] ?? NULL;
-      if (!$file || !$file->access('download')) {
+      if (!$file) {
+        continue;
+      }
+      $access = $file->access('download', NULL, TRUE);
+      $cacheability->addCacheableDependency($file)->addCacheableDependency($access);
+      if (!$access->isAllowed()) {
         continue;
       }
       $items[] = [
@@ -76,15 +88,17 @@ class ThreadView {
         ],
       ];
     }
-    if (!$items) {
-      return [];
+    $build = [];
+    if ($items) {
+      $build = [
+        '#type' => 'component',
+        '#component' => 'divengine_core:section',
+        '#props' => ['title' => (string) $this->t('Attachments'), 'count' => (string) count($items)],
+        '#slots' => ['content' => ['#type' => 'container', '#attributes' => ['class' => ['dv-attachments']], 'items' => $items]],
+      ];
     }
-    return [
-      '#type' => 'component',
-      '#component' => 'divengine_core:section',
-      '#props' => ['title' => (string) $this->t('Attachments'), 'count' => (string) count($items)],
-      '#slots' => ['content' => ['#type' => 'container', '#attributes' => ['class' => ['dv-attachments']], 'items' => $items]],
-    ];
+    $cacheability->applyTo($build);
+    return $build;
   }
 
   protected function icon(string $mime): string {
