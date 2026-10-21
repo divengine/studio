@@ -1,0 +1,12 @@
+name: 'Divengine Studio'
+type: profile
+description: 'Installs Divengine Studio as a complete engineering suite. The modules and configuration come from recipes/divengine_studio.'
+core_version_requirement: ^11.3
+# The recipe installs every module and theme; the profile only drives the
+# installer.
+install: []
+distribution:
+  name: 'Divengine Studio'
+  install:
+    theme: divengine_studio_installer_theme
+    finish_url: /studio

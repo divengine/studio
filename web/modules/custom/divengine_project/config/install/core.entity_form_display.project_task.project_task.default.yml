@@ -1,0 +1,105 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.project_task.project_task.comments
+  module:
+    - datetime
+    - divengine_project
+    - text
+id: project_task.project_task.default
+targetEntityType: project_task
+bundle: project_task
+mode: default
+content:
+  name:
+    type: string_textfield
+    weight: -20
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  description:
+    type: text_textarea
+    weight: -10
+    settings:
+      rows: 8
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  project:
+    type: options_select
+    weight: -19
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  parent:
+    type: entity_reference_autocomplete
+    weight: -18
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  type:
+    type: options_select
+    weight: -17
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  stage:
+    type: options_select
+    weight: -16
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  priority:
+    type: options_select
+    weight: -15
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  assignees:
+    type: entity_reference_autocomplete_tags
+    weight: -14
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  tags:
+    type: entity_reference_autocomplete_tags
+    weight: -13
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  start_date:
+    type: datetime_default
+    weight: -12
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  deadline:
+    type: datetime_default
+    weight: -11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  estimate:
+    type: number
+    weight: -10
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  comments: true

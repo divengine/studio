@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 132" width="144" height="132" role="img" aria-label="Divengine">
+  <rect width="144" height="132" fill="#335999"/>
+  <g fill="#fff">
+    <rect x="20" y="22" width="7" height="79"/>
+    <rect x="20" y="22" width="19" height="3"/>
+    <rect x="20" y="98" width="19" height="3"/>
+    <rect x="50" y="22" width="7" height="79"/>
+    <rect x="50" y="22" width="19" height="3"/>
+    <rect x="50" y="98" width="19" height="3"/>
+    <rect x="87" y="22" width="7" height="79"/>
+    <rect x="75" y="22" width="19" height="3"/>
+    <rect x="75" y="98" width="19" height="3"/>
+    <rect x="117" y="22" width="7" height="79"/>
+    <rect x="105" y="22" width="19" height="3"/>
+    <rect x="105" y="98" width="19" height="3"/>
+  </g>
+</svg>

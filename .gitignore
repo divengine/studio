@@ -20,6 +20,9 @@
 !/web/themes/
 /web/themes/*
 !/web/themes/custom/
+!/web/profiles/
+/web/profiles/*
+!/web/profiles/custom/
 
 # Local test config holds real DB credentials.
 /phpunit.xml

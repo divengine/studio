@@ -1,0 +1,51 @@
+{#
+/**
+ * @file
+ * Divengine Studio installation page.
+ *
+ * Same variables as Claro's install-page.html.twig; the header carries the
+ * Divengine mark and the product name.
+ */
+#}
+<a href="#main-content" class="visually-hidden focusable skip-link">{{ 'Skip to main content'|t }}</a>
+<div class="layout-container dv-installer">
+
+  <header role="banner" class="dv-installer__header">
+    <img class="dv-installer__logo" src="{{ base_path ~ directory }}/logo.svg" alt="" width="48" height="44">
+    {% if site_name %}
+      <h1 class="site-name">
+        {{ site_name }}
+        {% if site_version %}
+          <span class="site-version">{{ site_version }}</span>
+        {% endif %}
+      </h1>
+    {% endif %}
+  </header>
+
+  {% if page.sidebar_first %}
+    <aside class="layout-sidebar-first" role="complementary" aria-label="{{ 'Installation steps'|t }}">
+      {{ page.sidebar_first }}
+    </aside>
+  {% endif %}
+
+  <main role="main" class="main-content" id="main-content" tabindex="-1">
+    {% if title %}
+      <h2 class="heading-c">{{ title }}</h2>
+    {% endif %}
+    {{ page.highlighted }}
+    {{ page.content }}
+  </main>
+
+  {% if page.sidebar_second %}
+    <aside class="layout-sidebar-second" role="complementary">
+      {{ page.sidebar_second }}
+    </aside>
+  {% endif %}
+
+  {% if page.page_bottom %}
+    <footer role="contentinfo">
+      {{ page.page_bottom }}
+    </footer>
+  {% endif %}
+
+</div>

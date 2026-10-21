@@ -1,0 +1,4 @@
+installer:
+  css:
+    theme:
+      css/installer.css: {}
