@@ -169,6 +169,22 @@ class SnapshotImporterTest extends KernelTestBase {
     }
   }
 
+  public function testUndocumentedSymbolsAreBounded(): void {
+    $document = $this->document();
+    // Five more public methods without documentation.
+    foreach (range(1, 5) as $n) {
+      $document['units'][0]['symbols'][0]['members'][] = ['key' => "Shop::undocumented$n()", 'kind' => 'method', 'name' => "undocumented$n", 'visibility' => 'public', 'signature' => "undocumented$n(): void", 'line' => 100 + $n];
+    }
+    $this->importer()->import($document);
+    $sid = (int) CodeDocSet::load($this->set->id())->getLatestSnapshot()->id();
+    $index = \Drupal::service('divengine_codedocs.index');
+    $total = array_sum(array_map(fn ($unit) => $unit['documentable'] - $unit['documented'], $index->units($sid)));
+    $this->assertGreaterThan(1, $total, 'The fixture has several undocumented symbols.');
+    $this->assertCount($total, $index->undocumented($sid));
+    $this->assertCount(2, $index->undocumented($sid, 2));
+    $this->assertSame(array_slice($index->undocumented($sid), 0, 2), $index->undocumented($sid, 2), 'The first ones, in the same order.');
+  }
+
   public function testJavadocAndTypeScriptOutputNormalize(): void {
     $adapters = \Drupal::service('divengine_codedocs.adapters');
     foreach (['javadoc', 'tsdoc'] as $format) {

@@ -27,11 +27,26 @@ class SnapshotImporter {
     protected LockBackendInterface $lock,
   ) {}
 
-  public function setFor(string $identifier): CodeDocSet {
+  /**
+   * The documentation set with an identifier, if there is one.
+   *
+   * Callers answer a missing set exactly as one the account may not use, so
+   * the API does not tell which identifiers exist.
+   */
+  public function setFor(string $identifier): ?CodeDocSet {
     $sets = $this->entities->getStorage('codedoc_set')->loadByProperties(['identifier' => $identifier]);
-    return reset($sets) ?: throw new ContractException('Register a documentation set in its Development first: ' . $identifier);
+    return reset($sets) ?: NULL;
   }
 
+  /**
+   * Who may publish into a set.
+   *
+   * Managers and administrators of code docs publish where they can view
+   * the Development. A publisher account ("publish code docs", typically a
+   * CI service account) publishes into the Developments it is a member,
+   * responsible or owner of, even when it may not view them: publishing
+   * does not grant reading, and every read goes through view access.
+   */
   public function mayPublish(CodeDocSet $set): bool {
     $development = $set->getDevelopment();
     if (!$development) {
@@ -53,9 +68,10 @@ class SnapshotImporter {
     }
     $adapter = $this->adapters->resolve($header, $format);
     $meta = $adapter->meta($header);
-    $set = $this->setFor((string) ($meta['project'] ?? ''));
-    if (!$this->mayPublish($set)) {
-      throw new AccessDeniedHttpException('You cannot publish into this Development.');
+    $identifier = (string) ($meta['project'] ?? '');
+    $set = $this->setFor($identifier);
+    if (!$set || !$this->mayPublish($set)) {
+      throw new AccessDeniedHttpException('No documentation set ' . $identifier . ' that this account may publish into. Register the set in its Development and make the account a member there.');
     }
     $language = (string) ($meta['language'] ?? '');
     if ($language === '' || ($set->get('language')->value && strtolower($set->get('language')->value) !== strtolower($language))) {

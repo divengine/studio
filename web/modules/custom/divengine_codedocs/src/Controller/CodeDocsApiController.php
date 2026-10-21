@@ -64,8 +64,9 @@ class CodeDocsApiController extends ControllerBase {
         return array_values(array_map(fn ($s) => ['id' => (int) $s->id(), 'identifier' => $s->getIdentifier(), 'name' => $s->label(), 'latest' => $s->getLatestSnapshot()?->id()], array_filter($sets, fn ($s) => $s->access('view'))));
       }
       $set = \Drupal::service('divengine_codedocs.importer')->setFor((string) $request->query->get('project', ''));
-      if (!$set->access('view')) {
-        throw new AccessDeniedHttpException();
+      // A missing set is answered as a hidden one.
+      if (!$set || !$set->access('view')) {
+        throw new AccessDeniedHttpException('Documentation set unavailable.');
       }
       if ($operation === 'snapshots') {
         $ss = $this->entityTypeManager()->getStorage('codedoc_snapshot');
