@@ -69,7 +69,8 @@ cleanup() {
     rm -rf -- "$OLD"
   fi
   if [[ -n "$DB" ]]; then
-    pg dropdb --if-exists "$DB" || echo "  ! could not drop $DB" >&2
+    # --force closes connections that an interrupted process still holds.
+    pg dropdb --if-exists --force "$DB" || echo "  ! could not drop $DB" >&2
   fi
   SITE="" DB="" OLD=""
 }
