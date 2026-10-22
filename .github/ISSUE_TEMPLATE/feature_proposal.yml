@@ -1,0 +1,77 @@
+name: Feature proposal
+description: Propose a new capability or a change to existing behavior.
+type: Feature
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for your proposal. Please read [CONTRIBUTING.md](https://github.com/divengine/studio/blob/main/CONTRIBUTING.md) and [GOVERNANCE.md](https://github.com/divengine/studio/blob/main/GOVERNANCE.md) first.
+
+        A proposal is not approved work. The maintainer decides whether it fits the scope, architecture and roadmap, and sets its priority. Please wait for that decision before starting a substantial implementation.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or need
+      description: What are you trying to do, and what prevents you today? Describe the need, not only the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How Studio could address it. Mention the screens, records, permissions or APIs involved.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches, workarounds, or existing Drupal core or contributed modules that cover part of it.
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: For orientation only; the maintainer assigns labels.
+      multiple: true
+      options:
+        - Artifacts and traceability
+        - Diagrams and modelers
+        - Unified Process
+        - Test management (QA)
+        - Projects and timesheets
+        - Knowledge base and discussions
+        - Code Source, database schemas or code documentation
+        - MCP and other integrations
+        - Installation, recipes and upgrades
+        - Developer tooling and documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Compatibility, data and access impact
+      description: Would this change stored data, permissions, access rules, the recipes or how existing sites are updated? Write "none known" if not.
+    validations:
+      required: true
+  - type: dropdown
+    id: contribute
+    attributes:
+      label: Would you like to work on it?
+      options:
+        - "Yes, after the direction is agreed"
+        - Maybe, with guidance
+        - "No"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched the existing issues and this has not been proposed.
+          required: true
+        - label: I understand that this proposal is not approved work until the maintainer accepts it.
+          required: true

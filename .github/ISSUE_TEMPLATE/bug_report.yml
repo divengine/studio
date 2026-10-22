@@ -1,0 +1,105 @@
+name: Bug report
+description: Report something in Divengine Studio that does not work as documented.
+type: Bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a problem.
+
+        **Do not report security vulnerabilities here.** Use a private report as described in [SECURITY.md](https://github.com/divengine/studio/blob/main/SECURITY.md).
+
+        Search the [existing issues](https://github.com/divengine/studio/issues) first. Remove passwords, tokens, database URLs, private file paths and personal data from everything you paste.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened
+      description: A clear description of the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Starting from a clean installation where possible.
+      placeholder: |
+        1. Install with the web installer, MCP integration not selected.
+        2. Go to ...
+        3. Click ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Studio version or commit
+      description: A release tag or the commit hash of `main` you are running (`git rev-parse --short HEAD`).
+      placeholder: e.g. b4a1c3b
+    validations:
+      required: true
+  - type: dropdown
+    id: install-path
+    attributes:
+      label: How was the site installed or updated?
+      options:
+        - Web installer (/core/install.php)
+        - drush site:install divengine_studio_installer
+        - recipes/divengine_studio_base applied to an existing Drupal site
+        - Existing site updated (updatedb and base recipe re-applied)
+        - Other or not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: mcp
+    attributes:
+      label: Is the optional MCP integration installed?
+      options:
+        - "No"
+        - "Yes"
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Versions of what is involved. `vendor/bin/drush status` shows most of them.
+      value: |
+        - Drupal core:
+        - PHP:
+        - PostgreSQL:
+        - Web server (Apache, nginx, Caddy, other):
+        - Browser (for UI problems):
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs and error messages
+      description: Relevant lines from the browser, `vendor/bin/drush watchdog:show` or the web server log. Remove secrets and personal data.
+      render: text
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, configuration that differs from the defaults, contributed modules added to the site.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: This is not a security vulnerability.
+          required: true
+        - label: I searched the existing issues and this has not been reported.
+          required: true
+        - label: I removed secrets and personal data from this report.
+          required: true
