@@ -37,7 +37,7 @@ Existing sites may grant these permissions manually or reapply the recipe.
 ## Publish existing extractor output
 
 Run the current Java or TypeScript extractor as usual. Its JSON needs no changes.
-Use the module's standard-library Python publisher instead of the Odoo publisher:
+Use the module's standard-library Python publisher:
 
 ```powershell
 $env:STUDIO_URL = 'https://studio.example.com'
@@ -116,7 +116,9 @@ preserved. Documentation is rendered as text, so imported HTML is not executed.
 Base path: `/api/divengine/codedocs/`. HTTP Basic authentication works on these
 routes; session-cookie writes require Drupal's `X-CSRF-Token` header.
 Validation errors return JSON `{ "message": "..." }` with HTTP 422, access errors
-403. Register the set first; ingestion never creates Developments or sets.
+403. Register the set first; ingestion never creates Developments or sets. An
+identifier that names no set gets the same 403 as a set the account may not use,
+for publishing and for reading, so the API does not reveal which sets exist.
 
 | Method and path | Body / query |
 | --- | --- |

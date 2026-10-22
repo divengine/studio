@@ -77,10 +77,12 @@ class CodeDocIndex {
   }
 
   /**
-   * Public, handwritten symbols without documentation, by unit.
+   * The first public, handwritten symbols without documentation, by unit.
+   *
+   * The total is the sum of documentable minus documented over units().
    */
   public function undocumented(int $sid, int $limit = 500): array {
-    return $this->database->query("SELECT s.id, s.name, s.kind, s.signature, s.unit_id FROM {divengine_codedoc_symbol} s WHERE s.sid = :sid AND s.documented = 0 " . str_replace('{divengine_codedoc_symbol}.id', 's.id', $this->eligible()) . " ORDER BY s.unit_id, s.line, s.id", [':sid' => $sid, ':sid2' => $sid], ['fetch' => \PDO::FETCH_ASSOC])->fetchAll();
+    return $this->database->queryRange("SELECT s.id, s.name, s.kind, s.signature, s.unit_id FROM {divengine_codedoc_symbol} s WHERE s.sid = :sid AND s.documented = 0 " . str_replace('{divengine_codedoc_symbol}.id', 's.id', $this->eligible()) . " ORDER BY s.unit_id, s.line, s.id", 0, max(1, $limit), [':sid' => $sid, ':sid2' => $sid], ['fetch' => \PDO::FETCH_ASSOC])->fetchAll();
   }
 
   /**
