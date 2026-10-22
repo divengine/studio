@@ -34,10 +34,11 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `recipes/divengine_studio` | Site recipe for new sites: Drupal's Standard recipe + `divengine_studio_base` |
 | `recipes/divengine_studio_base` | All Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions; re-applied to update existing sites |
 | `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
-| `docs/` | Architecture decisions, roadmap, MVP scope, research and handoff notes |
+| `docs/` | Architecture decisions, roadmap, development and release guides, MVP scope, research and handoff notes |
 | `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
 | `phpunit.xml.dist`, `bootstrap.kernel.php` | Test configuration |
+| `.github/` | Issue forms, pull request template, CODEOWNERS and CI |
 
 ## Direction
 
@@ -252,46 +253,49 @@ The second command creates the `mcp_bot` account and a token in
 To leave MCP out entirely, skip both commands and run
 `composer remove drupal/mcp drupal/jsonapi_schema`.
 
-## Checks
+## Checks and tests
 
-Scripts for you and for agents working on the repository:
+[docs/development.md](docs/development.md) describes the development setup and every
+kind of test. Run them against a dedicated, disposable PostgreSQL database, never one
+that holds data you want to keep.
 
 ```bash
 scripts/test.sh                # the PHPUnit suite (arguments go to phpunit)
-scripts/check-install.sh       # clean install from the recipe in the test database, with checks
-scripts/check.sh               # both, before a commit
-scripts/check-install-paths.sh # both supported installation paths, each in a new database
+scripts/check-install-paths.sh # every installation path, each in a new database
+scripts/check-install.sh       # only the installation profile path
+scripts/check.sh               # the suite, then every installation path, before a commit
 ```
 
-`check-install.sh` uses `SIMPLETEST_DB` from `phpunit.xml` (or `STUDIO_TEST_DB`), empties that
-database, installs into a throw-away `sites/recipecheck` and removes it afterwards.
+`scripts/test.sh` needs `phpunit.xml`: copy `phpunit.xml.dist` and set `SIMPLETEST_DB`
+(`phpunit.xml` is ignored by git). The Functional tests, including the installer
+profile's, need a web server for the test site (`SIMPLETEST_BASE_URL`).
 
-`check-install-paths.sh` installs with the installation profile (with and without the MCP
-integration) and applies the base recipe to a Standard site. Each path gets a new database
-named `studio_installcheck_*`, dropped afterwards, and a throw-away site directory. It
-checks requirements, pending entity definition updates, the expected configuration,
-themes and the `/studio` front page:
+No script resets or reuses an existing database:
+
+- `test.sh` uses `SIMPLETEST_DB` (from the environment, or from `phpunit.xml`). Point it
+  at an empty database created for the tests. `scripts/test-db-guard.php` refuses the
+  database of a site configured under `web/sites/` and any database that already holds a
+  Drupal installation; PHPUnit only creates tables with a random test prefix there.
+- `check-install-paths.sh` creates a database named `studio_installcheck_<path>_<random>`
+  and a throw-away site directory for each path, and removes only what it created. The
+  paths are the installation profile with and without the MCP integration, the base recipe
+  applied to a Standard site, and, on request, `upgrade`: a site set up with the code of an
+  earlier commit (`STUDIO_UPGRADE_FROM`, by default `869526c`, the last one on Drupal 11.3)
+  and then updated with this checkout as described in "Update an existing site". Each path
+  checks requirements, pending entity definition updates, the expected modules, roles,
+  configuration, themes and the `/studio` front page.
+- `check-install.sh` and `check.sh` take the server from `STUDIO_INSTALLCHECK_SERVER`, or
+  from the server part of `SIMPLETEST_DB`.
+
+Every script needs PostgreSQL 16 or later and refuses older servers.
 
 ```bash
 STUDIO_INSTALLCHECK_SERVER=pgsql://user:password@127.0.0.1:5432 scripts/check-install-paths.sh
+STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh upgrade
 # when that user cannot create databases:
 STUDIO_INSTALLCHECK_PG_ADMIN="sudo -n -u postgres" STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh
 ```
 
-The interactive installer screens are covered by Functional tests in the profile, which
-need a web server for the test site (`SIMPLETEST_BASE_URL`):
-
-```bash
-vendor/bin/phpunit -c phpunit.xml web/profiles/custom/divengine_studio_installer/tests
-```
-
-## Tests
-
-Copy `phpunit.xml.dist` to `phpunit.xml` and set `SIMPLETEST_DB` to your database. `phpunit.xml` is ignored by git.
-
-```bash
-vendor/bin/phpunit -c phpunit.xml web/modules/custom
-```
 
 The JavaScript is tested with Node.js and jsdom, against the vendored engines and the
 CKEditor 5 build of core:
@@ -305,6 +309,31 @@ done
 Diagram engines are vendored in each notation module (`js/vendor/`) with their license
 and a provenance note; nothing is loaded from a CDN.
 
+Every pull request runs these checks in [CI](.github/workflows/ci.yml).
+
+## Contributing and governance
+
+Contributions are welcome. Divengine Studio is maintainer-led: the maintainer
+([@rafageist](https://github.com/rafageist)) decides scope, architecture, roadmap,
+releases and merges, and reviews every pull request. An issue or pull request is a
+proposal, not approved work.
+
+| Document | Purpose |
+|---|---|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to propose changes, coding standards, tests and review |
+| [GOVERNANCE.md](GOVERNANCE.md) | Roles, decisions and triage |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Expected behavior in the project's spaces |
+| [SECURITY.md](SECURITY.md) | Reporting vulnerabilities privately |
+| [docs/development.md](docs/development.md) | Local setup, tests and troubleshooting |
+| [docs/releasing.md](docs/releasing.md) | Versioning, compatibility and the release checklist |
+| [CHANGELOG.md](CHANGELOG.md) | Changes on `main` and known limitations |
+
+To get started, look for issues labelled
+[`good first issue`](https://github.com/divengine/studio/labels/good%20first%20issue) or
+[`help wanted`](https://github.com/divengine/studio/labels/help%20wanted), and open an
+issue before starting a substantial change. Do not report security problems in public
+issues.
+
 ## License
 
-GPL-3.0. See [LICENSE](LICENSE).
+GPL-3.0-or-later. See [LICENSE](LICENSE).
