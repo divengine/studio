@@ -151,7 +151,9 @@ vendor/bin/drush cache:rebuild
 
 Re-applying the recipe also sets again the values it defines for existing configuration:
 the front page, the default and administration themes and the editor buttons and filters
-of Basic and Full HTML.
+of Basic and Full HTML. The MCP recipe turns MCP authentication back on, keeps the token
+access set up by `drush divengine:mcp-setup` and the MCP plugin settings, and only adds
+plugins the site does not have yet ([ADR-0016](docs/architecture/adr-0016-mcp-settings-ownership.md)).
 
 Applying the recipe keeps the site's name and sets `/studio` as the front page, the
 Studio theme as default and Gin as administration theme. In a multisite installation,
