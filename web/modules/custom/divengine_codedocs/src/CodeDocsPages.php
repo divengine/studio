@@ -332,9 +332,11 @@ class CodeDocsPages {
     ], NULL, $this->t('Public or exported, handwritten symbols with documentation. Overrides inherit theirs and are not counted. Least documented first.'));
     $undocumented = $this->index->undocumented($sid, 500);
     if ($undocumented) {
+      $total = array_sum(array_map(fn ($unit) => $unit['documentable'] - $unit['documented'], $units));
       $build['undocumented'] = [
         '#type' => 'details',
-        '#title' => $this->t('Undocumented public symbols (@count)', ['@count' => count($undocumented)]),
+        '#title' => $this->t('Undocumented public symbols (@count)', ['@count' => max($total, count($undocumented))]),
+        'note' => $total > count($undocumented) ? ['#markup' => '<p>' . $this->t('The first @shown are listed, by unit.', ['@shown' => count($undocumented)]) . '</p>'] : [],
         'table' => [
           '#type' => 'table',
           '#header' => [$this->t('Symbol'), $this->t('Kind'), $this->t('Unit')],
