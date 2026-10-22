@@ -17,7 +17,14 @@ contributed [MCP](https://www.drupal.org/project/mcp) module. Installed by the
   - Prints the endpoint and the `claude mcp add` command. The token itself is never
     printed or stored in configuration.
 
+- `simpleConfigDefaults` config action: sets simple configuration values only where the
+  site has none. The MCP recipe gives its plugin defaults this way, so re-applying it on
+  updates keeps what administrators changed (ADR-0016).
+
 The token file must be readable by the user PHP runs as.
+
+Re-applying the recipe always turns `enable_auth` back on and never touches
+`auth_settings`, which belongs to `divengine:mcp-setup`.
 
 ## Usage
 
