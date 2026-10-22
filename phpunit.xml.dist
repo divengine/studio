@@ -29,6 +29,11 @@
     <testsuite name="kernel">
       <directory>web/modules/custom/*/tests/src/Kernel</directory>
     </testsuite>
+    <!-- Functional tests need a web server serving web/ at SIMPLETEST_BASE_URL. -->
+    <testsuite name="functional">
+      <directory>web/modules/custom/*/tests/src/Functional</directory>
+      <directory>web/profiles/custom/*/tests/src/Functional</directory>
+    </testsuite>
   </testsuites>
   <source ignoreSuppressionOfDeprecations="true">
     <include>
