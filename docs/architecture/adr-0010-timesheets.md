@@ -17,7 +17,7 @@ A module `divengine_timesheet` on top of `divengine_project`, as Odoo's `hr_time
 
 | Concept | Implementation |
 |---|---|
-| Timesheet line | Content entity `timesheet`: person, date, project, optional task, description, hours (decimal). The project of an entry on a task is the task's project. |
+| Timesheet line | Content entity `timesheet`: person, date, project, optional task, description, hours (decimal). The project of an entry on a task is the task's project: an entry with a task and no project takes it, and a contradicting project is refused on validation and on save (#10). |
 | Allocated time | The task's existing `estimate` field, labelled *Allocated time*. |
 | Task figures | Spent (own entries), on subtasks (all descendants), total, remaining (negative = overtime), progress. Totals count every entry, as everyone who sees a task sees how long it took. |
 | Timer | One per person, kept in `user.data`; stopping rounds up to the quarter hour and prefills *Log time*. Starting another stops the running one and logs it. |

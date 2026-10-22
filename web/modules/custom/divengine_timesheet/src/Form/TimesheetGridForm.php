@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_timesheet\Form;
 
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\Lock\LockBackendInterface;
 use Drupal\Core\Url;
 use Drupal\divengine_project\Entity\ProjectStage;
 use Drupal\divengine_timesheet\Entity\Timesheet;
@@ -30,10 +32,14 @@ class TimesheetGridForm extends FormBase {
    */
   protected string $monday;
 
-  public function __construct(protected EntityTypeManagerInterface $entityTypeManager) {}
+  public function __construct(
+    protected EntityTypeManagerInterface $entityTypeManager,
+    protected Connection $database,
+    protected LockBackendInterface $lock,
+  ) {}
 
   public static function create(ContainerInterface $container): static {
-    return new static($container->get('entity_type.manager'));
+    return new static($container->get('entity_type.manager'), $container->get('database'), $container->get('lock'));
   }
 
   public function getFormId(): string {
@@ -158,10 +164,51 @@ class TimesheetGridForm extends FormBase {
     }
   }
 
+  /**
+   * Saves the differences between the grid and the stored entries.
+   *
+   * The stored entries are read again under a lock per person, and the
+   * changes are written in one transaction that ends before the lock is
+   * released, so a submission sent twice (a retry, a double click, two tabs)
+   * finds the first one's entries and records nothing more. The entries are
+   * read before the transaction starts: on PostgreSQL, a query run by a
+   * query alter inside a transaction fails.
+   */
   public function submitForm(array &$form, FormStateInterface $form_state): void {
+    $lock = 'divengine_timesheet_grid:' . (int) $this->currentUser()->id();
+    $deadline = time() + 30;
+    while (!$this->lock->acquire($lock)) {
+      if (time() >= $deadline) {
+        $this->messenger()->addError($this->t('Your timesheet is being saved by another request. Check it and try again.'));
+        return;
+      }
+      $this->lock->wait($lock, 5);
+    }
+    try {
+      $this->entityTypeManager->getStorage('timesheet')->resetCache();
+      $cells = $this->cells($form_state->get('days'));
+      $transaction = $this->database->startTransaction();
+      try {
+        $changed = $this->saveChanges($form_state, $cells);
+      }
+      catch (\Throwable $e) {
+        $transaction->rollBack();
+        throw $e;
+      }
+      unset($transaction);
+    }
+    finally {
+      $this->lock->release($lock);
+    }
+    $this->messenger()->addStatus($changed ? $this->formatPlural($changed, 'Saved 1 change.', 'Saved @count changes.') : $this->t('Nothing changed.'));
+  }
+
+  /**
+   * Writes the grid's changes and returns how many cells changed.
+   */
+  protected function saveChanges(FormStateInterface $form_state, array $cells): int {
     $storage = $this->entityTypeManager->getStorage('timesheet');
     $days = $form_state->get('days');
-    $cells = $this->cells($days);
     $changed = 0;
     foreach ($form_state->get('rows') as $key => $row) {
       foreach ($days as $day) {
@@ -195,7 +242,7 @@ class TimesheetGridForm extends FormBase {
         $changed++;
       }
     }
-    $this->messenger()->addStatus($changed ? $this->formatPlural($changed, 'Saved 1 change.', 'Saved @count changes.') : $this->t('Nothing changed.'));
+    return $changed;
   }
 
   /**

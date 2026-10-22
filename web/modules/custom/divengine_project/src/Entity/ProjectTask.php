@@ -128,6 +128,7 @@ class ProjectTask extends ContentEntityBase implements EntityChangedInterface, E
 
   public function preSave(EntityStorageInterface $storage): void {
     parent::preSave($storage);
+    \Drupal::service('divengine_project.hierarchy')->assertAcyclic($this);
     $project = $this->getProject();
     // A subtask belongs to the project of its parent.
     if ($parent = $this->get('parent')->entity) {
