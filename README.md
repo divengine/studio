@@ -254,26 +254,37 @@ To leave MCP out entirely, skip both commands and run
 
 ## Checks
 
-Scripts for you and for agents working on the repository:
+Scripts for working on the repository:
 
 ```bash
 scripts/test.sh                # the PHPUnit suite (arguments go to phpunit)
-scripts/check-install.sh       # clean install from the recipe in the test database, with checks
-scripts/check.sh               # both, before a commit
-scripts/check-install-paths.sh # both supported installation paths, each in a new database
+scripts/check-install-paths.sh # every installation path, each in a new database
+scripts/check-install.sh       # only the installation profile path
+scripts/check.sh               # the suite, then every installation path, before a commit
 ```
 
-`check-install.sh` uses `SIMPLETEST_DB` from `phpunit.xml` (or `STUDIO_TEST_DB`), empties that
-database, installs into a throw-away `sites/recipecheck` and removes it afterwards.
+No script resets or reuses an existing database:
 
-`check-install-paths.sh` installs with the installation profile (with and without the MCP
-integration) and applies the base recipe to a Standard site. Each path gets a new database
-named `studio_installcheck_*`, dropped afterwards, and a throw-away site directory. It
-checks requirements, pending entity definition updates, the expected configuration,
-themes and the `/studio` front page:
+- `test.sh` uses `SIMPLETEST_DB` (from the environment, or from `phpunit.xml`). Point it
+  at an empty database created for the tests. `scripts/test-db-guard.php` refuses the
+  database of a site configured under `web/sites/` and any database that already holds a
+  Drupal installation; PHPUnit only creates tables with a random test prefix there.
+- `check-install-paths.sh` creates a database named `studio_installcheck_<path>_<random>`
+  and a throw-away site directory for each path, and removes only what it created. The
+  paths are the installation profile with and without the MCP integration, the base recipe
+  applied to a Standard site, and, on request, `upgrade`: a site set up with the code of an
+  earlier commit (`STUDIO_UPGRADE_FROM`, by default `869526c`, the last one on Drupal 11.3)
+  and then updated with this checkout as described in "Update an existing site". Each path
+  checks requirements, pending entity definition updates, the expected modules, roles,
+  configuration, themes and the `/studio` front page.
+- `check-install.sh` and `check.sh` take the server from `STUDIO_INSTALLCHECK_SERVER`, or
+  from the server part of `SIMPLETEST_DB`.
+
+Every script needs PostgreSQL 16 or later and refuses older servers.
 
 ```bash
 STUDIO_INSTALLCHECK_SERVER=pgsql://user:password@127.0.0.1:5432 scripts/check-install-paths.sh
+STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh upgrade
 # when that user cannot create databases:
 STUDIO_INSTALLCHECK_PG_ADMIN="sudo -n -u postgres" STUDIO_INSTALLCHECK_SERVER=... scripts/check-install-paths.sh
 ```
@@ -287,7 +298,7 @@ vendor/bin/phpunit -c phpunit.xml web/profiles/custom/divengine_studio_installer
 
 ## Tests
 
-Copy `phpunit.xml.dist` to `phpunit.xml` and set `SIMPLETEST_DB` to your database. `phpunit.xml` is ignored by git.
+Copy `phpunit.xml.dist` to `phpunit.xml` and set `SIMPLETEST_DB` to an empty database created for the tests (never the database of a site). `phpunit.xml` is ignored by git.
 
 ```bash
 vendor/bin/phpunit -c phpunit.xml web/modules/custom
