@@ -11,13 +11,13 @@ config:
   actions:
     # Authentication stays on even before the token exists: until
     # divengine:mcp-setup runs, only users with a session and the "use mcp
-    # server" permission can reach /mcp/post.
+    # server" permission can reach /mcp/post. auth_settings is not set here:
+    # the mcp module treats missing values as off, and the recipe is
+    # re-applied on updates, which must keep the token access that
+    # divengine:mcp-setup stored there.
     mcp.settings:
       simpleConfigUpdate:
         enable_auth: true
-        auth_settings:
-          enable_token_auth: false
-          enable_basic_auth: false
         plugins:
           general:
             enabled: true
