@@ -3,6 +3,12 @@
 /*
 !/.gitignore
 !/README.md
+!/CHANGELOG.md
+!/CODE_OF_CONDUCT.md
+!/CONTRIBUTING.md
+!/GOVERNANCE.md
+!/SECURITY.md
+!/.github/
 !/LICENSE
 !/composer.json
 !/composer.lock
