@@ -4,7 +4,7 @@ services:
     arguments: ['@database']
   divengine_timesheet.timer:
     class: Drupal\divengine_timesheet\Timer
-    arguments: ['@user.data', '@datetime.time']
+    arguments: ['@user.data', '@datetime.time', '@lock']
   divengine_timesheet.view:
     class: Drupal\divengine_timesheet\TimesheetView
     arguments: ['@entity_type.manager', '@current_user', '@divengine_timesheet.stats', '@divengine_timesheet.timer', '@divengine_project.visibility', '@form_builder', '@date.formatter']

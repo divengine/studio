@@ -2,6 +2,9 @@ services:
   divengine_project.visibility:
     class: Drupal\divengine_project\ProjectVisibility
     arguments: ['@database', '@entity_type.manager']
+  divengine_project.hierarchy:
+    class: Drupal\divengine_project\ProjectHierarchy
+    arguments: ['@database', '@lock']
   divengine_project.task_table:
     class: Drupal\divengine_project\TaskTable
     arguments: ['@entity_type.manager']

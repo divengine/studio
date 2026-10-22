@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Drupal\divengine_timesheet\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -32,17 +31,8 @@ class TimesheetForm extends ContentEntityForm {
     $form = parent::form($form, $form_state);
     $account = $this->currentUser();
     $form['uid']['#access'] = $account->hasPermission('manage timesheets') || $account->hasPermission('administer projects');
-    $form['project']['#description'] = $this->t('Leave as is when you pick a task: the task decides the project.');
+    $form['project']['#description'] = $this->t('Leave empty when you pick a task: the entry takes the task\'s project. A task of another project is refused.');
     return $form;
-  }
-
-  public function buildEntity(array $form, FormStateInterface $form_state): EntityInterface {
-    /** @var \Drupal\divengine_timesheet\Entity\Timesheet $entry */
-    $entry = parent::buildEntity($form, $form_state);
-    if ($task = $entry->get('task')->entity) {
-      $entry->set('project', $task->get('project')->target_id);
-    }
-    return $entry;
   }
 
   public function save(array $form, FormStateInterface $form_state): int {

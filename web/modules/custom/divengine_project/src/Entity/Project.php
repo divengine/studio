@@ -127,6 +127,7 @@ class Project extends ContentEntityBase implements EntityChangedInterface, Entit
   public function preSave(EntityStorageInterface $storage): void {
     parent::preSave($storage);
     $this->set('project_key', mb_strtoupper(trim($this->getKey())));
+    \Drupal::service('divengine_project.hierarchy')->assertAcyclic($this);
   }
 
   public static function postDelete(EntityStorageInterface $storage, array $entities): void {
