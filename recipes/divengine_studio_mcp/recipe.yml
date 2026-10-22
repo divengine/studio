@@ -9,41 +9,44 @@ install:
   - divengine_mcp
 config:
   actions:
-    # Authentication stays on even before the token exists: until
-    # divengine:mcp-setup runs, only users with a session and the "use mcp
-    # server" permission can reach /mcp/post. auth_settings is not set here:
-    # the mcp module treats missing values as off, and the recipe is
-    # re-applied on updates, which must keep the token access that
-    # divengine:mcp-setup stored there.
+    # Ownership of mcp.settings (ADR-0016). The recipe is re-applied on
+    # updates, so it only forces what the distribution owns:
+    # - enable_auth is always put back to true. Until divengine:mcp-setup
+    #   runs, only users with a session and the "use mcp server" permission
+    #   can reach /mcp/post.
+    # - auth_settings belongs to divengine:mcp-setup and is never set here;
+    #   the mcp module treats missing values as off.
+    # - plugins are defaults: simpleConfigDefaults (divengine_mcp) adds the
+    #   plugins a site does not have yet and keeps what administrators set.
     mcp.settings:
       simpleConfigUpdate:
         enable_auth: true
-        plugins:
-          general:
-            enabled: true
-            config: {}
-          content:
-            enabled: true
-            config:
-              content_types:
-                article: article
-                page: page
-          jsonapi:
-            enabled: true
-            config:
-              allowed_resource_types: []
-          # Code of the Developments the agent can see (divengine_source).
-          code:
-            enabled: true
-            config: {}
-          # Database schemas of the Developments the agent can see
-          # (divengine_database).
-          database:
-            enabled: true
-            config: {}
-          codedocs:
-            enabled: true
-            config: {}
+      simpleConfigDefaults:
+        plugins.general:
+          enabled: true
+          config: {}
+        plugins.content:
+          enabled: true
+          config:
+            content_types:
+              article: article
+              page: page
+        plugins.jsonapi:
+          enabled: true
+          config:
+            allowed_resource_types: []
+        # Code of the Developments the agent can see (divengine_source).
+        plugins.code:
+          enabled: true
+          config: {}
+        # Database schemas of the Developments the agent can see
+        # (divengine_database).
+        plugins.database:
+          enabled: true
+          config: {}
+        plugins.codedocs:
+          enabled: true
+          config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:
