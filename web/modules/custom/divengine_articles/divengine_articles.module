@@ -34,6 +34,41 @@ function divengine_articles_node_presave(NodeInterface $node): void {
 }
 
 /**
+ * Implements hook_ENTITY_TYPE_update() for node.
+ *
+ * When an article changes Development (directly, or by moving under another
+ * parent), every article below it follows, so no sub-article stays visible
+ * to the people of the Development it left.
+ */
+function divengine_articles_node_update(NodeInterface $node): void {
+  static $cascading = FALSE;
+  if ($cascading || $node->bundle() !== 'knowledge_article') {
+    return;
+  }
+  $development = $node->get('kb_development')->target_id;
+  if ((string) $node->getOriginal()?->get('kb_development')->target_id === (string) $development) {
+    return;
+  }
+  $ids = \Drupal::service('divengine_articles.tree')->descendantIds((int) $node->id());
+  if (!$ids) {
+    return;
+  }
+  $cascading = TRUE;
+  try {
+    foreach (\Drupal::entityTypeManager()->getStorage('node')->loadMultiple($ids) as $descendant) {
+      if ((string) $descendant->get('kb_development')->target_id !== (string) $development) {
+        // The same article in another place, not a new version of it.
+        $descendant->set('kb_development', $development)->setNewRevision(FALSE);
+        $descendant->save();
+      }
+    }
+  }
+  finally {
+    $cascading = FALSE;
+  }
+}
+
+/**
  * Implements hook_entity_bundle_field_info_alter().
  */
 function divengine_articles_entity_bundle_field_info_alter(array &$fields, EntityTypeInterface $entity_type, string $bundle): void {
