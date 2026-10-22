@@ -48,6 +48,34 @@ foreach (['divengine_core', 'divengine_artifact', 'divengine_traceability', 'div
   $checks["module $module"] = $modules->moduleExists($module);
 }
 $checks[$expect_mcp ? 'MCP integration installed' : 'MCP integration not installed'] = $modules->moduleExists('divengine_mcp') === $expect_mcp;
+// Analyzers push database snapshots with HTTP Basic.
+$checks['module basic_auth'] = $modules->moduleExists('basic_auth');
+
+foreach (['content_editor', 'studio_manager', 'project_manager', 'qa_tester', 'qa_lead', 'qa_manager', 'database_analyzer', 'code_docs_publisher'] as $role) {
+  $checks["role $role"] = (bool) \Drupal\user\Entity\Role::load($role);
+}
+$checks['every record type has a discussion'] = count(\Drupal::service('divengine_thread.manager')->types()) >= 17
+  && (bool) \Drupal\field\Entity\FieldConfig::loadByName('node', 'knowledge_article', 'thread');
+$checks['[[CODE]] filter on Basic HTML'] = (bool) \Drupal\filter\Entity\FilterFormat::load('basic_html')?->filters('divengine_record_references')->status;
+$checks['articles are edited in the Studio theme'] = \Drupal::config('node.settings')->get('use_admin_theme') === FALSE;
+$standard_case = \Drupal::entityTypeManager()->getStorage('development_case')->load('standard');
+$checks['Development cases recommend verification'] = $standard_case && in_array('requirements_verified', array_column($standard_case->getLines(), 'target'), TRUE);
+
+$schema = \Drupal::database()->schema();
+$checks['database facts tables'] = $schema->tableExists('divengine_db_fk_column');
+$checks['code docs facts tables'] = $schema->tableExists('divengine_codedoc_ref') && $schema->tableExists('divengine_codedoc_batch');
+$adapters = \Drupal::service('divengine_codedocs.adapters');
+$checks['code docs adapters: contract, javadoc, tsdoc'] = $adapters->resolve(['contract' => 'divengine.codedocs'])->id() === 'contract'
+  && $adapters->resolve([], 'javadoc')->id() === 'javadoc'
+  && $adapters->resolve([], 'tsdoc')->id() === 'tsdoc';
+try {
+  $demo = file_get_contents($modules->getModule('divengine_database')->getPath() . '/tests/fixtures/demo_shop_v1.json');
+  \Drupal::service('divengine_database.importer')->validate(\Drupal::service('divengine_database.adapters')->toContract($demo));
+  $checks['the demo snapshot passes the contract checks'] = TRUE;
+}
+catch (\Throwable $e) {
+  $checks['the demo snapshot passes the contract checks (' . $e->getMessage() . ')'] = FALSE;
+}
 
 $failed = 0;
 foreach ($checks as $label => $ok) {

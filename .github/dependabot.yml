@@ -1,0 +1,13 @@
+# Keeps the pinned GitHub Actions current. Pull requests opened by Dependabot are
+# reviewed and merged by the maintainer like any other.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - '*'

@@ -1,0 +1,283 @@
+# Checks for pull requests (including forks) and for main.
+#
+# Runs with a read-only token and no secrets. Every database is a throw-away
+# PostgreSQL service container that exists only for the job; its credentials
+# are fixed CI values, not secrets.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    # Explicit bash adds -o pipefail to every step.
+    shell: bash
+
+env:
+  PHP_VERSION: '8.4'
+  PHP_EXTENSIONS: pdo_pgsql, pgsql, pdo_sqlite, gd, mbstring, xml, dom, curl, zip, intl, opcache
+  COMPOSER_NO_INTERACTION: '1'
+
+jobs:
+  static:
+    name: static
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+          tools: composer:v2
+      - name: Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-nodev-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-nodev-${{ runner.os }}-
+      - name: composer validate
+        run: composer validate --strict
+      - name: composer audit
+        run: |
+          set +e
+          out="$(composer audit --locked --ignore-unreachable 2>&1)"
+          status=$?
+          echo "$out"
+          if grep -q 'unreachable' <<<"$out"; then
+            echo "::warning title=composer audit::An advisory source was unreachable. Advisories for Drupal contributed projects may not have been checked; see docs/development.md."
+          fi
+          exit $status
+      - name: Install dependencies
+        run: composer install --no-dev --no-progress --prefer-dist
+      - name: PHP syntax
+        run: |
+          find web/modules/custom web/themes/custom web/profiles/custom scripts bootstrap.kernel.php -type f \
+            \( -name '*.php' -o -name '*.module' -o -name '*.install' -o -name '*.inc' -o -name '*.theme' -o -name '*.profile' \) \
+            -not -path '*/js/vendor/*' -not -path '*/node_modules/*' -print0 \
+            | xargs -0 -n1 -P4 php -d display_errors=1 -l 2>&1 \
+            | { grep -v '^No syntax errors detected in ' || true; }
+      - name: YAML syntax
+        run: |
+          find recipes web/modules/custom web/themes/custom web/profiles/custom -type f -name '*.yml' \
+            -not -path '*/js/vendor/*' -not -path '*/node_modules/*' -print0 \
+            | xargs -0 vendor/bin/yaml-lint --parse-tags --format=github
+
+  phpunit:
+    name: phpunit (${{ matrix.suite }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: ${{ matrix.timeout }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: kernel
+            timeout: 40
+          - suite: functional
+            timeout: 50
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: studio_ci
+          POSTGRES_PASSWORD: studio_ci
+          POSTGRES_DB: studio_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U studio_ci -d studio_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      PGHOST: 127.0.0.1
+      PGPORT: '5432'
+      PGUSER: studio_ci
+      PGPASSWORD: studio_ci
+      SIMPLETEST_BASE_URL: http://127.0.0.1:8888
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: memory_limit=-1, max_execution_time=0
+          coverage: none
+          tools: composer:v2
+      - name: Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-dev-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-dev-${{ runner.os }}-
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+      - name: Prepare the test database
+        run: psql -d studio_ci -v ON_ERROR_STOP=1 -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm'
+      - name: Write phpunit.xml
+        run: |
+          sed -e 's#name="SIMPLETEST_DB" value="[^"]*"#name="SIMPLETEST_DB" value="pgsql://studio_ci:studio_ci@127.0.0.1:5432/studio_ci"#' \
+              -e 's#name="SIMPLETEST_BASE_URL" value="[^"]*"#name="SIMPLETEST_BASE_URL" value="http://127.0.0.1:8888"#' \
+              phpunit.xml.dist > phpunit.xml
+          mkdir -p web/sites/simpletest
+      - name: Start the web server
+        if: matrix.suite == 'functional'
+        working-directory: web
+        run: |
+          PHP_CLI_SERVER_WORKERS=4 nohup php -d memory_limit=-1 -d max_execution_time=0 \
+            -S 127.0.0.1:8888 .ht.router.php > "$RUNNER_TEMP/php-server.log" 2>&1 &
+          for i in $(seq 1 30); do
+            curl -s -o /dev/null http://127.0.0.1:8888/core/install.php && exit 0
+            sleep 1
+          done
+          echo "The web server did not start." >&2
+          cat "$RUNNER_TEMP/php-server.log" >&2
+          exit 1
+      - name: PHPUnit ${{ matrix.suite }}
+        run: vendor/bin/phpunit -c phpunit.xml --testsuite ${{ matrix.suite }}
+
+  install-paths:
+    name: install paths
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: studio_ci
+          POSTGRES_PASSWORD: studio_ci
+          POSTGRES_DB: studio_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U studio_ci -d studio_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # The upgrade path installs an earlier commit with git archive.
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          ini-values: memory_limit=-1
+          coverage: none
+          tools: composer:v2
+      - name: Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-dev-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-dev-${{ runner.os }}-
+      - name: Install dependencies
+        run: composer install --no-progress --prefer-dist
+      - name: PostgreSQL client
+        run: command -v createdb && command -v psql || { sudo apt-get update -q && sudo apt-get install -yq postgresql-client; }
+      - name: Check the installation paths
+        env:
+          STUDIO_INSTALLCHECK_SERVER: pgsql://studio_ci:studio_ci@127.0.0.1:5432
+        run: scripts/check-install-paths.sh
+      - name: Check the upgrade path
+        env:
+          STUDIO_INSTALLCHECK_SERVER: pgsql://studio_ci:studio_ci@127.0.0.1:5432
+        run: scripts/check-install-paths.sh upgrade
+      - name: Show installation logs
+        if: failure()
+        run: |
+          shopt -s nullglob
+          for log in private/installcheck-*.log; do
+            echo "::group::$log"
+            tail -n 200 "$log" | sed -E 's#pgsql://[^[:space:]"]+#pgsql://***#g'
+            echo "::endgroup::"
+          done
+
+  javascript:
+    name: javascript
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+          tools: composer:v2
+      - name: Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-nodev-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-nodev-${{ runner.os }}-
+      # The diagram embed tests load the CKEditor 5 build shipped with core.
+      - name: Install dependencies
+        run: composer install --no-dev --no-progress --prefer-dist
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: web/modules/custom/*/tests/js/package-lock.json
+      - name: JavaScript tests
+        run: |
+          status=0
+          for dir in web/modules/custom/*/tests/js; do
+            echo "::group::$dir"
+            (cd "$dir" && npm ci --no-audit --no-fund && npm test) || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
+  codedocs:
+    name: codedocs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+          tools: composer:v2
+      - name: Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-nodev-${{ runner.os }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-nodev-${{ runner.os }}-
+      - name: Install dependencies
+        run: composer install --no-dev --no-progress --prefer-dist
+      - name: CodeDocs integration test (in-memory SQLite)
+        run: php web/modules/custom/divengine_codedocs/tests/run.php
