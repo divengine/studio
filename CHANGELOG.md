@@ -76,6 +76,9 @@ No release has been published yet; everything below is on `main`.
   display and invalid knowledge article configuration (#25, #52).
 - New installations on Drupal 11.4, whose Standard recipe no longer provides the
   configuration Studio's knowledge articles relied on (#54).
+- Cron no longer logs `ServiceNotFoundException: mcp.client_message.storage` on every run
+  when the MCP integration is installed: Divengine MCP removes the MCP module's cron
+  hook, which still calls the message storage that MCP removed with its SSE transport.
 
 ### Security
 
