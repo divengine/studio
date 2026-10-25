@@ -1,0 +1,6 @@
+services:
+  _defaults:
+    autowire: true
+  Drupal\divengine_mcp_oauth\EventSubscriber\McpOAuthSubscriber:
+    tags:
+      - { name: event_subscriber }

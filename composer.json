@@ -24,7 +24,8 @@
         "drupal/core-recommended": "^11.4",
         "drupal/gin": "^5.0",
         "drupal/jsonapi_schema": "^1.0",
-        "drupal/mcp": "^1.2.3"
+        "drupal/mcp": "^1.2.3",
+        "drupal/simple_oauth": "^6.1"
     },
     "conflict": {
         "drupal/drupal": "*"

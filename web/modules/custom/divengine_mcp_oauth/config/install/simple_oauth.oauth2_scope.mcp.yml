@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - divengine_mcp_oauth
+id: mcp
+name: mcp
+description: 'Read Divengine Studio through MCP.'
+grant_types:
+  authorization_code:
+    status: true
+    description: 'Read your Divengine Studio work through MCP (code, database schemas, code documentation, artifacts), with no more access than your own account has.'
+  refresh_token:
+    status: true
+    description: 'Keep the connection without asking again.'
+umbrella: false
+parent: _none
+# The token can do what both its user and the "MCP agent" role can do
+# (simple_oauth's Oauth2AccessPolicy intersects them), so it stays read-only.
+granularity_id: role
+granularity_configuration:
+  role: mcp_agent

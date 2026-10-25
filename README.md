@@ -30,10 +30,11 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_codedocs` | Code documentation for any language: common contract, Javadoc/TypeScript adapters, chunked publishing API, symbols, references, coverage and snapshot comparisons. [Usage](web/modules/custom/divengine_codedocs/README.md) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
+| `web/modules/custom/divengine_mcp_oauth` | Optional: OAuth 2.1 for MCP clients such as claude.ai: discovery, dynamic client registration, tokens limited to `/mcp/post` (`drush divengine:mcp-oauth-setup`, ADR-0017) |
 | `web/profiles/custom/divengine_studio_installer` | Installation profile: the branded web installer, which applies the recipes, and its installer theme |
 | `recipes/divengine_studio` | Site recipe for new sites: Drupal's Standard recipe + `divengine_studio_base` |
 | `recipes/divengine_studio_base` | All Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions; re-applied to update existing sites |
-| `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with token auth |
+| `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with OAuth 2.1 and token auth |
 | `docs/` | Architecture decisions, roadmap, development and release guides, MVP scope, research and handoff notes |
 | `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
@@ -104,11 +105,12 @@ When it finishes, the browser opens `/studio`, the Studio home, which takes the
 administrator to **My work**. The default theme is the Studio theme and Gin is the
 administration theme.
 
-If you selected the MCP integration, create its service account and token afterwards on
-the server, as the installer reminds you:
+If you selected the MCP integration, create its OAuth signing keys and, if you want one,
+its service account and token afterwards on the server, as the installer reminds you:
 
 ```bash
-vendor/bin/drush divengine:mcp-setup --uri=https://studio.example.com
+vendor/bin/drush divengine:mcp-oauth-setup --uri=https://studio.example.com
+vendor/bin/drush divengine:mcp-setup --uri=https://studio.example.com   # optional token access
 ```
 
 The same installation can run without a browser:
@@ -154,6 +156,9 @@ the front page, the default and administration themes and the editor buttons and
 of Basic and Full HTML. The MCP recipe turns MCP authentication back on, keeps the token
 access set up by `drush divengine:mcp-setup` and the MCP plugin settings, and only adds
 plugins the site does not have yet ([ADR-0016](docs/architecture/adr-0016-mcp-settings-ownership.md)).
+A site that had MCP before OAuth was added gets it on that update; run
+`drush divengine:mcp-oauth-setup` once afterwards to create the signing keys
+([ADR-0017](docs/architecture/adr-0017-mcp-oauth.md)).
 
 Applying the recipe keeps the site's name and sets `/studio` as the front page, the
 Studio theme as default and Gin as administration theme. In a multisite installation,
@@ -241,19 +246,33 @@ administrator; it works entirely in the Studio theme.
 
 ### MCP (optional)
 
-Exposes Studio, read-only, to AI clients such as Claude Code:
+Exposes Studio, read-only, to AI clients such as claude.ai, Claude Code, Claude Desktop
+and Cursor:
 
 ```bash
 vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp
-vendor/bin/drush divengine:mcp-setup --uri=https://studio.example.com
+vendor/bin/drush divengine:mcp-oauth-setup --uri=https://studio.example.com
+vendor/bin/drush divengine:mcp-setup --uri=https://studio.example.com   # optional
 ```
 
-The second command creates the `mcp_bot` account and a token in
-`private/divengine-mcp.token` (outside the web root, ignored by git) and prints the
-`claude mcp add` command. See `web/modules/custom/divengine_mcp/README.md`.
+Clients connect in one of two ways:
 
-To leave MCP out entirely, skip both commands and run
-`composer remove drupal/mcp drupal/jsonapi_schema`.
+- **OAuth 2.1** (any client, required by claude.ai and ChatGPT): add the server by its URL,
+  `https://studio.example.com/mcp/post`, with no headers. The client opens Studio's login
+  and consent page and then acts as that person, read-only. People need the **MCP user**
+  role. `divengine:mcp-oauth-setup` creates the token signing keys in `private/oauth/`.
+  See `web/modules/custom/divengine_mcp_oauth/README.md` and
+  [ADR-0017](docs/architecture/adr-0017-mcp-oauth.md).
+- **Token** (clients that accept headers, and scripts): `divengine:mcp-setup` creates the
+  `mcp_bot` account and a token in `private/divengine-mcp.token` (outside the web root,
+  ignored by git) and prints the `claude mcp add` command. See
+  `web/modules/custom/divengine_mcp/README.md`.
+
+The web server must pass `/.well-known/oauth-*` to Drupal; the examples in
+[Web server security](#web-server-security) do.
+
+To leave MCP out entirely, skip these commands and run
+`composer remove drupal/mcp drupal/jsonapi_schema drupal/simple_oauth`.
 
 ## Checks and tests
 
