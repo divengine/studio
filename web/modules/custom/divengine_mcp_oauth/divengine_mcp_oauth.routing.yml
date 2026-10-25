@@ -1,0 +1,37 @@
+# OAuth 2.0 Protected Resource Metadata (RFC 9728). MCP clients look for it at
+# the root and under the path of the endpoint they connect to.
+divengine_mcp_oauth.protected_resource:
+  path: '/.well-known/oauth-protected-resource'
+  defaults:
+    _controller: '\Drupal\divengine_mcp_oauth\Controller\OAuthMetadataController::protectedResource'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+divengine_mcp_oauth.protected_resource.mcp:
+  path: '/.well-known/oauth-protected-resource/mcp/post'
+  defaults:
+    _controller: '\Drupal\divengine_mcp_oauth\Controller\OAuthMetadataController::protectedResource'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+# OAuth 2.0 Authorization Server Metadata (RFC 8414).
+divengine_mcp_oauth.authorization_server:
+  path: '/.well-known/oauth-authorization-server'
+  defaults:
+    _controller: '\Drupal\divengine_mcp_oauth\Controller\OAuthMetadataController::authorizationServer'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+
+# OAuth 2.0 Dynamic Client Registration (RFC 7591).
+divengine_mcp_oauth.register:
+  path: '/oauth/register'
+  defaults:
+    _controller: '\Drupal\divengine_mcp_oauth\Controller\ClientRegistrationController::register'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE

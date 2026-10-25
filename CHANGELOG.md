@@ -40,6 +40,10 @@ No release has been published yet; everything below is on `main`.
 - Studio workspace theme and the **Studio Manager** role.
 - Optional read-only MCP server (`recipes/divengine_studio_mcp`) with token
   authentication and `drush divengine:mcp-setup`.
+- OAuth 2.1 for MCP clients (`divengine_mcp_oauth`, ADR-0017): claude.ai, Claude Desktop,
+  ChatGPT and other clients connect by URL, register themselves and act as the person who
+  authorizes them, read-only. Adds `drupal/simple_oauth`, the **MCP user** role and
+  `drush divengine:mcp-oauth-setup`.
 - Native web installer: the `divengine_studio_installer` profile is selected
   automatically by `/core/install.php`, has a branded installer theme, an optional
   MCP integration step and finishes at `/studio`; also usable with
@@ -96,6 +100,10 @@ vendor/bin/drush recipe $PWD/recipes/divengine_studio_base
 vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp   # if MCP is installed
 vendor/bin/drush cache:rebuild
 ```
+
+Sites with MCP get OAuth on that update. Run
+`vendor/bin/drush divengine:mcp-oauth-setup --uri=https://your-studio-address` once
+afterwards, and give the **MCP user** role to the people who will connect AI clients.
 
 Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 

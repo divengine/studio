@@ -1,5 +1,5 @@
 name: 'Divengine Studio MCP'
-description: 'Exposes Studio to AI clients (Claude Code, Claude Desktop, Cursor) as a read-only MCP server with token authentication. Run "drush divengine:mcp-setup" afterwards to create the service account and its token.'
+description: 'Exposes Studio to AI clients (claude.ai, Claude Code, Claude Desktop, Cursor) as a read-only MCP server with OAuth 2.1 and token authentication. Run "drush divengine:mcp-oauth-setup" afterwards to create the OAuth signing keys, and "drush divengine:mcp-setup" for the service account and its token.'
 type: 'Integration'
 install:
   - jsonapi
@@ -7,7 +7,16 @@ install:
   - key
   - mcp
   - divengine_mcp
+  - divengine_mcp_oauth
 config:
+  # Re-applying the recipe keeps what the site already has.
+  strict: false
+  # Recipes only install simple config from modules; the OAuth token types
+  # (simple_oauth) and the "mcp" scope (divengine_mcp_oauth) are config
+  # entities and have to be imported explicitly.
+  import:
+    simple_oauth: '*'
+    divengine_mcp_oauth: '*'
   actions:
     # Ownership of mcp.settings (ADR-0016). The recipe is re-applied on
     # updates, so it only forces what the distribution owns:
@@ -67,3 +76,12 @@ config:
         - 'use source code'
         - 'use database schemas'
         - 'use code docs'
+    # People who may connect an AI client to their own account with OAuth
+    # (ADR-0017). The token can only do what both the person and the
+    # "MCP agent" role can do, so it never writes.
+    user.role.mcp_user:
+      createIfNotExists:
+        label: 'MCP user'
+      grantPermissions:
+        - 'use mcp server'
+        - 'grant simple_oauth codes'
