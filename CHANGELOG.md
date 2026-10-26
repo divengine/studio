@@ -55,6 +55,12 @@ No release has been published yet; everything below is on `main`.
 - Community documents, issue forms, pull request template, security policy and pull
   request CI (#34, #35, #36, #37).
 
+- External references (`divengine_external`, ADR-0018, #69): GitHub issues, pull requests
+  and commits, or any web link, registered once per Development and traced to
+  requirements, decisions and evidence with **Link external work** in a record's Traces.
+  Links are read without network access; references follow the visibility of their
+  Development and are readable through JSON:API and the MCP `jsonapi_read` tool.
+
 ### Changed
 
 - Drupal core 11.4.10, Gin 5.0.16 and Drush 13.8.0 (#53, #54).
@@ -111,6 +117,9 @@ vendor/bin/drush cache:rebuild
 Sites with MCP get OAuth on that update. Run
 `vendor/bin/drush divengine:mcp-oauth-setup --uri=https://your-studio-address` once
 afterwards, and give the **MCP user** role to the people who will connect AI clients.
+
+Re-applying `divengine_studio_base` installs External references and grants **Link
+external work** to the roles that create trace links (#69).
 
 Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 

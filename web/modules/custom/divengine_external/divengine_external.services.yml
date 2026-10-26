@@ -1,0 +1,7 @@
+services:
+  plugin.manager.divengine_external_provider:
+    class: Drupal\divengine_external\ExternalProviderManager
+    parent: default_plugin_manager
+  divengine_external.references:
+    class: Drupal\divengine_external\ExternalReferences
+    arguments: ['@plugin.manager.divengine_external_provider', '@entity_type.manager', '@divengine_process.development_references', '@lock', '@database']

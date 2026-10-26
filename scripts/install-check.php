@@ -44,7 +44,7 @@ foreach ([
 }
 
 $modules = \Drupal::moduleHandler();
-foreach (['divengine_core', 'divengine_artifact', 'divengine_traceability', 'divengine_process', 'divengine_qa', 'divengine_project', 'divengine_timesheet', 'divengine_thread', 'divengine_articles', 'divengine_source', 'divengine_database', 'divengine_codedocs'] as $module) {
+foreach (['divengine_core', 'divengine_artifact', 'divengine_traceability', 'divengine_process', 'divengine_qa', 'divengine_project', 'divengine_timesheet', 'divengine_thread', 'divengine_articles', 'divengine_source', 'divengine_database', 'divengine_codedocs', 'divengine_external'] as $module) {
   $checks["module $module"] = $modules->moduleExists($module);
 }
 $checks[$expect_mcp ? 'MCP integration installed' : 'MCP integration not installed'] = $modules->moduleExists('divengine_mcp') === $expect_mcp;

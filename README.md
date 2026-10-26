@@ -28,6 +28,7 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/modules/custom/divengine_source` | Code Source: Git repositories of a Development indexed from the object database, code browser, MCP tools for agents (ADR-0012) |
 | `web/modules/custom/divengine_database` | Database schemas: snapshots from any analyzer through a normalized contract (SchemaSpy XML included), schema explorer, schema evolution, findings, MCP tools (ADR-0013) |
 | `web/modules/custom/divengine_codedocs` | Code documentation for any language: common contract, Javadoc/TypeScript adapters, chunked publishing API, symbols, references, coverage and snapshot comparisons. [Usage](web/modules/custom/divengine_codedocs/README.md) |
+| `web/modules/custom/divengine_external` | External references: GitHub issues, pull requests and commits, or any link, registered once per Development and traced to requirements, decisions and evidence; links are read without network access (ADR-0018). [Usage](web/modules/custom/divengine_external/README.md) |
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `web/modules/custom/divengine_mcp_oauth` | Optional: OAuth 2.1 for MCP clients such as claude.ai: discovery, dynamic client registration, tokens limited to `/mcp/post` (`drush divengine:mcp-oauth-setup`, ADR-0017) |
