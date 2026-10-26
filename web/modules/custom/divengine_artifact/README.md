@@ -25,6 +25,22 @@ Engineering artifact management — requirements, decisions, risks, test cases, 
 | created | timestamp | Creation time |
 | changed | timestamp | Last edit time |
 
+## Codes
+
+An artifact's code (`artifact_key`, for example `REQ-0042`) is permanent once assigned
+(ADR-0007):
+
+- New artifacts get the next code of their type's prefix from a global, locked sequence;
+  the code field is unique.
+- The edit form does not offer the code of a type with a prefix. A save through the
+  Entity API that changes it is refused, and validation reports it on the field, so
+  writers that validate (JSON:API, when writes are enabled) get a violation.
+- New revisions keep the code, and reverting to an older revision keeps the current one.
+- There is no administrative exception: a wrong code is fixed by creating a new artifact
+  and relating it to the old one (for example with `supersedes`).
+
+Covered by `ArtifactKeyStabilityTest` and `UniqueArtifactKeyConstraintTest`.
+
 ## Initial Artifact Types
 
 - requirement
