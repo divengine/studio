@@ -1,0 +1,10 @@
+name: 'Divengine MCP OAuth'
+type: module
+description: 'Lets AI clients connect to the MCP server with OAuth 2.1: discovery metadata, dynamic client registration, and tokens limited to the MCP endpoint.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_mcp:divengine_mcp
+  - mcp:mcp
+  - consumers:consumers
+  - simple_oauth:simple_oauth

@@ -30,10 +30,10 @@ class TimerController extends ControllerBase {
    * its time logged on that task first.
    */
   public function start(ProjectTask $project_task): RedirectResponse {
-    $running = $this->timer->current($this->currentUser());
-    if ($running && (int) $running['task'] !== (int) $project_task->id()) {
-      $other = $this->entityTypeManager()->getStorage('project_task')->load($running['task']);
-      $hours = $this->timer->stop($this->currentUser());
+    $stopped = $this->timer->start($this->currentUser(), (int) $project_task->id());
+    if ($stopped) {
+      $other = $this->entityTypeManager()->getStorage('project_task')->load($stopped['task']);
+      $hours = $this->timer->hours($stopped);
       if ($other && $other->access('view')) {
         $this->entityTypeManager()->getStorage('timesheet')->create([
           'uid' => $this->currentUser()->id(),
@@ -45,7 +45,6 @@ class TimerController extends ControllerBase {
         $this->messenger()->addStatus($this->t('Logged %hours on %task from the timer you had running.', ['%hours' => Timesheet::formatHours($hours), '%task' => $other->label()]));
       }
     }
-    $this->timer->start($this->currentUser(), (int) $project_task->id());
     $this->messenger()->addStatus($this->t('Timer started on %task.', ['%task' => $project_task->label()]));
     return new RedirectResponse($project_task->toUrl()->toString());
   }

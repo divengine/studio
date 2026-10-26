@@ -29,7 +29,7 @@ class IntegrationsForm extends FormBase {
     $form['mcp'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('MCP integration'),
-      '#description' => $this->t('Lets AI clients read Studio through a read-only MCP server with token authentication. After installation, an operator creates the service account and its token with <code>drush divengine:mcp-setup</code>.'),
+      '#description' => $this->t('Lets AI clients read Studio through a read-only MCP server, with OAuth 2.1 or a token. After installation, an operator creates the OAuth signing keys with <code>drush divengine:mcp-oauth-setup</code>, and the service account and its token with <code>drush divengine:mcp-setup</code>.'),
       '#default_value' => FALSE,
     ];
     $form['actions'] = ['#type' => 'actions'];

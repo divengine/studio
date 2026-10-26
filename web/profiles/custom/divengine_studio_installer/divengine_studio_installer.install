@@ -81,12 +81,13 @@ function divengine_studio_installer_apply_mcp(array &$install_state): array {
 /**
  * Installation task: tells how to finish the MCP setup.
  *
- * The service account and its token are created by an operator with
+ * The OAuth signing keys, the service account and its token are secrets an
+ * operator creates with "drush divengine:mcp-oauth-setup" and
  * "drush divengine:mcp-setup", never during installation.
  */
 function divengine_studio_installer_next_steps(array &$install_state): void {
   if (_divengine_studio_installer_mcp_selected($install_state)) {
-    \Drupal::messenger()->addStatus(t('The MCP integration is installed. To create its service account and token, run <code>drush divengine:mcp-setup --uri=https://your-studio-address</code> on the server, then connect your MCP client as the command explains.'));
+    \Drupal::messenger()->addStatus(t('The MCP integration is installed. To let people connect AI clients with OAuth, run <code>drush divengine:mcp-oauth-setup --uri=https://your-studio-address</code> on the server and give them the MCP user role. For a service account with a token, run <code>drush divengine:mcp-setup --uri=https://your-studio-address</code>. Each command explains how to connect.'));
   }
   // The choice only matters during installation.
   \Drupal::state()->delete(IntegrationsForm::STATE_MCP);
