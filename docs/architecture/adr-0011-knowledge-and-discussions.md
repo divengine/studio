@@ -34,8 +34,9 @@ already ships most of the pieces (nodes, taxonomy, comments, files, text formats
 ### Links by code (`divengine_traceability`)
 
 - `[[CODE]]` / `[[CODE|text]]` in formatted text becomes a link to the record with that code
-  (text filter `divengine_record_references`), with the current title, *restricted* when the
-  reader cannot see it, marked when the code is unknown.
+  (text filter `divengine_record_references`), with the current title. A code the reader
+  cannot open is marked exactly like an unknown code, so references do not reveal that a
+  record of another Development exists (#12).
 - Mentions are indexed on save (table `divengine_reference`) and records show *Mentioned in*.
   Mentions are not traces: traces stay the explicit, typed relationships.
 
