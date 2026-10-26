@@ -58,6 +58,14 @@ entity, `external_reference`, and nothing else is changed in the trace model:
    `divengine_external.references` service. The MCP write tools (#71) are to use the same
    service.
 
+8. **Observing is optional, manual and read-only (#70).** When the site allows it, people
+   who may edit a GitHub reference can ask GitHub for its title and state:
+   - only `api.github.com` is contacted, anonymously, without redirects, with bounded
+     time and size, at most once a minute per reference, and never while GitHub asks
+     Studio to wait;
+   - the answer is stored apart from the reference, as the provider's state on a date. It
+     creates no revision and never changes a Studio record.
+
 `TracePanel` gained `hook_divengine_trace_panel_actions_alter()` so that the module adds
 its action without Traceability depending on it.
 

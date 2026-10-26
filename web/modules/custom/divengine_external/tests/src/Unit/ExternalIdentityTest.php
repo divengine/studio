@@ -35,6 +35,7 @@ class ExternalIdentityTest extends UnitTestCase {
       'pull request tab, case, query, fragment' => ['https://GitHub.com/RafaGeist/Ancora-GOH/pull/99/files?diff=split#r1', 'github', 'pull_request', 'rafageist/ancora-goh', '99', 'https://github.com/rafageist/ancora-goh/pull/99', 'rafageist/ancora-goh#99'],
       'www and trailing slash' => ['https://www.github.com/rafageist/ancora-goh/issues/91/', 'github', 'issue', 'rafageist/ancora-goh', '91', 'https://github.com/rafageist/ancora-goh/issues/91', 'rafageist/ancora-goh#91'],
       'commit' => ['https://github.com/a/b/commit/ABCDEF1234567', 'github', 'commit', 'a/b', 'abcdef1234567', 'https://github.com/a/b/commit/abcdef1234567', 'a/b@abcdef1'],
+      'actions run and job' => ['https://github.com/a/b/actions/runs/123456/job/7', 'github', 'actions_run', 'a/b', '123456', 'https://github.com/a/b/actions/runs/123456', 'a/b run 123456'],
       'repository .git' => ['http://github.com/a/b.git', 'github', 'repository', 'a/b', 'a/b', 'https://github.com/a/b', 'a/b'],
       'other host' => ['https://Docs.Example.com:443/spec/v2/#intro', 'link', 'link', '', '', 'https://docs.example.com/spec/v2', 'docs.example.com/spec/v2'],
     ];
@@ -73,6 +74,7 @@ class ExternalIdentityTest extends UnitTestCase {
       'github issue zero' => ['https://github.com/a/b/issues/0'],
       'github issue text' => ['https://github.com/a/b/issues/x1'],
       'github bad owner' => ['https://github.com/-a/b/pull/1'],
+      'github actions without run' => ['https://github.com/a/b/actions'],
       'github short sha' => ['https://github.com/a/b/commit/abc12'],
       'too long' => ['https://example.com/' . str_repeat('a', 2100)],
     ];

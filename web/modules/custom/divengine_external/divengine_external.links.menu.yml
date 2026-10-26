@@ -4,3 +4,10 @@ divengine_external.studio.references:
   route_name: entity.external_reference.collection
   menu_name: studio
   weight: 31
+
+divengine_external.settings:
+  title: 'External references'
+  description: 'Whether Studio may read the title and state of public GitHub work when people ask.'
+  route_name: divengine_external.settings
+  parent: divengine.admin
+  weight: 55

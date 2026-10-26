@@ -17,3 +17,24 @@ entity.external_reference.collection:
     _title: 'External work'
   requirements:
     _permission: 'use unified process'
+
+divengine_external.refresh:
+  path: '/external/{external_reference}/refresh'
+  defaults:
+    _controller: '\Drupal\divengine_external\Controller\ExternalReferenceController::refresh'
+  requirements:
+    _entity_access: 'external_reference.update'
+    _csrf_token: 'TRUE'
+    external_reference: \d+
+  options:
+    parameters:
+      external_reference:
+        type: 'entity:external_reference'
+
+divengine_external.settings:
+  path: '/admin/divengine/external'
+  defaults:
+    _form: '\Drupal\divengine_external\Form\ExternalSettingsForm'
+    _title: 'External references'
+  requirements:
+    _permission: 'administer external references'

@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Install and update functions of External references.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_schema().
+ */
+function divengine_external_schema(): array {
+  return [
+    'divengine_external_observation' => [
+      'description' => 'What a provider last said about the work of an external reference. Provider state, kept apart from Studio records.',
+      'fields' => [
+        'reference_id' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+        'status' => ['type' => 'varchar_ascii', 'length' => 32, 'not null' => TRUE],
+        'title' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'state' => ['type' => 'varchar_ascii', 'length' => 32, 'not null' => TRUE, 'default' => ''],
+        'updated' => ['type' => 'int', 'size' => 'big', 'not null' => FALSE],
+        'note' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+        'observed' => ['type' => 'int', 'size' => 'big', 'not null' => TRUE],
+        'observed_by' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      ],
+      'primary key' => ['reference_id'],
+    ],
+  ];
+}
+
+/**
+ * Adds the table of observed external state and its setting.
+ */
+function divengine_external_update_11001(): void {
+  $schema = \Drupal::database()->schema();
+  if (!$schema->tableExists('divengine_external_observation')) {
+    $schema->createTable('divengine_external_observation', divengine_external_schema()['divengine_external_observation']);
+  }
+  $config = \Drupal::configFactory()->getEditable('divengine_external.settings');
+  if ($config->isNew()) {
+    $config->set('observe_github', FALSE)->save();
+  }
+}
