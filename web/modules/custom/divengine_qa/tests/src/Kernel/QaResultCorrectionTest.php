@@ -202,17 +202,14 @@ class QaResultCorrectionTest extends KernelTestBase {
   }
 
   /**
-   * Characterization: the last result of a case after a late correction.
+   * Correcting an older run keeps its place in the case's history (#9).
    *
-   * Pending maintainer decision (see issue #9). QaResultRecorder::stamp()
-   * sets execution_date to the time of the correction, and
-   * QaMetrics::refreshCase() takes the execution with the latest
-   * execution_date as the case's last result. Correcting the result of an
-   * older run after a newer run recorded one therefore makes the older,
-   * corrected execution the case's last result. This test records that
-   * behaviour; it is not a statement that it is the intended one.
+   * A correction keeps the execution date and who recorded the result; the
+   * correction record holds who corrected it, when and why. The case's last
+   * result, and the requirement verification built on it, stay with the
+   * newer run.
    */
-  public function testCorrectingAnOlderRunMakesItTheLastResultOfTheCase(): void {
+  public function testCorrectingAnOlderRunKeepsTheNewerResultLast(): void {
     $lead = $this->qaUser('lead');
     $tester = $this->qaUser('tester');
     $plan = $this->qaPlan($this->qaDevelopment($lead, [$tester]));
@@ -231,17 +228,25 @@ class QaResultCorrectionTest extends KernelTestBase {
     $manager = $this->qaUser('manager');
     $this->setCurrentUser($manager);
     $this->container->get('divengine_qa.runs')->reopen(QaTestRun::load($older->id()), 'Correct an old result');
-    $this->setCurrentUser($tester);
+    $this->setCurrentUser($lead);
 
     QaTestClock::$now = 1_800_000_300;
     $this->recorder()->record($this->executions($older)[0], 'blocked', ['result_reason' => 'Data missing'], 'It never really ran');
     $corrected = $this->executions($older)[0];
-    $this->assertSame(1_800_000_300, (int) $corrected->get('execution_date')->value, 'A correction restamps the execution date.');
-    $this->assertSame(1_800_000_200, (int) $this->executions($newer)[0]->get('execution_date')->value);
-    // CURRENT behaviour: the corrected older execution, not the newer run's
-    // Failed result, is the case's last result.
-    $this->assertSame('blocked', QaTestCase::load($case->id())->get('last_result')->value);
-    $this->assertSame([(string) $corrected->id()], array_map(fn ($c) => (string) $c->get('execution')->target_id, $this->corrections($older)));
+    $this->assertSame('blocked', $corrected->getResult());
+    $this->assertSame(1_800_000_100, (int) $corrected->get('execution_date')->value, 'A correction keeps the execution date.');
+    $this->assertSame((string) $tester->id(), (string) $corrected->get('executed_by')->target_id, 'A correction keeps who recorded the result.');
+    $this->assertSame('failed', QaTestCase::load($case->id())->get('last_result')->value, "The newer run's result stays the case's last result.");
+
+    // The correction is recorded apart: who, when, why, old and new values.
+    $corrections = $this->corrections($older);
+    $this->assertCount(1, $corrections);
+    $correction = reset($corrections);
+    $this->assertSame((string) $corrected->id(), (string) $correction->get('execution')->target_id);
+    $this->assertSame((string) $lead->id(), (string) $correction->get('uid')->target_id);
+    $this->assertSame(1_800_000_300, (int) $correction->get('created')->value);
+    $this->assertSame('It never really ran', $correction->get('reason')->value);
+    $this->assertSame(['passed', 'blocked'], [$correction->get('old_state')->value, $correction->get('new_state')->value]);
   }
 
 }

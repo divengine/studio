@@ -20,7 +20,7 @@ class QaRunRulesConstraint extends SymfonyConstraint {
 
   public string $historical = 'A Completed or Cancelled Run is historical evidence and cannot be modified. Reopen a Completed Run before making corrections.';
 
-  public string $flags = 'Self-created and Automatically Completed are set by the system only.';
+  public string $flags = 'Self-created, Automatically Completed and the snapshot date are set by the system only.';
 
   public string $plan = 'The Test Plan of a Run cannot change once its executions were generated from that Plan.';
 

@@ -68,6 +68,13 @@ No release has been published yet; everything below is on `main`.
 - Deleting a Development that still has dependent records is refused (#33).
 - Creating a trace link requires view access to both ends and refuses duplicates,
   cycles in `includes`/`generalizes` and links across Developments (#33).
+- QA runs record when their snapshot was taken. A Draft run whose plan has no Ready
+  cases says it cannot start until a QA Lead generates its executions (#9).
+- Correcting a result of an older QA run keeps its execution date and tester; the
+  correction record holds who corrected it, when and why, and the newer run stays the
+  case's last result (#9).
+- Copying run evidence into a QA Issue is now opt-in, and the form warns that copies are
+  shared with the QA users of the Development (#9).
 
 ### Fixed
 

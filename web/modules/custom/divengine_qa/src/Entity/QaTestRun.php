@@ -166,6 +166,9 @@ class QaTestRun extends ContentEntityBase implements StatefulInterface, EntityOw
       ->setLabel(new TranslatableMarkup('End Date'))
       ->setDisplayOptions('form', ['type' => 'datetime_timestamp', 'weight' => -9])
       ->setDisplayConfigurable('form', TRUE);
+    $fields['snapshot_date'] = BaseFieldDefinition::create('timestamp')
+      ->setLabel(new TranslatableMarkup('Snapshot Taken'))
+      ->setDescription(new TranslatableMarkup('When the executions were generated from the Test Plan. Empty while the Run has none.'));
     $fields['notes'] = ProcessFields::text(new TranslatableMarkup('Notes'), -5);
     $fields['tags'] = QaFields::tags(-4);
     $fields['last_reopened_by'] = BaseFieldDefinition::create('entity_reference')

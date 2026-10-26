@@ -7,7 +7,7 @@ services:
     arguments: ['@entity_type.manager']
   divengine_qa.snapshot:
     class: Drupal\divengine_qa\QaSnapshot
-    arguments: ['@entity_type.manager', '@divengine_qa.metrics']
+    arguments: ['@entity_type.manager', '@divengine_qa.metrics', '@datetime.time']
   divengine_qa.runs:
     class: Drupal\divengine_qa\QaRunWorkflow
     arguments: ['@entity_type.manager', '@current_user', '@datetime.time', '@lock', '@divengine_qa.metrics', '@divengine_qa.snapshot', '@divengine_qa.logger']

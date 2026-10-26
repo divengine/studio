@@ -51,3 +51,16 @@ function divengine_qa_install(bool $is_syncing): void {
     $case->addLines($lines)->save();
   }
 }
+
+/**
+ * Adds the snapshot date of test runs.
+ *
+ * Existing runs keep an empty date: it was not recorded when their
+ * executions were generated, and it is not inferred.
+ */
+function divengine_qa_update_11001(): void {
+  $definition = \Drupal\Core\Field\BaseFieldDefinition::create('timestamp')
+    ->setLabel(new TranslatableMarkup('Snapshot Taken'))
+    ->setDescription(new TranslatableMarkup('When the executions were generated from the Test Plan. Empty while the Run has none.'));
+  \Drupal::entityDefinitionUpdateManager()->installFieldStorageDefinition('snapshot_date', 'qa_test_run', 'divengine_qa', $definition);
+}

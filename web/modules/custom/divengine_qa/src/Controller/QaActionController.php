@@ -43,7 +43,9 @@ class QaActionController extends ControllerBase {
         'complete' => $this->runs->complete($qa_test_run),
         'cancel' => $this->runs->cancel($qa_test_run),
         'reset' => $this->runs->resetToDraft($qa_test_run),
-        'generate' => $this->messenger()->addStatus($this->formatPlural($this->runs->generateExecutions($qa_test_run), 'Generated 1 execution.', 'Generated @count executions.')),
+        'generate' => ($count = $this->runs->generateExecutions($qa_test_run))
+          ? $this->messenger()->addStatus($this->formatPlural($count, 'Generated 1 execution.', 'Generated @count executions.'))
+          : $this->messenger()->addWarning($this->t('No executions were generated: the Test Plan has no Ready Test Cases. The Run stays a Draft without a snapshot.')),
       };
     }
     catch (QaException $e) {

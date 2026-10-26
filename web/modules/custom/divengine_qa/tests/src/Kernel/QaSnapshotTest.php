@@ -166,16 +166,13 @@ class QaSnapshotTest extends KernelTestBase {
   }
 
   /**
-   * Characterization: a run created while the plan has no Ready case.
+   * A Draft run prepared before its plan has Ready cases (#9).
    *
-   * Pending maintainer decision (see issue #9). The snapshot of such a run
-   * is not taken when the run is created but later, when a Lead generates
-   * its executions (QaRunWorkflow::generateExecutions()) while it is still
-   * Draft. Its content is therefore the plan as it is at generation time,
-   * including changes made after the run was created. The services that
-   * create runs for Testers refuse an empty plan; a run saved directly (the
-   * run form of a Lead) is accepted. This test records that behaviour; it
-   * is not a statement that it is the intended one.
+   * A Lead may save such a run (the run form); the services that create runs
+   * for Testers refuse an empty plan. It cannot start. Its snapshot is taken
+   * when a Lead generates its executions, so it holds the plan as it is
+   * then, and the run records that moment as its snapshot date. From then on
+   * it is frozen like any other snapshot.
    */
   public function testRunCreatedWithoutReadyCasesTakesItsSnapshotOnGeneration(): void {
     $lead = $this->qaUser('lead');
@@ -192,8 +189,12 @@ class QaSnapshotTest extends KernelTestBase {
       $this->assertStringContainsString('no Ready Test Cases', $e->getMessage());
     }
 
+    QaTestClock::$now = 1_800_000_100;
     $run = $this->qaRun($plan, $lead, $tester, FALSE, 'Created empty');
     $this->assertSame([], $this->executions($run));
+    $this->assertTrue(QaTestRun::load($run->id())->get('snapshot_date')->isEmpty(), 'No snapshot is recorded while there are no executions.');
+    $this->assertSame(0, $this->container->get('divengine_qa.runs')->generateExecutions(QaTestRun::load($run->id())));
+    $this->assertTrue(QaTestRun::load($run->id())->get('snapshot_date')->isEmpty(), 'Generating from a plan without Ready cases records no snapshot.');
     try {
       $this->container->get('divengine_qa.runs')->start($run);
       $this->fail('A run without executions cannot start.');
@@ -216,7 +217,9 @@ class QaSnapshotTest extends KernelTestBase {
       $this->assertStringContainsString('Only a QA Lead', $e->getMessage());
     }
     $this->setCurrentUser($lead);
+    QaTestClock::$now = 1_800_000_500;
     $this->assertSame(1, $this->container->get('divengine_qa.runs')->generateExecutions(QaTestRun::load($run->id())));
+    $this->assertSame(1_800_000_500, (int) QaTestRun::load($run->id())->get('snapshot_date')->value, 'The snapshot date is when the executions were generated.');
     [$execution] = $this->executions($run);
     $this->assertSame('Search renamed after the run was created', $execution->get('snapshot_name')->value);
     $this->assertSame(['Type a term', 'Step added after the run was created'], array_values(array_map(fn ($s) => $s->get('action')->value, $execution->getStepResults())));
@@ -225,8 +228,14 @@ class QaSnapshotTest extends KernelTestBase {
     $frozen = $this->snapshot($run);
     $case->set('name', 'Renamed again')->save();
     $this->qaCase($suite, 'Ready later still');
+    QaTestClock::$now = 1_800_000_900;
     $this->assertSame(0, $this->container->get('divengine_qa.runs')->generateExecutions(QaTestRun::load($run->id())));
     $this->assertSame($frozen, $this->snapshot($run));
+    $this->assertSame(1_800_000_500, (int) QaTestRun::load($run->id())->get('snapshot_date')->value);
+
+    // Only the workflow sets the snapshot date.
+    $edited = QaTestRun::load($run->id())->set('snapshot_date', 1_800_000_000);
+    $this->assertStringContainsString('set by the system only', (string) $edited->validate()[0]->getMessage());
   }
 
 }

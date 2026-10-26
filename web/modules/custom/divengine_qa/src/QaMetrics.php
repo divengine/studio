@@ -107,8 +107,11 @@ class QaMetrics {
     $ids = $storage->getQuery()->accessCheck(FALSE)->condition('test_case', $case->id())->execute();
     $latest = NULL;
     foreach ($storage->loadMultiple($ids) as $execution) {
+      // The latest execution by its execution date (corrections keep it),
+      // then by creation order.
       $date = (int) $execution->get('execution_date')->value;
-      if ($latest === NULL || $date > (int) $latest->get('execution_date')->value) {
+      $latest_date = (int) $latest?->get('execution_date')->value;
+      if ($latest === NULL || $date > $latest_date || ($date === $latest_date && (int) $execution->id() > (int) $latest->id())) {
         $latest = $execution;
       }
     }

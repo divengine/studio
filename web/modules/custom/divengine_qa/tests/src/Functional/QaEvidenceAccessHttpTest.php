@@ -27,7 +27,7 @@ class QaEvidenceAccessHttpTest extends BrowserTestBase {
   public function testPrivateEvidenceAndMembershipChanges(): void {
     $tester_permissions = ['use unified process', 'use qa', 'execute qa tests'];
     $lead = $this->drupalCreateUser(array_merge($tester_permissions, ['manage qa']));
-    $tester = $this->drupalCreateUser($tester_permissions);
+    $tester = $this->drupalCreateUser(array_merge($tester_permissions, ['use text format qa_issue']));
     $colleague = $this->drupalCreateUser($tester_permissions);
     $outsider = $this->drupalCreateUser(array_merge($tester_permissions, ['manage qa']));
     $this->grantPermissions(Role::load('anonymous'), ['use qa', 'execute qa tests']);
@@ -83,6 +83,29 @@ class QaEvidenceAccessHttpTest extends BrowserTestBase {
       $this->assertSession()->responseNotContains("Private $name evidence");
     }
 
+    // Reporting an issue: copying the evidence is opt-in, and the form warns
+    // that copies are shared with the QA users of the Development.
+    $this->setCurrentUser($tester);
+    \Drupal::service('divengine_qa.results')->record($step, 'failed', ['actual_result' => 'Declined']);
+    $this->drupalLogin($tester);
+    $this->drupalGet('/qa/execution/' . $execution->id() . '/issue');
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->checkboxNotChecked('copy_attachments');
+    $this->assertSession()->pageTextContains('Copies on the QA Issue can be opened by every QA user of the Development [DEV-0001] Private QA, including people who cannot open this Test Run.');
+    $issue = \Drupal::service('divengine_qa.issues')->create(\Drupal::entityTypeManager()->getStorage('qa_test_execution')->loadUnchanged($execution->id()), NULL, 'Card declined', '<p>Declined.</p>', '2', TRUE);
+    $copies = array_map(fn ($item) => $item->entity->createFileUrl(), iterator_to_array(\Drupal::entityTypeManager()->getStorage('qa_issue')->loadUnchanged($issue->id())->get('evidence')));
+    $this->assertCount(2, $copies);
+    $this->drupalLogin($colleague);
+    foreach ($copies as $url) {
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(200);
+    }
+    $this->drupalLogin($outsider);
+    foreach ($copies as $url) {
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(403);
+    }
+
     // Warm caches as the Tester, then revoke their membership. The next
     // request is separate from the writer and must not reuse the earlier
     // privileged answer.
@@ -103,6 +126,20 @@ class QaEvidenceAccessHttpTest extends BrowserTestBase {
     $this->drupalGet($files['step']);
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->responseContains('Private step evidence');
+
+    // The issue copies follow the Development too: warm them for the
+    // colleague, then remove them from it.
+    $this->drupalLogin($colleague);
+    foreach ($copies as $url) {
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(200);
+    }
+    $development->set('members', [])->save();
+    foreach ($copies as $url) {
+      $this->drupalGet($url);
+      $this->assertSession()->statusCodeEquals(403);
+      $this->assertSession()->responseNotContains('evidence');
+    }
   }
 
 }

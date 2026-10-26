@@ -183,17 +183,14 @@ class QaRuntimeAccessTest extends KernelTestBase {
   }
 
   /**
-   * Evidence copied into a QA Issue.
+   * Evidence copied into a QA Issue (#9).
    *
-   * Invariant: users outside the Development never download the copy.
-   *
-   * Characterization, pending maintainer decision (see issue #9): QA Issues
-   * are design-level records (QaAccessControlHandler::designAccess()) read
-   * by every QA user of the Development, so the copy QaIssues::copyEvidence()
-   * makes under private://qa/issues/<id> is downloadable by any QA user of
-   * the Development who can view the issue, including Testers who could not
-   * download the original evidence of the run. This test records that
-   * behaviour; it is not a statement that it is the intended one.
+   * Copying is an explicit choice of the reporter, who is warned on the
+   * Report Issue form. QA Issues are design-level records
+   * (QaAccessControlHandler::designAccess()) read by every QA user of the
+   * Development, so the copy under private://qa/issues/<id> is shared with
+   * them, while the original stays private to the run. Nobody outside the
+   * Development reaches the copy, and leaving the Development removes it.
    */
   public function testEvidenceCopiedToAnIssue(): void {
     $lead = $this->qaUser('lead');
@@ -214,6 +211,10 @@ class QaRuntimeAccessTest extends KernelTestBase {
     $execution->get('evidence')->appendItem($original->id());
     $execution->saveTrusted();
 
+    // Without the choice, nothing is copied.
+    $private = $this->container->get('divengine_qa.issues')->create($execution, NULL, 'Card declined privately', '<p>Declined.</p>', '2', FALSE);
+    $this->assertCount(0, QaIssue::load($private->id())->get('evidence'));
+
     $issue = $this->container->get('divengine_qa.issues')->create($execution, NULL, 'Card declined', '<p>Declined.</p>', '2', TRUE);
     $issue = QaIssue::load($issue->id());
     $this->assertCount(1, $issue->get('evidence'));
@@ -229,8 +230,8 @@ class QaRuntimeAccessTest extends KernelTestBase {
     $this->assertTrue($this->downloadable($copy, $tester));
     $this->assertTrue($this->downloadable($copy, $lead));
 
-    // CURRENT behaviour: QA users of the Development who are not on the run
-    // download the copy, while the original stays restricted to the run.
+    // QA users of the Development who are not on the run download the copy,
+    // while the original stays restricted to the run.
     foreach (['colleague' => $colleague, 'reader' => $reader] as $who => $account) {
       $this->assertTrue($issue->access('view', $account), $who);
       $this->assertTrue($this->downloadable($copy, $account), "$who downloads the issue copy");
