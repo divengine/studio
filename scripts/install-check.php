@@ -48,6 +48,14 @@ foreach (['divengine_core', 'divengine_artifact', 'divengine_traceability', 'div
   $checks["module $module"] = $modules->moduleExists($module);
 }
 $checks[$expect_mcp ? 'MCP integration installed' : 'MCP integration not installed'] = $modules->moduleExists('divengine_mcp') === $expect_mcp;
+if ($expect_mcp) {
+  // OAuth for MCP clients (ADR-0017): the scope and token types are config
+  // entities the recipe has to import.
+  $checks['MCP OAuth installed'] = $modules->moduleExists('divengine_mcp_oauth');
+  $checks['MCP OAuth scope'] = (bool) \Drupal::entityTypeManager()->getStorage('oauth2_scope')->load('mcp');
+  $checks['OAuth token types'] = (bool) \Drupal::entityTypeManager()->getStorage('oauth2_token_type')->load('access_token');
+  $checks['role mcp_user'] = (bool) \Drupal\user\Entity\Role::load('mcp_user');
+}
 // Analyzers push database snapshots with HTTP Basic.
 $checks['module basic_auth'] = $modules->moduleExists('basic_auth');
 
