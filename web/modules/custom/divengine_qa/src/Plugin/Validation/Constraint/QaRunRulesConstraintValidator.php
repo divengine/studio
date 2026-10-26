@@ -46,8 +46,8 @@ class QaRunRulesConstraintValidator extends ConstraintValidator implements Conta
     }
     $original = $run->isNew() ? NULL : $this->entityTypeManager->getStorage('qa_test_run')->loadUnchanged($run->id());
     $flags_changed = $original
-      ? ((bool) $original->get('is_self_service')->value !== (bool) $run->get('is_self_service')->value || (bool) $original->get('is_auto_completed')->value !== (bool) $run->get('is_auto_completed')->value)
-      : ($run->get('is_self_service')->value || $run->get('is_auto_completed')->value);
+      ? ((bool) $original->get('is_self_service')->value !== (bool) $run->get('is_self_service')->value || (bool) $original->get('is_auto_completed')->value !== (bool) $run->get('is_auto_completed')->value || (string) $original->get('snapshot_date')->value !== (string) $run->get('snapshot_date')->value)
+      : ($run->get('is_self_service')->value || $run->get('is_auto_completed')->value || !$run->get('snapshot_date')->isEmpty());
     if ($flags_changed) {
       $this->context->buildViolation($constraint->flags)->addViolation();
     }

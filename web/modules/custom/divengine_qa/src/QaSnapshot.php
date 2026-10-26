@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\divengine_qa;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\divengine_qa\Entity\QaTestRun;
 
@@ -11,15 +12,18 @@ use Drupal\divengine_qa\Entity\QaTestRun;
  * Freezes the plan into a run: one execution per Ready case, one step result
  * per step.
  *
- * The copy never changes afterwards: editing the plan does not touch existing
- * runs, and new Ready cases are never injected into a run that already has
- * executions.
+ * The copy is taken when the executions are generated: when the run is
+ * created, or later by a Lead for a Draft run whose plan had no Ready cases
+ * then. The run records that moment as its snapshot date. The copy never
+ * changes afterwards: editing the plan does not touch existing runs, and new
+ * Ready cases are never injected into a run that already has executions.
  */
 class QaSnapshot {
 
   public function __construct(
     protected EntityTypeManagerInterface $entityTypeManager,
     protected QaMetrics $metrics,
+    protected TimeInterface $time,
   ) {}
 
   /**
@@ -82,6 +86,9 @@ class QaSnapshot {
         ])->saveTrusted();
       }
       $created++;
+    }
+    if ($created) {
+      $run->set('snapshot_date', $this->time->getRequestTime());
     }
     $this->metrics->refreshRun($run);
     return $created;

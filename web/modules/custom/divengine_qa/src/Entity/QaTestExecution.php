@@ -20,7 +20,8 @@ use Drupal\divengine_qa\QaVocabulary;
 /**
  * The execution of one test case (or ad-hoc scenario) in a run.
  *
- * Its instructions are a frozen copy taken when the run was created. With
+ * Its instructions are a frozen copy taken when the run's executions were
+ * generated (the run's snapshot date). With
  * steps, its result is derived from the step results; without, it is
  * recorded directly. Executions are only created by the snapshot and by
  * Add Scenario.
@@ -63,7 +64,7 @@ class QaTestExecution extends ContentEntityBase implements EntityChangedInterfac
   use QaTrustedWriteTrait;
 
   /**
-   * Fields frozen when the run is created.
+   * Fields frozen when the execution is generated.
    */
   public static function snapshotFields(): array {
     return [

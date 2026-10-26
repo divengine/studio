@@ -120,14 +120,28 @@ class ReportIssueForm extends FormBase {
       '#states' => $link + ['required' => [':input[name="mode"]' => ['value' => 'link']]],
     ];
     $evidence = $this->issues->relevantEvidence($this->execution, $failed);
+    // Run evidence is private to the Run; a copy on the issue is shared with
+    // the QA team of the Development. Copying is opt-in and says so.
     $form['copy_attachments'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Copy Attachments to QA Issue'),
-      '#default_value' => TRUE,
+      '#default_value' => FALSE,
+      '#access' => (bool) $evidence,
       '#description' => $evidence
         ? $this->formatPlural(count($evidence), '1 evidence file: @names', '@count evidence files: @names', ['@names' => implode(', ', array_map(fn ($f) => $f->getFilename(), $evidence))])
-        : $this->t('No evidence attached to this execution or its failed steps.'),
+        : NULL,
     ];
+    if ($evidence) {
+      $form['copy_warning'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['messages', 'messages--warning']],
+        'text' => ['#markup' => $this->t('Copies on the QA Issue can be opened by every QA user of the Development %development, including people who cannot open this Test Run. Copy only evidence they may see. The originals stay private to the Run.', ['%development' => (string) $this->execution->get('development')->entity?->label()])],
+        '#states' => ['visible' => [':input[name="copy_attachments"]' => ['checked' => TRUE]]],
+      ];
+    }
+    else {
+      $form['no_evidence'] = ['#markup' => '<p>' . $this->t('No evidence attached to this execution or its failed steps.') . '</p>'];
+    }
     $form['actions'] = ['#type' => 'actions'];
     $form['actions']['create'] = ['#type' => 'submit', '#value' => $this->t('Create QA Issue'), '#button_type' => 'primary', '#states' => $create];
     $form['actions']['link'] = ['#type' => 'submit', '#value' => $this->t('Link QA Issue'), '#button_type' => 'primary', '#states' => $link];

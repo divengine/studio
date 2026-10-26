@@ -270,10 +270,19 @@ class QaResultRecorder {
 
   /**
    * Sets the result and who recorded it when (cleared for Pending).
+   *
+   * A correction from one final result to another keeps who recorded the
+   * result and when: the execution date orders the case's results, so
+   * correcting an older run never makes it the case's last result. The
+   * correction record holds who corrected it, when and why.
    */
   protected function stamp(QaTestExecution|QaStepResult $record, string $state): void {
-    $record->set('state', $state);
     $terminal = in_array($state, QaVocabulary::TERMINAL, TRUE);
+    $recorded = in_array($record->getResult(), QaVocabulary::TERMINAL, TRUE) && !$record->get('execution_date')->isEmpty();
+    $record->set('state', $state);
+    if ($terminal && $recorded) {
+      return;
+    }
     $record->set('executed_by', $terminal ? $this->currentUser->id() : NULL);
     $record->set('execution_date', $terminal ? $this->time->getRequestTime() : NULL);
   }

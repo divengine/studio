@@ -297,13 +297,14 @@ class QaViewBuilder extends EntityViewBuilder {
       (string) $this->t('Test Plan') => $plan?->label(),
       (string) $this->t('Tester') => $run->get('tester')->entity?->getDisplayName() . ($run->get('is_self_service')->value ? ' · ' . $this->t('self-created') : ''),
       (string) $this->t('Environment') => $plan?->get('environment')->entity?->label(),
+      (string) $this->t('Snapshot Taken') => $this->date($run->get('snapshot_date')->value),
       (string) $this->t('Started') => $this->date($run->get('start_date')->value),
       (string) $this->t('Ended') => $this->date($run->get('end_date')->value),
     ], $actions) + ['#weight' => -100];
 
     $banners = [];
     if (!$executions) {
-      $banners[] = $this->t("This Run has no executions: none of the Plan's Test Cases were Ready when it was created. It cannot be started or completed until executions are generated.");
+      $banners[] = $this->t('This Draft Run has no executions yet and cannot be started: its Test Plan had no Ready Test Cases. Once there are, a QA Lead generates the executions, which takes the snapshot of the Plan at that moment.');
     }
     elseif ($state === 'in_progress') {
       $banners[] = (int) $run->get('pending_count')->value > 0
@@ -438,7 +439,7 @@ class QaViewBuilder extends EntityViewBuilder {
       $build['banners'] = ['#theme' => 'status_messages', '#message_list' => ['warning' => $banners], '#status_headings' => ['warning' => $this->t('Warning message')], '#weight' => -95];
     }
 
-    $build['instructions'] = $this->section($this->t('Instructions (frozen when the Run was created)'), 0, $this->facts([
+    $build['instructions'] = $this->section($this->t('Instructions (frozen when the executions were generated)'), 0, $this->facts([
       (string) $this->t('Objective') => $execution->get('snapshot_description')->value,
       (string) $this->t('Preconditions') => $execution->get('snapshot_preconditions')->value,
       (string) $this->t('Test Data') => $execution->get('snapshot_test_data')->value,
