@@ -1,0 +1,11 @@
+# Blank issues are disabled so that reports carry the version, installation path and
+# environment needed to reproduce them. The maintainer can still open other issues
+# with the GitHub CLI or API.
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/divengine/studio/security/advisories/new
+    about: Report vulnerabilities privately. Never disclose them in a public issue. See SECURITY.md.
+  - name: Documentation
+    url: https://github.com/divengine/studio#readme
+    about: Installation, updates and operation are described in the README and the docs/ directory.

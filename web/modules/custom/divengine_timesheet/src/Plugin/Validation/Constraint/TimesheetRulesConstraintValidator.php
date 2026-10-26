@@ -29,11 +29,15 @@ class TimesheetRulesConstraintValidator extends ConstraintValidator {
     }
     $task = $entry->get('task')->entity;
     $project = $entry->get('project')->entity;
-    if ($task && $project && (string) $task->get('project')->target_id !== (string) $project->id()) {
+    if (!$task && $entry->get('project')->isEmpty()) {
+      $this->context->buildViolation($constraint->project)->atPath('project')->addViolation();
+    }
+    elseif ($project && $entry->contradictsTask()) {
       $this->context->buildViolation($constraint->task)
         ->setParameter('%task', $task->label())
         ->setParameter('%project', $project->label())
-        ->atPath('task')
+        ->setParameter('%task_project', (string) $task->get('project')->entity?->label())
+        ->atPath('project')
         ->addViolation();
     }
   }

@@ -3,10 +3,12 @@
     "description": "Divengine Studio: an engineering suite on Drupal core (artifacts, traceability, modelers, Unified Process).",
     "type": "project",
     "license": "GPL-3.0-or-later",
-    "homepage": "https://www.drupal.org/project/drupal",
+    "homepage": "https://github.com/divengine/studio",
     "support": {
-        "docs": "https://www.drupal.org/docs/user_guide/en/index.html",
-        "chat": "https://www.drupal.org/node/314178"
+        "issues": "https://github.com/divengine/studio/issues",
+        "source": "https://github.com/divengine/studio",
+        "docs": "https://github.com/divengine/studio/wiki",
+        "security": "https://github.com/divengine/studio/security/policy"
     },
     "repositories": [
         {
@@ -22,7 +24,8 @@
         "drupal/core-recommended": "^11.4",
         "drupal/gin": "^5.0",
         "drupal/jsonapi_schema": "^1.0",
-        "drupal/mcp": "^1.2.3"
+        "drupal/mcp": "^1.2.3",
+        "drupal/simple_oauth": "^6.1"
     },
     "conflict": {
         "drupal/drupal": "*"
@@ -87,19 +90,16 @@
                 "support"
             ],
             "post-create-project-cmd-message": [
-                "<bg=blue;fg=white>                                                         </>",
-                "<bg=blue;fg=white>  Congratulations, you’ve installed the Drupal codebase  </>",
-                "<bg=blue;fg=white>  from the drupal/recommended-project template!          </>",
-                "<bg=blue;fg=white>                                                         </>",
+                "<bg=blue;fg=white>                                                   </>",
+                "<bg=blue;fg=white>  Divengine Studio: the code is ready to install.  </>",
+                "<bg=blue;fg=white>                                                   </>",
                 "",
                 "<bg=yellow;fg=black>Next steps</>:",
-                "  * Install the site: https://www.drupal.org/docs/installing-drupal",
-                "  * Read the user guide: https://www.drupal.org/docs/user_guide/en/index.html",
-                "  * Get support: https://www.drupal.org/support",
-                "  * Get involved with the Drupal community:",
-                "      https://www.drupal.org/getting-involved",
-                "  * Remove the plugin that prints this message:",
-                "      composer remove drupal/core-project-message"
+                "  * Create an empty PostgreSQL 16+ database with the pg_trgm extension.",
+                "  * Set $settings['file_private_path'] in web/sites/default/settings.php.",
+                "  * Open /core/install.php, or run:",
+                "      vendor/bin/drush site:install divengine_studio_installer",
+                "  * Installation and updates: https://github.com/divengine/studio#installation"
             ]
         }
     },
