@@ -88,16 +88,18 @@ class TracePanel {
       ];
     }
 
-    $actions = NULL;
+    $actions = [];
     $add = Url::fromRoute('entity.trace_link.add_form', [], ['query' => array_filter([
       'source' => $entity->getEntityTypeId() . '/' . $entity->id(),
       'type' => $add_type,
       'destination' => $entity->toUrl()->toString(),
     ])]);
     if ($add->access($this->currentUser)) {
-      $actions = Link::fromTextAndUrl($this->t('Add trace'), $add)->toRenderable()
+      $actions['add'] = Link::fromTextAndUrl($this->t('Add trace'), $add)->toRenderable()
         + ['#attributes' => ['class' => ['button', 'button--small']]];
     }
+    // Modules offer other ways to trace the record, e.g. to external work.
+    $this->moduleHandler->alter('divengine_trace_panel_actions', $actions, $entity);
 
     $build = [
       '#type' => 'component',
@@ -110,7 +112,7 @@ class TracePanel {
           '#rows' => $rows,
           '#empty' => $this->t('Not traced yet. Traces are recorded explicitly, never inferred.'),
         ],
-        'actions' => $actions,
+        'actions' => $actions ?: NULL,
       ]),
       '#cache' => [
         'tags' => ['trace_link_list'],

@@ -1,0 +1,7 @@
+link external work:
+  title: 'Link external work'
+  description: 'Register references to external work (issues, pull requests, commits, links) in the Developments the user edits, and change their label and notes. Linking them to records also needs "Create trace links".'
+administer external references:
+  title: 'Administer external references'
+  description: 'Edit and delete every external reference, whatever its Development.'
+  restrict access: true

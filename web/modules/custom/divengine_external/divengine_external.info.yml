@@ -1,0 +1,9 @@
+name: 'Divengine External References'
+type: module
+description: 'References to work tracked outside Studio (GitHub issues, pull requests and commits, or any web link) as records of a Development that trace links connect to requirements, decisions and evidence. Studio stores the reference, never a copy of the external work.'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_core
+  - divengine_process
+  - divengine_traceability

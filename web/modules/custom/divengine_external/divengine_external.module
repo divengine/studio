@@ -1,0 +1,48 @@
+<?php
+
+/**
+ * @file
+ * External references: work tracked outside Studio, linked to its records.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_divengine_process_scoped_types_alter().
+ *
+ * References follow the visibility of their Development, and keep it from
+ * being deleted while they exist.
+ */
+function divengine_external_divengine_process_scoped_types_alter(array &$types): void {
+  $types[] = 'external_reference';
+}
+
+/**
+ * Implements hook_divengine_trace_end_types_alter().
+ */
+function divengine_external_divengine_trace_end_types_alter(array &$types): void {
+  $types[] = 'external_reference';
+}
+
+/**
+ * Implements hook_divengine_trace_panel_actions_alter().
+ *
+ * Records of a Development offer to link external work from their traces.
+ */
+function divengine_external_divengine_trace_panel_actions_alter(array &$actions, ContentEntityInterface $entity): void {
+  if ($entity->getEntityTypeId() === 'external_reference' || !\Drupal::service('divengine_external.references')->developmentOf($entity)) {
+    return;
+  }
+  $url = Url::fromRoute('divengine_external.link', [
+    'entity_type_id' => $entity->getEntityTypeId(),
+    'entity_id' => $entity->id(),
+  ], ['query' => ['destination' => $entity->toUrl()->toString()]]);
+  if ($url->access()) {
+    $actions['external'] = Link::fromTextAndUrl(t('Link external work'), $url)->toRenderable()
+      + ['#attributes' => ['class' => ['button', 'button--small']]];
+  }
+}

@@ -1,0 +1,19 @@
+divengine_external.link:
+  path: '/external/link/{entity_type_id}/{entity_id}'
+  defaults:
+    _form: '\Drupal\divengine_external\Form\LinkExternalWorkForm'
+    _title: 'Link external work'
+  requirements:
+    _custom_access: '\Drupal\divengine_external\Form\LinkExternalWorkForm::access'
+    entity_type_id: '[a-z_][a-z0-9_]*'
+    entity_id: \d+
+
+# The default collection route asks for the administration permission; the
+# list itself only shows references of Developments the viewer sees.
+entity.external_reference.collection:
+  path: '/external'
+  defaults:
+    _entity_list: 'external_reference'
+    _title: 'External work'
+  requirements:
+    _permission: 'use unified process'

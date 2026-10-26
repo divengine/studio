@@ -1,0 +1,6 @@
+divengine_external.studio.references:
+  title: 'External work'
+  description: 'Issues, pull requests, commits and links your Developments reference.'
+  route_name: entity.external_reference.collection
+  menu_name: studio
+  weight: 31

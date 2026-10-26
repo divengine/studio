@@ -33,6 +33,7 @@ install:
   - divengine_source
   - divengine_database
   - divengine_codedocs
+  - divengine_external
   # Analyzers push database snapshots with HTTP Basic (only on routes that
   # accept it).
   - basic_auth
@@ -178,6 +179,7 @@ config:
         - 'view diagram revisions'
         - 'view trace links'
         - 'create trace links'
+        - 'link external work'
         - 'edit trace links'
         - 'view trace link revisions'
         - 'use artifact_lifecycle transition create_new_draft'
@@ -266,6 +268,7 @@ config:
         - 'use unified process'
         - 'view trace links'
         - 'create trace links'
+        - 'link external work'
         - 'edit trace links'
         - 'use qa'
         - 'execute qa tests'
@@ -283,6 +286,7 @@ config:
         - 'use unified process'
         - 'view trace links'
         - 'create trace links'
+        - 'link external work'
         - 'edit trace links'
         - 'use qa'
         - 'execute qa tests'
@@ -305,6 +309,7 @@ config:
         - 'use code docs'
         - 'view trace links'
         - 'create trace links'
+        - 'link external work'
         - 'edit trace links'
         - 'access comments'
         - 'post comments'
@@ -372,6 +377,7 @@ config:
         - 'create terms in standard_body'
         - 'create test_case artifact'
         - 'create trace links'
+        - 'link external work'
         - 'create uml diagram'
         - 'create use_case artifact'
         - 'create work_product artifact'
