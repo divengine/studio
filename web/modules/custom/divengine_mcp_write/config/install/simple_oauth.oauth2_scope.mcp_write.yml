@@ -1,0 +1,24 @@
+langcode: en
+status: true
+dependencies:
+  enforced:
+    module:
+      - divengine_mcp_write
+id: mcp_write
+name: mcp_write
+description: 'Write engineering records in Divengine Studio through MCP.'
+grant_types:
+  authorization_code:
+    status: true
+    description: 'Create and revise requirements, decisions and evidence in your Developments, register external work and link them, as you and with no more access than your own account has. Only if you have the MCP writer role; clients never approve anything.'
+  refresh_token:
+    status: true
+    description: 'Keep the connection without asking again.'
+umbrella: false
+parent: _none
+# The token can do what both its user and the "MCP editor" role can do
+# (simple_oauth's Oauth2AccessPolicy intersects them). The tools also check
+# that the request carries this scope, because user 1 keeps every permission.
+granularity_id: role
+granularity_configuration:
+  role: mcp_editor

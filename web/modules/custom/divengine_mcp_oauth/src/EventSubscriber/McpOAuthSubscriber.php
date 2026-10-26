@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Ties OAuth tokens with the "mcp" scope to the MCP endpoint (ADR-0017).
+ * Ties OAuth tokens with an MCP scope to the MCP endpoint (ADR-0017).
  *
  * - A 401 from /mcp/post says where the protected resource metadata is
  *   (RFC 9728 section 5.1), which is how MCP clients start the OAuth flow.
@@ -42,7 +42,7 @@ final class McpOAuthSubscriber implements EventSubscriberInterface {
       return;
     }
     $scopes = array_column($account->getToken()->get('scopes')->getValue(), 'scope_id');
-    if (in_array(OAuthMetadataController::SCOPE, $scopes, TRUE)) {
+    if (array_intersect([OAuthMetadataController::SCOPE, OAuthMetadataController::WRITE_SCOPE], $scopes)) {
       throw new AccessDeniedHttpException('This token is only valid for the MCP endpoint.');
     }
   }
@@ -56,7 +56,7 @@ final class McpOAuthSubscriber implements EventSubscriberInterface {
       return;
     }
     $metadata = Url::fromRoute('divengine_mcp_oauth.protected_resource.mcp')->setAbsolute()->toString();
-    $response->headers->set('WWW-Authenticate', sprintf('Bearer resource_metadata="%s", scope="%s"', $metadata, OAuthMetadataController::SCOPE));
+    $response->headers->set('WWW-Authenticate', sprintf('Bearer resource_metadata="%s", scope="%s"', $metadata, implode(' ', OAuthMetadataController::scopes())));
   }
 
   /**

@@ -149,6 +149,9 @@ class ExternalReference extends RevisionableContentEntityBase implements EntityC
       $this->setIdentity($references->identify((string) $this->get('url')->value));
     }
     $this->set('label', trim((string) $this->get('label')->value));
+    if ($this->isNew() && trim((string) $this->get('code')->value) === '') {
+      $this->set('code', \Drupal::service('divengine_core.sequence')->next('EXT'));
+    }
     if (!$this->isNew()) {
       $original = $storage->loadUnchanged($this->id());
       if ($original instanceof self && ($original->identityValues() !== $this->identityValues() || $original->getUrl() !== $this->getUrl() || (string) $original->get('development')->target_id !== (string) $this->get('development')->target_id)) {
@@ -187,6 +190,18 @@ class ExternalReference extends RevisionableContentEntityBase implements EntityC
     \Drupal::service('divengine_external.observations')->forget(array_keys($entities));
   }
 
+  /**
+   * The code of the reference, e.g. EXT-0001, assigned when it is
+   * registered. Records mention it as [[EXT-0001]]; MCP tools address it.
+   */
+  public static function codeFieldDefinition(): BaseFieldDefinition {
+    return BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Code'))
+      ->setSetting('max_length', 32)
+      ->setReadOnly(TRUE)
+      ->addConstraint('UniqueField');
+  }
+
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::ownerBaseFieldDefinitions($entity_type);
@@ -194,6 +209,8 @@ class ExternalReference extends RevisionableContentEntityBase implements EntityC
 
     $fields['development'] = static::developmentFieldDefinition()
       ->setDescription(new TranslatableMarkup('The Development that references this work. Only people who see it see the reference.'));
+
+    $fields['code'] = static::codeFieldDefinition();
 
     $fields['url'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Link'))

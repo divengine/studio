@@ -8,6 +8,9 @@ install:
   - mcp
   - divengine_mcp
   - divengine_mcp_oauth
+  # Engineering writes (ADR-0019): available to nobody until an administrator
+  # gives people the "MCP writer" role.
+  - divengine_mcp_write
 config:
   # Re-applying the recipe keeps what the site already has.
   strict: false
@@ -17,6 +20,7 @@ config:
   import:
     simple_oauth: '*'
     divengine_mcp_oauth: '*'
+    divengine_mcp_write: '*'
   actions:
     # Ownership of mcp.settings (ADR-0016). The recipe is re-applied on
     # updates, so it only forces what the distribution owns:
@@ -56,6 +60,11 @@ config:
         plugins.codedocs:
           enabled: true
           config: {}
+        # Engineering writes: listed only to OAuth tokens with the
+        # mcp_write scope of people with the "MCP writer" role.
+        plugins.engineering:
+          enabled: true
+          config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:
@@ -85,3 +94,43 @@ config:
       grantPermissions:
         - 'use mcp server'
         - 'grant simple_oauth codes'
+    # The role of the "mcp_write" scope (ADR-0019). A token can do what both
+    # its person and this role can do; the tools themselves only create and
+    # revise requirements, decisions and evidence, register external work
+    # and link or unlink them, and never approve.
+    user.role.mcp_editor:
+      createIfNotExists:
+        label: 'MCP editor (scope)'
+      grantPermissions:
+        - 'use mcp server'
+        - 'write engineering records through mcp'
+        - 'access divengine'
+        - 'use unified process'
+        - 'view artifact'
+        - 'view artifact revisions'
+        - 'view latest version'
+        - 'create artifact'
+        - 'edit artifact'
+        - 'create requirement artifact'
+        - 'edit requirement artifact'
+        - 'create decision artifact'
+        - 'edit decision artifact'
+        - 'create evidence artifact'
+        - 'edit evidence artifact'
+        - 'view trace links'
+        - 'view trace link revisions'
+        - 'create trace links'
+        - 'delete trace links'
+        - 'link external work'
+        - 'use requirement_lifecycle transition draft'
+        - 'use requirement_lifecycle transition propose'
+        - 'use artifact_lifecycle transition create_new_draft'
+        - 'use artifact_lifecycle transition submit_for_review'
+        - 'use artifact_lifecycle transition request_changes'
+    # People whose AI clients may write. They still need the ordinary
+    # permissions of each write (for example Content editor) and "MCP user".
+    user.role.mcp_writer:
+      createIfNotExists:
+        label: 'MCP writer'
+      grantPermissions:
+        - 'write engineering records through mcp'

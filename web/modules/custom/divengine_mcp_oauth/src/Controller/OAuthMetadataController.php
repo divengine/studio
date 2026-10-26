@@ -21,9 +21,28 @@ use Symfony\Component\HttpFoundation\Request;
 final class OAuthMetadataController extends ControllerBase {
 
   /**
-   * The only scope MCP clients are given.
+   * The scope of MCP clients: reading what the person may read.
    */
   const SCOPE = 'mcp';
+
+  /**
+   * The scope of engineering writes through MCP, when divengine_mcp_write
+   * provides it (ADR-0019). Only people with the MCP writer role can use it.
+   */
+  const WRITE_SCOPE = 'mcp_write';
+
+  /**
+   * The MCP scopes this site has.
+   *
+   * @return string[]
+   */
+  public static function scopes(): array {
+    $scopes = [static::SCOPE];
+    if (\Drupal::entityTypeManager()->getStorage('oauth2_scope')->load(static::WRITE_SCOPE)) {
+      $scopes[] = static::WRITE_SCOPE;
+    }
+    return $scopes;
+  }
 
   /**
    * OAuth 2.0 Protected Resource Metadata (RFC 9728) for /mcp/post.
@@ -32,7 +51,7 @@ final class OAuthMetadataController extends ControllerBase {
     return $this->respond([
       'resource' => Url::fromRoute('mcp.post')->setAbsolute()->toString(),
       'authorization_servers' => [static::issuer($request)],
-      'scopes_supported' => [static::SCOPE],
+      'scopes_supported' => static::scopes(),
       'bearer_methods_supported' => ['header'],
       'resource_name' => (string) $this->config('system.site')->get('name'),
     ]);
@@ -48,7 +67,7 @@ final class OAuthMetadataController extends ControllerBase {
       'token_endpoint' => Url::fromRoute('oauth2_token.token')->setAbsolute()->toString(),
       'registration_endpoint' => Url::fromRoute('divengine_mcp_oauth.register')->setAbsolute()->toString(),
       'jwks_uri' => Url::fromRoute('simple_oauth.jwks')->setAbsolute()->toString(),
-      'scopes_supported' => [static::SCOPE],
+      'scopes_supported' => static::scopes(),
       'response_types_supported' => ['code'],
       'grant_types_supported' => ['authorization_code', 'refresh_token'],
       'token_endpoint_auth_methods_supported' => ['none', 'client_secret_post', 'client_secret_basic'],
@@ -72,6 +91,7 @@ final class OAuthMetadataController extends ControllerBase {
     $response->headers->set('Access-Control-Allow-Origin', '*');
     $response->addCacheableDependency((new CacheableMetadata())
       ->addCacheContexts(['url.site'])
+      ->addCacheTags(['config:oauth2_scope_list'])
       ->addCacheableDependency($this->config('system.site')));
     return $response;
   }
