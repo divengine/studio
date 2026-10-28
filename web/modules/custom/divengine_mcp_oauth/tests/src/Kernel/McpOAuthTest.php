@@ -69,7 +69,7 @@ class McpOAuthTest extends KernelTestBase {
     $response = $this->request('POST', '/mcp/post', ['jsonrpc' => '2.0', 'id' => 1, 'method' => 'tools/list']);
     $this->assertSame(401, $response->getStatusCode());
     $this->assertSame(
-      'Bearer resource_metadata="http://studio.example.com/.well-known/oauth-protected-resource/mcp/post", scope="mcp"',
+      'Bearer resource_metadata="http://studio.example.com/.well-known/oauth-protected-resource/mcp/post", scope="mcp mcp_write"',
       $response->headers->get('WWW-Authenticate'),
     );
   }
@@ -79,7 +79,9 @@ class McpOAuthTest extends KernelTestBase {
       $resource = json_decode((string) $this->request('GET', $path)->getContent(), TRUE);
       $this->assertSame('http://studio.example.com/mcp/post', $resource['resource'], $path);
       $this->assertSame(['http://studio.example.com'], $resource['authorization_servers'], $path);
-      $this->assertSame(['mcp'], $resource['scopes_supported'], $path);
+      // The recipe installs engineering writes (ADR-0019); the write scope
+      // is of use only to people with the MCP writer role.
+      $this->assertSame(['mcp', 'mcp_write'], $resource['scopes_supported'], $path);
     }
 
     $server = json_decode((string) $this->request('GET', '/.well-known/oauth-authorization-server')->getContent(), TRUE);
@@ -87,6 +89,7 @@ class McpOAuthTest extends KernelTestBase {
     $this->assertSame('http://studio.example.com/oauth/authorize', $server['authorization_endpoint']);
     $this->assertSame('http://studio.example.com/oauth/token', $server['token_endpoint']);
     $this->assertSame('http://studio.example.com/oauth/register', $server['registration_endpoint']);
+    $this->assertSame(['mcp', 'mcp_write'], $server['scopes_supported']);
     $this->assertSame(['S256'], $server['code_challenge_methods_supported']);
     $this->assertSame(['authorization_code', 'refresh_token'], $server['grant_types_supported']);
   }
@@ -102,7 +105,7 @@ class McpOAuthTest extends KernelTestBase {
     $this->assertSame(201, $response->getStatusCode());
     $data = json_decode((string) $response->getContent(), TRUE);
     $this->assertArrayNotHasKey('client_secret', $data);
-    $this->assertSame('mcp', $data['scope']);
+    $this->assertSame('mcp mcp_write', $data['scope']);
 
     $consumers = $this->container->get('entity_type.manager')->getStorage('consumer')->loadByProperties(['client_id' => $data['client_id']]);
     /** @var \Drupal\consumers\Entity\ConsumerInterface $consumer */
@@ -111,7 +114,7 @@ class McpOAuthTest extends KernelTestBase {
     $this->assertFalse((bool) $consumer->get('confidential')->value);
     $this->assertTrue((bool) $consumer->get('pkce')->value);
     $this->assertFalse((bool) $consumer->get('automatic_authorization')->value);
-    $this->assertSame(['mcp'], array_column($consumer->get('authorization_code_scopes')->getValue(), 'scope_id'));
+    $this->assertSame(['mcp', 'mcp_write'], array_column($consumer->get('authorization_code_scopes')->getValue(), 'scope_id'));
     $this->assertSame(['https://claude.ai/api/mcp/auth_callback'], array_column($consumer->get('redirect')->getValue(), 'value'));
   }
 

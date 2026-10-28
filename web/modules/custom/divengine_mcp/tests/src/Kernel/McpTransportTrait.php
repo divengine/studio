@@ -169,6 +169,10 @@ trait McpTransportTrait {
    */
   protected function startRequest(): void {
     $this->container->get('entity.memory_cache')->deleteAll();
+    // Access handlers remember their answers for the rest of a request.
+    foreach (array_keys($this->container->get('entity_type.manager')->getDefinitions()) as $entity_type_id) {
+      $this->container->get('entity_type.manager')->getAccessControlHandler($entity_type_id)->resetCache();
+    }
     drupal_static_reset();
     $this->container->get('current_user')->setAccount(new AnonymousUserSession());
     // A request that ended in an exception stays on the stack; keep only the

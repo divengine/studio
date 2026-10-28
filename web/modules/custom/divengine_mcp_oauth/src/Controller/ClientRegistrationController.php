@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
  * code flow. Registration is open, as those clients expect, but a client gets
  * nothing by registering: a person still has to log in and allow it, and the
  * consent page names the host its codes go to. Every client is limited to the
- * "mcp" scope and must use PKCE. See ADR-0017.
+ * MCP scopes and must use PKCE. See ADR-0017.
  */
 final class ClientRegistrationController extends ControllerBase {
 
@@ -108,7 +108,9 @@ final class ClientRegistrationController extends ControllerBase {
       'pkce' => TRUE,
       'automatic_authorization' => FALSE,
       'remember_approval' => TRUE,
-      'authorization_code_scopes' => [['scope_id' => OAuthMetadataController::SCOPE]],
+      // Every MCP scope the site has. A token can only do what its person
+      // may do, so the write scope is of use only to MCP writers.
+      'authorization_code_scopes' => array_map(fn (string $scope) => ['scope_id' => $scope], OAuthMetadataController::scopes()),
       'access_token_expiration' => static::ACCESS_TOKEN_TTL,
       'refresh_token_expiration' => static::REFRESH_TOKEN_TTL,
     ]);
@@ -126,7 +128,7 @@ final class ClientRegistrationController extends ControllerBase {
       'grant_types' => array_values(array_unique($grant_types)),
       'response_types' => ['code'],
       'token_endpoint_auth_method' => $auth_method,
-      'scope' => OAuthMetadataController::SCOPE,
+      'scope' => implode(' ', OAuthMetadataController::scopes()),
     ];
     if ($secret !== NULL) {
       $data['client_secret'] = $secret;
