@@ -42,3 +42,25 @@ function divengine_external_update_11001(): void {
     $config->set('observe_github', FALSE)->save();
   }
 }
+
+/**
+ * Gives external references a code (EXT-0001).
+ */
+function divengine_external_update_11002(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  if (!$manager->getFieldStorageDefinition('code', 'external_reference')) {
+    $manager->installFieldStorageDefinition('code', 'external_reference', 'divengine_external', \Drupal\divengine_external\Entity\ExternalReference::codeFieldDefinition());
+  }
+  $storage = \Drupal::entityTypeManager()->getStorage('external_reference');
+  $ids = $storage->getQuery()->accessCheck(FALSE)->notExists('code')->sort('id')->execute();
+  $sequence = \Drupal::service('divengine_core.sequence');
+  $database = \Drupal::database();
+  // The code is not revisionable: it lives in the table the storage keeps
+  // it in, never in the revision tables.
+  $table = $storage->getTableMapping()->getFieldTableName('code');
+  // Without saving: a code is not a change of the reference.
+  foreach ($ids as $id) {
+    $database->update($table)->fields(['code' => $sequence->next('EXT')])->condition('id', $id)->execute();
+  }
+  $storage->resetCache();
+}

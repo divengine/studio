@@ -27,6 +27,7 @@ class ExternalReferenceListBuilder extends EntityListBuilder {
 
   public function buildHeader(): array {
     return [
+      'code' => $this->t('Code'),
       'label' => $this->t('External work'),
       'kind' => $this->t('Kind'),
       'development' => $this->t('Development'),
@@ -36,6 +37,7 @@ class ExternalReferenceListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity): array {
     /** @var \Drupal\divengine_external\Entity\ExternalReference $entity */
     return [
+      'code' => (string) $entity->get('code')->value,
       'label' => $entity->toLink(),
       'kind' => \Drupal::service('plugin.manager.divengine_external_provider')->kindLabel((string) $entity->get('provider')->value, (string) $entity->get('kind')->value),
       'development' => $entity->getDevelopment()?->label() ?? '',
