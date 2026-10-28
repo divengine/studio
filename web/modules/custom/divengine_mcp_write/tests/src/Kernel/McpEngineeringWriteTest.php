@@ -9,6 +9,7 @@ use Drupal\divengine_process\Entity\Development;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\Tests\divengine_mcp\Kernel\McpTransportTrait;
 use Drupal\Tests\user\Traits\UserCreationTrait;
+use Drupal\user\Entity\Role;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
@@ -306,6 +307,104 @@ class McpEngineeringWriteTest extends KernelTestBase {
     $storage = $this->container->get('entity_type.manager')->getStorage('oauth2_token');
     $storage->delete($storage->loadByProperties(['bundle' => 'access_token', 'auth_user_id' => $this->writer->id()]));
     $this->assertSame(401, $this->mcpRequest('tools/list', [], $bearer)->getStatusCode());
+  }
+
+  /**
+   * The MCP writer role must be held explicitly, by everyone (#79).
+   *
+   * User 1 and administrator roles have every permission, but without the
+   * role their write-scoped tokens neither list nor run engineering tools.
+   * With the role they reach only the enumerated tools; removing it stops
+   * them on the next request, with the same token.
+   */
+  public function testWriterRoleIsRequiredEvenForAdministrators(): void {
+    $create = ['development' => $this->code($this->beta), 'type' => 'decision', 'title' => 'Admin decision'];
+    $artifacts = $this->container->get('entity_type.manager')->getStorage('artifact');
+    $count = fn () => (int) $artifacts->getQuery()->accessCheck(FALSE)->count()->execute();
+
+    // User 1, and a person with an administrator role, with write-scoped
+    // tokens but without the MCP writer role.
+    Role::create(['id' => 'administrator', 'label' => 'Administrator', 'is_admin' => TRUE])->save();
+    $administrator = $this->createUser([], 'site_admin');
+    $administrator->addRole('administrator');
+    $administrator->save();
+    $root = User::load(1);
+    foreach (['user 1' => $root, 'administrator' => $administrator] as $who => $account) {
+      $this->assertTrue($account->hasPermission('write engineering records through mcp'), "$who has every permission.");
+      $bearer = 'Bearer ' . $this->oauthToken($account, ['mcp', 'mcp_write']);
+      $this->assertSame([], array_values(preg_grep('/^engineering_/', $this->toolNames($bearer))), "$who lists no engineering tool.");
+      foreach (['create_artifact' => $create, 'read' => ['code' => 'REQ-0001'], 'developments' => []] as $tool => $arguments) {
+        $answer = (string) $this->tool($tool, $arguments, $bearer);
+        $this->assertStringStartsWith('JSON-RPC error', $answer, "$who cannot call $tool directly.");
+        $this->assertStringNotContainsString('Beta', $answer);
+      }
+    }
+    $this->assertSame(0, $count(), 'Nothing was written.');
+
+    // With the role, user 1 reaches the enumerated tools, and only those
+    // write.
+    $root->addRole('mcp_writer');
+    $root->save();
+    $bearer = 'Bearer ' . $this->oauthToken($root, ['mcp', 'mcp_write']);
+    $engineering = array_values(preg_grep('/^engineering_/', $this->toolNames($bearer)));
+    sort($engineering);
+    $this->assertSame(['engineering_create_artifact', 'engineering_developments', 'engineering_link', 'engineering_read', 'engineering_register_external', 'engineering_unlink', 'engineering_update_artifact'], $engineering);
+    $created = $this->tool('create_artifact', $create, $bearer);
+    $this->assertIsArray($created, (string) json_encode($created));
+    $this->assertSame(1, $count());
+
+    // Deleting the MCP writer role leaves the accounts unsaved and their
+    // tokens valid. The role is read from the account on every request, so
+    // user 1, who keeps every permission, loses the tools at once.
+    $writer_bearer = 'Bearer ' . $this->oauthToken($this->writer, ['mcp', 'mcp_write']);
+    $this->assertContains('engineering_developments', $this->toolNames($writer_bearer));
+    $permissions = Role::load('mcp_writer')->getPermissions();
+    Role::load('mcp_writer')->delete();
+    $this->assertSame(200, $this->mcpRequest('tools/list', [], $bearer)->getStatusCode(), 'The token is still valid.');
+    $this->assertSame([], array_values(preg_grep('/^engineering_/', $this->toolNames($writer_bearer))), 'An ordinary writer loses the tools too.');
+    $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('developments', [], $writer_bearer));
+    $this->assertSame([], array_values(preg_grep('/^engineering_/', $this->toolNames($bearer))));
+    $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('read', ['code' => $created['code']], $bearer));
+    $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('create_artifact', $create + ['idempotency_key' => 'k'], $bearer));
+    $this->assertSame(1, $count());
+
+    // Removing the role from an account: simple_oauth also revokes the
+    // person's tokens whenever the account is saved.
+    $role = Role::create(['id' => 'mcp_writer', 'label' => 'MCP writer']);
+    foreach ($permissions as $permission) {
+      $role->grantPermission($permission);
+    }
+    $role->save();
+    $root = User::load(1);
+    $root->addRole('mcp_writer');
+    $root->save();
+    $bearer = 'Bearer ' . $this->oauthToken($root, ['mcp', 'mcp_write']);
+    $this->assertContains('engineering_developments', $this->toolNames($bearer));
+    $root = User::load(1);
+    $root->removeRole('mcp_writer');
+    $root->save();
+    $this->assertSame(401, $this->mcpRequest('tools/list', [], $bearer)->getStatusCode());
+    $this->assertSame(1, $count());
+
+    // A blocked account is refused, with or without the role.
+    $writer = User::load($this->writer->id());
+    $writer->block();
+    $writer->save();
+    $this->assertSame(401, $this->mcpRequest('tools/list', [], $writer_bearer)->getStatusCode());
+  }
+
+  /**
+   * Browser sessions never reach engineering tools, whatever the roles.
+   */
+  public function testSessionsNeverWrite(): void {
+    $root = User::load(1);
+    $root->addRole('mcp_writer');
+    $root->save();
+    $plugins = $this->container->get('plugin.manager.mcp');
+    foreach ([$root, $this->writer] as $account) {
+      $this->setCurrentUser($account);
+      $this->assertFalse($plugins->createInstance('engineering')->hasAccess()->isAllowed(), $account->getAccountName());
+    }
   }
 
   public function testDevelopmentBoundariesHold(): void {

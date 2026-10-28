@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\divengine_mcp_write\Plugin\Mcp;
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\divengine_mcp_oauth\Controller\OAuthMetadataController;
 use Drupal\divengine_mcp_write\EngineeringWriteException;
@@ -32,19 +33,30 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 )]
 class Engineering extends McpPluginBase {
 
+  /**
+   * The role a person must hold, explicitly, for their clients to write.
+   */
+  const WRITER_ROLE = 'mcp_writer';
+
   protected EngineeringWriter $writer;
+
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->writer = $container->get('divengine_mcp_write.writer');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
     return $instance;
   }
 
   /**
-   * Only a person's OAuth token with the write scope, and the permission.
+   * Only a person's OAuth token with the write scope, of an MCP writer.
    *
-   * The scope is checked on the token itself: simple_oauth gives user 1
-   * every permission whatever the scope.
+   * Permissions are not enough on their own: user 1 and administrator roles
+   * have every permission, whatever the scope, and a token's roles are those
+   * of its scopes. So the scope is read from the token, and the MCP writer
+   * role from the person's account as stored now (#79). The answer is never
+   * cached: removing the role or the token takes effect on the next request.
    */
   public function hasAccess(): AccessResult {
     $account = $this->currentUser->getAccount();
@@ -54,6 +66,11 @@ class Engineering extends McpPluginBase {
     $scopes = array_column($account->getToken()->get('scopes')->getValue(), 'scope_id');
     if (!in_array(OAuthMetadataController::WRITE_SCOPE, $scopes, TRUE)) {
       return AccessResult::forbidden('The token does not have the mcp_write scope.')->setCacheMaxAge(0);
+    }
+    /** @var \Drupal\user\UserInterface|null $person */
+    $person = $this->entityTypeManager->getStorage('user')->loadUnchanged($account->id());
+    if (!$person || !$person->isActive() || !in_array(static::WRITER_ROLE, $person->getRoles(TRUE), TRUE)) {
+      return AccessResult::forbidden('The person does not have the MCP writer role.')->setCacheMaxAge(0);
     }
     return parent::hasAccess()
       ->andIf(AccessResult::allowedIfHasPermission($account, 'write engineering records through mcp'))

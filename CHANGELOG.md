@@ -113,6 +113,9 @@ No release has been published yet; everything below is on `main`.
 
 - Gin updated from 5.0.15 to 5.0.16 for SA-CONTRIB-2026-219 (#54).
 - Trace endpoint privacy fixes (#21).
+- MCP engineering writes require explicit membership in the **MCP writer** role, also for
+  user 1 and administrator roles, which have every permission (#79). The role is read
+  from the account on every request.
 
 ### Upgrade notes
 
