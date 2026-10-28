@@ -66,6 +66,13 @@ No release has been published yet; everything below is on `main`.
   commits, Actions runs and repositories from `api.github.com`, shown as GitHub's state
   on a date. It is off by default and never runs in the background.
 
+- MCP engineering writes (#71, ADR-0019): the AI client of a person with the new **MCP
+  writer** role, connected with OAuth and the new `mcp_write` scope, can create and revise
+  requirements, decisions and evidence, register external work and link them through
+  seven `engineering_*` tools. Writes are revisions by that person, are logged without
+  their content, never approve, and stay inside the Developments the person may change.
+- External references have a code (`EXT-0001`) that MCP tools and `[[EXT-0001]]` use.
+
 ### Changed
 
 - Drupal core 11.4.10, Gin 5.0.16 and Drush 13.8.0 (#53, #54).
@@ -125,6 +132,12 @@ afterwards, and give the **MCP user** role to the people who will connect AI cli
 
 Re-applying `divengine_studio_base` installs External references and grants **Link
 external work** to the roles that create trace links (#69).
+
+Re-applying `divengine_studio_mcp` installs MCP engineering writes (#71) with nobody
+allowed to write. `drush updatedb` numbers existing external references (`EXT-0001`,
+without new revisions). To let someone write from an AI client, give them the **MCP
+writer** role; clients they connected before must connect again to get the `mcp_write`
+scope.
 
 Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 
