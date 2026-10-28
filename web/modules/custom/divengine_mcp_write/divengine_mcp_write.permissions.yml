@@ -1,0 +1,4 @@
+write engineering records through mcp:
+  title: 'Write engineering records through MCP'
+  description: 'Let AI clients authorized with OAuth create and revise requirements, decisions and evidence, register external work and link them, as this person, within what the person may already do. Clients never approve, and the shared service token never writes.'
+  restrict access: true

@@ -55,6 +55,12 @@ if ($expect_mcp) {
   $checks['MCP OAuth scope'] = (bool) \Drupal::entityTypeManager()->getStorage('oauth2_scope')->load('mcp');
   $checks['OAuth token types'] = (bool) \Drupal::entityTypeManager()->getStorage('oauth2_token_type')->load('access_token');
   $checks['role mcp_user'] = (bool) \Drupal\user\Entity\Role::load('mcp_user');
+  // Engineering writes (ADR-0019) are installed but granted to nobody: no
+  // account has the MCP writer role, and the read-only roles cannot write.
+  $checks['MCP engineering writes installed'] = $modules->moduleExists('divengine_mcp_write');
+  $checks['MCP write scope on mcp_editor'] = ($scope = \Drupal::entityTypeManager()->getStorage('oauth2_scope')->load('mcp_write')) && $scope->getGranularity()->getConfiguration()['role'] === 'mcp_editor';
+  $checks['nobody is an MCP writer'] = !\Drupal::entityTypeManager()->getStorage('user')->getQuery()->accessCheck(FALSE)->condition('roles', 'mcp_writer')->count()->execute();
+  $checks['read-only MCP roles cannot write'] = !array_filter(['mcp_agent', 'mcp_user'], fn ($role) => \Drupal\user\Entity\Role::load($role)?->hasPermission('write engineering records through mcp'));
 }
 // Analyzers push database snapshots with HTTP Basic.
 $checks['module basic_auth'] = $modules->moduleExists('basic_auth');
