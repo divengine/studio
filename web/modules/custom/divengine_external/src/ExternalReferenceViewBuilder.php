@@ -6,6 +6,8 @@ namespace Drupal\divengine_external;
 
 use Drupal\Core\Entity\EntityViewBuilder;
 use Drupal\Core\Url;
+use Drupal\divengine_external\Entity\ExternalReference;
+use Drupal\divengine_external\ExternalObservation;
 
 /**
  * The page of an external reference: what it is, where it opens, and the
@@ -61,6 +63,7 @@ class ExternalReferenceViewBuilder extends EntityViewBuilder {
         '#attributes' => ['class' => ['description']],
         '#weight' => -90,
       ];
+      $build[$id]['observed'] = $this->observed($reference) + ['#weight' => -85];
       $notes = trim((string) $reference->get('notes')->value);
       if ($notes !== '') {
         $build[$id]['notes'] = [
@@ -72,6 +75,58 @@ class ExternalReferenceViewBuilder extends EntityViewBuilder {
         ];
       }
     }
+  }
+
+  /**
+   * What the provider last reported, and the Refresh button.
+   *
+   * Shown as observed provider state, with its date, apart from Studio's
+   * own data.
+   */
+  protected function observed(ExternalReference $reference): array {
+    $observations = \Drupal::service('divengine_external.observations');
+    $last = $observations->get($reference);
+    $enabled = $observations->isEnabled($reference);
+    if (!$last && !$enabled) {
+      return [];
+    }
+    $provider = (string) \Drupal::service('plugin.manager.divengine_external_provider')->getDefinition((string) $reference->get('provider')->value)['label'];
+    $formatter = \Drupal::service('date.formatter');
+    $facts = [];
+    if ($last && $last->status === ExternalObservation::OK) {
+      $facts = array_filter([
+        (string) $this->t('Title') => $last->title,
+        (string) $this->t('State') => $last->state,
+        (string) $this->t('Changed on @provider', ['@provider' => $provider]) => $last->updated ? $formatter->format((int) $last->updated, 'short') : NULL,
+      ]);
+    }
+    $lines = [];
+    foreach ($facts as $label => $value) {
+      $lines[] = ['#type' => 'html_tag', '#tag' => 'div', 'label' => ['#type' => 'html_tag', '#tag' => 'strong', '#value' => $label . ': '], 'value' => ['#plain_text' => (string) $value]];
+    }
+    if ($last && $last->note !== '') {
+      $lines[] = ['#type' => 'html_tag', '#tag' => 'p', '#value' => $this->t('@note', ['@note' => $last->note])];
+    }
+    $lines[] = ['#type' => 'html_tag', '#tag' => 'p', '#attributes' => ['class' => ['description']], '#value' => $last
+      ? $this->t('Observed on @provider on @date. This is the state on @provider, not a Studio decision.', ['@provider' => $provider, '@date' => $formatter->format((int) $last->observed, 'short')])
+      : $this->t('Not read from @provider yet.', ['@provider' => $provider]),
+    ];
+    $actions = NULL;
+    if ($enabled && $reference->access('update')) {
+      $actions = [
+        '#type' => 'link',
+        '#title' => $this->t('Refresh from @provider', ['@provider' => $provider]),
+        '#url' => Url::fromRoute('divengine_external.refresh', ['external_reference' => $reference->id()]),
+        '#attributes' => ['class' => ['button', 'button--small']],
+      ];
+    }
+    return [
+      '#type' => 'component',
+      '#component' => 'divengine_core:section',
+      '#props' => ['title' => (string) $this->t('Observed on @provider', ['@provider' => $provider])],
+      '#slots' => array_filter(['content' => $lines, 'actions' => $actions]),
+      '#cache' => ['tags' => ['config:divengine_external.settings']],
+    ];
   }
 
 }

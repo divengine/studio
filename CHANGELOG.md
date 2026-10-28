@@ -61,6 +61,11 @@ No release has been published yet; everything below is on `main`.
   Links are read without network access; references follow the visibility of their
   Development and are readable through JSON:API and the MCP `jsonapi_read` tool.
 
+- Optional, read-only GitHub state for external references (#70): with the setting on,
+  **Refresh from GitHub** reads the title and state of public issues, pull requests,
+  commits, Actions runs and repositories from `api.github.com`, shown as GitHub's state
+  on a date. It is off by default and never runs in the background.
+
 ### Changed
 
 - Drupal core 11.4.10, Gin 5.0.16 and Drush 13.8.0 (#53, #54).

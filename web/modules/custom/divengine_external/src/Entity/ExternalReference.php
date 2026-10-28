@@ -179,6 +179,14 @@ class ExternalReference extends RevisionableContentEntityBase implements EntityC
     }
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities): void {
+    parent::postDelete($storage, $entities);
+    \Drupal::service('divengine_external.observations')->forget(array_keys($entities));
+  }
+
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type): array {
     $fields = parent::baseFieldDefinitions($entity_type);
     $fields += static::ownerBaseFieldDefinitions($entity_type);

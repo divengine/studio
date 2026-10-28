@@ -1,0 +1,7 @@
+divengine_external.settings:
+  type: config_object
+  label: 'External references settings'
+  mapping:
+    observe_github:
+      type: boolean
+      label: 'Read the title and state of public GitHub work on request'

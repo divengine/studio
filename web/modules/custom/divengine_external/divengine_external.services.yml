@@ -5,3 +5,6 @@ services:
   divengine_external.references:
     class: Drupal\divengine_external\ExternalReferences
     arguments: ['@plugin.manager.divengine_external_provider', '@entity_type.manager', '@divengine_process.development_references', '@lock', '@database']
+  divengine_external.observations:
+    class: Drupal\divengine_external\ExternalObservations
+    arguments: ['@database', '@plugin.manager.divengine_external_provider', '@config.factory', '@state', '@datetime.time', '@cache_tags.invalidator']
