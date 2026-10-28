@@ -32,10 +32,11 @@ This repository only tracks Divengine's own code. Drupal core, contributed modul
 | `web/themes/custom/divengine_studio_theme` | The Studio workspace theme (default theme; Gin stays for configuration) |
 | `web/modules/custom/divengine_mcp` | Optional: service account and token for the MCP server (`drush divengine:mcp-setup`) |
 | `web/modules/custom/divengine_mcp_oauth` | Optional: OAuth 2.1 for MCP clients such as claude.ai: discovery, dynamic client registration, tokens limited to `/mcp/post` (`drush divengine:mcp-oauth-setup`, ADR-0017) |
+| `web/modules/custom/divengine_mcp_write` | Optional: engineering writes for AI clients of MCP writers: requirements, decisions, evidence, external work and their trace links (ADR-0019) |
 | `web/profiles/custom/divengine_studio_installer` | Installation profile: the branded web installer, which applies the recipes, and its installer theme |
 | `recipes/divengine_studio` | Site recipe for new sites: Drupal's Standard recipe + `divengine_studio_base` |
 | `recipes/divengine_studio_base` | All Studio modules, Gin, diagram embedding in Basic/Full HTML, editor permissions; re-applied to update existing sites |
-| `recipes/divengine_studio_mcp` | Optional recipe: read-only MCP server (drupal/mcp + JSON:API) with OAuth 2.1 and token auth |
+| `recipes/divengine_studio_mcp` | Optional recipe: MCP server (drupal/mcp + JSON:API) with OAuth 2.1 and token auth, read-only except for MCP writers |
 | `docs/` | Architecture decisions, roadmap, development and release guides, MVP scope, research and handoff notes |
 | `scripts/codedocs-demo/` | Runnable PHP and TypeScript shop examples, extraction/import scripts, MCP reads and screenshot capture |
 | `composer.json`, `composer.lock` | Exact Drupal core and contrib versions |
@@ -247,8 +248,8 @@ administrator; it works entirely in the Studio theme.
 
 ### MCP (optional)
 
-Exposes Studio, read-only, to AI clients such as claude.ai, Claude Code, Claude Desktop
-and Cursor:
+Exposes Studio to AI clients such as claude.ai, Claude Code, Claude Desktop and Cursor,
+read-only unless a person has the MCP writer role:
 
 ```bash
 vendor/bin/drush recipe $PWD/recipes/divengine_studio_mcp
@@ -268,6 +269,11 @@ Clients connect in one of two ways:
   `mcp_bot` account and a token in `private/divengine-mcp.token` (outside the web root,
   ignored by git) and prints the `claude mcp add` command. See
   `web/modules/custom/divengine_mcp/README.md`.
+
+**Engineering writes** (ADR-0019): people with the **MCP writer** role, connected with
+OAuth, can also create and revise requirements, decisions and evidence, register external
+work and link them from their client. Nobody has that role after installing or updating.
+See `web/modules/custom/divengine_mcp_write/README.md`.
 
 The web server must pass `/.well-known/oauth-*` to Drupal; the examples in
 [Web server security](#web-server-security) do.

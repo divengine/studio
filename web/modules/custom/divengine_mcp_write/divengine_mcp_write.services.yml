@@ -1,0 +1,7 @@
+services:
+  logger.channel.divengine_mcp_write:
+    parent: logger.channel_base
+    arguments: ['divengine_mcp_write']
+  divengine_mcp_write.writer:
+    class: Drupal\divengine_mcp_write\EngineeringWriter
+    arguments: ['@entity_type.manager', '@divengine_traceability.code_resolver', '@divengine_external.references', '@keyvalue.expirable', '@logger.channel.divengine_mcp_write', '@datetime.time']

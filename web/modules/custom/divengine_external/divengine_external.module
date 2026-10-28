@@ -22,6 +22,15 @@ function divengine_external_divengine_process_scoped_types_alter(array &$types):
 }
 
 /**
+ * Implements hook_divengine_code_fields_alter().
+ *
+ * [[EXT-0001]] links an external reference.
+ */
+function divengine_external_divengine_code_fields_alter(array &$fields): void {
+  $fields['external_reference'] = 'code';
+}
+
+/**
  * Implements hook_divengine_trace_end_types_alter().
  */
 function divengine_external_divengine_trace_end_types_alter(array &$types): void {

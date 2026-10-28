@@ -1,0 +1,14 @@
+name: 'Divengine MCP engineering writes'
+type: module
+description: 'Lets the connected AI client of a person create and revise requirements, decisions and evidence, register external work and link them, through an enumerated set of audited MCP tools. Only OAuth tokens with the mcp_write scope, of people with the MCP writer role (ADR-0019).'
+core_version_requirement: ^11
+package: 'Divengine'
+dependencies:
+  - divengine_mcp
+  - divengine_mcp_oauth
+  - divengine_artifact
+  - divengine_traceability
+  - divengine_process
+  - divengine_external
+  - mcp
+  - simple_oauth

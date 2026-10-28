@@ -209,4 +209,33 @@ class ExternalReferenceTest extends KernelTestBase {
     $this->assertNull(ExternalReference::load($reference->id()));
   }
 
+
+  public function testReferencesHaveCodesAndTheUpdateNumbersOldOnes(): void {
+    [$first] = $this->references()->resolve($this->alpha->id(), 'https://github.com/rafageist/ancora-goh/issues/70', $this->member);
+    [$second] = $this->references()->resolve($this->alpha->id(), 'https://github.com/rafageist/ancora-goh/pull/98', $this->member);
+    $this->assertMatchesRegularExpression('/^EXT-\d{4}$/', (string) $first->get('code')->value);
+    $this->assertNotSame($first->get('code')->value, $second->get('code')->value);
+    $this->assertSame($first->id(), $this->container->get('divengine_traceability.code_resolver')->resolve((string) $first->get('code')->value)?->id(), '[[EXT-…]] finds the reference.');
+
+    // A site with references from before codes existed: the field is not
+    // installed and the references have none.
+    $manager = $this->container->get('entity.definition_update_manager');
+    $manager->uninstallFieldStorageDefinition($manager->getFieldStorageDefinition('code', 'external_reference'));
+    $this->assertNull($manager->getFieldStorageDefinition('code', 'external_reference'));
+    $revisions = (int) $this->container->get('database')->query('SELECT COUNT(*) FROM {external_reference_revision}')->fetchField();
+
+    $this->container->get('module_handler')->loadInclude('divengine_external', 'install');
+    divengine_external_update_11002();
+    $this->assertNotNull($manager->getFieldStorageDefinition('code', 'external_reference'));
+    $storage = $this->container->get('entity_type.manager')->getStorage('external_reference');
+    $storage->resetCache();
+    $codes = array_map(fn ($reference) => (string) $reference->get('code')->value, $storage->loadMultiple([$first->id(), $second->id()]));
+    $this->assertCount(2, array_unique($codes));
+    foreach ($codes as $code) {
+      $this->assertMatchesRegularExpression('/^EXT-\d{4}$/', $code);
+    }
+    $this->assertSame($revisions, (int) $this->container->get('database')->query('SELECT COUNT(*) FROM {external_reference_revision}')->fetchField(), 'Numbering creates no revision.');
+    $this->assertArrayNotHasKey('external_reference', $manager->getChangeList(), 'No update of external references is pending.');
+  }
+
 }

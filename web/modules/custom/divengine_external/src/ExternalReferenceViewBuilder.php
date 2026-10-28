@@ -50,7 +50,7 @@ class ExternalReferenceViewBuilder extends EntityViewBuilder {
         '#type' => 'component',
         '#component' => 'divengine_core:status-bar',
         '#props' => [
-          'code' => $kind,
+          'code' => (string) $reference->get('code')->value,
           'facts' => array_map(fn ($label, $value) => ['label' => $label, 'value' => (string) $value], array_keys($facts), $facts),
         ],
         '#slots' => ['actions' => ['#type' => 'container', '#attributes' => ['class' => ['divengine-process-actions']], 'actions' => $actions]],
