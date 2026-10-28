@@ -104,7 +104,7 @@ class Engineering extends McpPluginBase {
             'type' => ['type' => 'string', 'enum' => EngineeringWriter::TYPES],
             'state' => $state,
             'log' => ['type' => 'string', 'description' => 'Why it is created; kept in the revision history.'],
-            'idempotency_key' => ['type' => 'string', 'maxLength' => 64, 'description' => 'Any unique string; repeating it returns the first result instead of a duplicate.'],
+            'idempotency_key' => ['type' => 'string', 'maxLength' => 64, 'description' => 'Any unique string; repeating it returns the record it created instead of a duplicate.'],
           ] + $text,
           'required' => ['development', 'type', 'title'],
         ],

@@ -218,6 +218,52 @@ class McpEngineeringWriteTest extends KernelTestBase {
     $this->assertStringContainsString('Approving stays with people', $this->tool('update_artifact', ['code' => $approved['code'], 'state' => 'approved', 'log' => 'Approve it back.'], $bearer));
   }
 
+  /**
+   * A retry with an idempotency key rechecks access (review of #78).
+   *
+   * Only the created artifact's ID is remembered. A person who left the
+   * Development keeps their token, scope and role, but the retry is refused
+   * like any request about a Development they cannot see, and says nothing
+   * about the record. With access restored the retry returns the same record
+   * instead of a duplicate; a deleted record is never described or created
+   * again.
+   */
+  public function testIdempotentRetryRechecksAccess(): void {
+    $bearer = 'Bearer ' . $this->oauthToken($this->writer, ['mcp', 'mcp_write']);
+    $alpha = $this->code($this->alpha);
+    $create = ['development' => $alpha, 'type' => 'requirement', 'title' => 'Confidential pricing rule', 'statement' => 'Discounts above 40% need approval.', 'idempotency_key' => 'retry-1'];
+    $created = $this->tool('create_artifact', $create, $bearer);
+    $this->assertIsArray($created, (string) json_encode($created));
+    $stored = $this->container->get('keyvalue.expirable')->get('divengine_mcp_write.idempotency')->get($this->writer->id() . ':retry-1');
+    $this->assertSame(['request', 'id'], array_keys($stored), 'Only the request hash and the ID are remembered.');
+
+    // The writer leaves the Development; token, scope and role stay.
+    $development = Development::load($this->alpha->id());
+    $development->set('members', [])->save();
+    $denied = $this->tool('create_artifact', $create, $bearer);
+    $this->assertSame("Error: No Development with code $alpha is visible to you.", $denied, 'The same answer as for a Development that does not exist.');
+    foreach ([$created['code'], 'Confidential', 'Discounts'] as $secret) {
+      $this->assertStringNotContainsString($secret, $denied);
+    }
+    $this->assertStringNotContainsString('Confidential', (string) $this->tool('create_artifact', ['idempotency_key' => 'retry-1', 'title' => 'x'] + $create, $bearer));
+
+    // Access restored: the retry returns the record, as it is now.
+    $development = Development::load($this->alpha->id());
+    $development->set('members', [$this->writer->id()])->save();
+    $again = $this->tool('create_artifact', $create, $bearer);
+    $this->assertIsArray($again, (string) json_encode($again));
+    $this->assertSame($created['code'], $again['code']);
+    $this->assertTrue($again['replayed']);
+    $storage = $this->container->get('entity_type.manager')->getStorage('artifact');
+    $this->assertSame(1, (int) $storage->getQuery()->accessCheck(FALSE)->count()->execute(), 'No duplicate.');
+
+    // A deleted record is not described, and nothing is created again.
+    $storage->delete($storage->loadMultiple());
+    $gone = $this->tool('create_artifact', $create, $bearer);
+    $this->assertSame('Error: This idempotency key was already used, and what it created is not available to you. Use a new key to create a record.', $gone);
+    $this->assertSame(0, (int) $storage->getQuery()->accessCheck(FALSE)->count()->execute());
+  }
+
   public function testOnlyWriteTokensOfWritersWrite(): void {
     $create = ['development' => $this->code($this->alpha), 'type' => 'decision', 'title' => 'Drupal is canonical'];
 

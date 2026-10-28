@@ -79,9 +79,12 @@ are no existence oracle.
 
 **Retries.**
 
-- `create_artifact` accepts an `idempotency_key`, remembered for seven days per person. The
-  same key with the same arguments returns the first result; with different arguments it
-  is refused.
+- `create_artifact` accepts an `idempotency_key`, remembered for seven days per person
+  together with the ID of the artifact it created, never its content. The same key with
+  the same arguments returns that artifact as the person may see it now, after the same
+  Development checks as a new request; if it was deleted or is hidden from them, the
+  retry is refused without describing it and nothing is created. With different
+  arguments the key is refused.
 - `register_external` and `link` return the existing reference or link instead of a
   duplicate.
 - `update_artifact` with `base_revision` refuses a stale revision.

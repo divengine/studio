@@ -109,10 +109,12 @@ class EngineeringWriter {
       throw new EngineeringWriteException(sprintf('Only these types can be created: %s.', implode(', ', static::TYPES)));
     }
     $request = hash('sha256', json_encode([$development_code, $type, $values]));
+    // A retry passes the same checks as the first request: a person who no
+    // longer may add records to the Development learns nothing from it.
+    $development = $this->development($development_code, $account);
     if ($replayed = $this->replay($idempotency_key, $request, $account)) {
       return $replayed;
     }
-    $development = $this->development($development_code, $account);
     $state = $this->state($values['state'] ?? 'draft');
     $artifact = Artifact::create([
       'type' => $type,
@@ -126,7 +128,7 @@ class EngineeringWriter {
     $artifact->setRevisionLogMessage($this->log($client, $values['log'] ?? 'Created.'));
     $this->save($artifact, $account, 'create');
     $result = $this->describe($artifact, $account);
-    $this->remember($idempotency_key, $request, $result, $account);
+    $this->remember($idempotency_key, $request, $artifact, $account);
     $this->audit('create_artifact', $artifact, $account, $client);
     return $result;
   }
@@ -475,7 +477,14 @@ class EngineeringWriter {
   }
 
   /**
-   * The answer to an earlier request with the same idempotency key.
+   * The record an earlier request with the same idempotency key created.
+   *
+   * Only the artifact's ID is remembered, never its content. A replay
+   * reloads it and answers with what the person may see now; a record that
+   * was deleted or is hidden from them is not described, and nothing is
+   * created again.
+   *
+   * @throws \Drupal\divengine_mcp_write\EngineeringWriteException
    */
   protected function replay(string $key, string $request, AccountInterface $account): ?array {
     if ($key === '') {
@@ -485,15 +494,22 @@ class EngineeringWriter {
     if (!$stored) {
       return NULL;
     }
-    if ($stored['request'] !== $request) {
+    if (($stored['request'] ?? NULL) !== $request) {
       throw new EngineeringWriteException('This idempotency key was used for a different request.');
     }
-    return $stored['result'] + ['replayed' => TRUE];
+    $artifact = isset($stored['id']) ? $this->entityTypeManager->getStorage('artifact')->load($stored['id']) : NULL;
+    if (!$artifact || !$artifact->access('view', $account)) {
+      throw new EngineeringWriteException('This idempotency key was already used, and what it created is not available to you. Use a new key to create a record.');
+    }
+    return $this->describe($artifact, $account) + ['replayed' => TRUE];
   }
 
-  protected function remember(string $key, string $request, array $result, AccountInterface $account): void {
+  /**
+   * Remembers which artifact a request with an idempotency key created.
+   */
+  protected function remember(string $key, string $request, Artifact $artifact, AccountInterface $account): void {
     if ($key !== '') {
-      $this->keyValue->get('divengine_mcp_write.idempotency')->setWithExpire($account->id() . ':' . $key, ['request' => $request, 'result' => $result], static::IDEMPOTENCY_TTL);
+      $this->keyValue->get('divengine_mcp_write.idempotency')->setWithExpire($account->id() . ':' . $key, ['request' => $request, 'id' => (int) $artifact->id()], static::IDEMPOTENCY_TTL);
     }
   }
 
