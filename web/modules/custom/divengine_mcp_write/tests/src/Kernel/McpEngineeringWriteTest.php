@@ -265,6 +265,113 @@ class McpEngineeringWriteTest extends KernelTestBase {
     $this->assertSame(0, (int) $storage->getQuery()->accessCheck(FALSE)->count()->execute());
   }
 
+  /**
+   * The engineering_contributor permissions of the #72 pilot account.
+   */
+  const CONTRIBUTOR = [
+    'access divengine',
+    'use unified process',
+    'view artifact',
+    'view artifact revisions',
+    'view latest version',
+    'create requirement artifact',
+    'create decision artifact',
+    'create evidence artifact',
+    'edit requirement artifact',
+    'edit decision artifact',
+    'edit evidence artifact',
+    'view trace links',
+    'view trace link revisions',
+    'create trace links',
+    'link external work',
+    'use requirement_lifecycle transition draft',
+    'use requirement_lifecycle transition propose',
+    'use artifact_lifecycle transition create_new_draft',
+    'use artifact_lifecycle transition submit_for_review',
+  ];
+
+  /**
+   * A least-privilege contributor submits revisions for review (#83).
+   *
+   * Update access is decided on the revision as it is, and the transition
+   * from its state to the requested one is checked by moderation validation.
+   * Before, access was asked after the new state was set, so submitting a
+   * decision or evidence for review needed transitions out of Review.
+   */
+  public function testLeastPrivilegeContributorSubmitsForReview(): void {
+    $contributor = $this->createUser(static::CONTRIBUTOR, 'contributor');
+    $contributor->addRole('mcp_user');
+    $contributor->addRole('mcp_writer');
+    $contributor->save();
+    $alpha = Development::load($this->alpha->id());
+    $alpha->get('members')->appendItem($contributor->id());
+    $alpha->save();
+    $bearer = 'Bearer ' . $this->oauthToken($contributor, ['mcp', 'mcp_write']);
+    $development = $this->code($this->alpha);
+    $storage = $this->container->get('entity_type.manager')->getStorage('artifact');
+    $history = function (string $code) use ($storage): array {
+      $id = current($storage->getQuery()->accessCheck(FALSE)->condition('artifact_key', $code)->execute());
+      $out = [];
+      foreach ($this->container->get('database')->query('SELECT revision_id FROM {artifact_revision} WHERE id = :id ORDER BY revision_id', [':id' => $id])->fetchCol() as $rid) {
+        $revision = $storage->loadRevision($rid);
+        $out[] = [$revision->get('moderation_state')->value, (string) $revision->getRevisionUserId(), $revision->getRevisionLogMessage()];
+      }
+      return $out;
+    };
+
+    foreach (['decision', 'evidence'] as $type) {
+      $draft = $this->tool('create_artifact', ['development' => $development, 'type' => $type, 'title' => "Pilot $type"], $bearer);
+      $this->assertIsArray($draft, (string) json_encode($draft));
+      $this->assertSame('draft', $draft['state']);
+
+      // Draft to Review, with the stale-write guard.
+      $this->assertStringContainsString('changed after revision', (string) $this->tool('update_artifact', ['code' => $draft['code'], 'state' => 'review', 'log' => 'x', 'base_revision' => $draft['revision'] - 1], $bearer));
+      $review = $this->tool('update_artifact', ['code' => $draft['code'], 'summary' => 'Ready.', 'state' => 'review', 'log' => 'Submit for review.', 'base_revision' => $draft['revision']], $bearer);
+      $this->assertIsArray($review, "$type to review: " . json_encode($review));
+      $this->assertSame('review', $review['state']);
+      $this->assertSame([
+        ['draft', (string) $contributor->id(), 'Through MCP (Test client): Created.'],
+        ['review', (string) $contributor->id(), 'Through MCP (Test client): Submit for review.'],
+      ], $history($draft['code']), "$type: history and revision users.");
+
+      // In Review the contributor has no transition (request changes and
+      // approval belong to reviewers): no revision is possible, in any state.
+      foreach (['draft', 'review'] as $state) {
+        $this->assertSame("Error: You may not revise {$draft['code']} while it is review.", $this->tool('update_artifact', ['code' => $draft['code'], 'summary' => 'Again.', 'state' => $state, 'log' => 'x'], $bearer));
+      }
+      // Proposed is not a state of their workflow.
+      $other = $this->tool('create_artifact', ['development' => $development, 'type' => $type, 'title' => "Other $type"], $bearer);
+      $this->assertStringContainsString('moderation_state', (string) $this->tool('update_artifact', ['code' => $other['code'], 'state' => 'proposed', 'log' => 'x'], $bearer));
+      $this->assertCount(1, $history($other['code']), 'A refused revision stores nothing.');
+
+      // Creating directly in Review is the same transition (Draft to Review)
+      // and the workflow allows it.
+      $direct = $this->tool('create_artifact', ['development' => $development, 'type' => $type, 'title' => "Direct $type", 'state' => 'review'], $bearer);
+      $this->assertSame('review', $direct['state']);
+    }
+
+    // Requirements: Draft to Proposed; Review is not theirs.
+    $requirement = $this->tool('create_artifact', ['development' => $development, 'type' => 'requirement', 'title' => 'Pilot requirement', 'statement' => 'The system shall.'], $bearer);
+    $this->assertSame('proposed', $this->tool('update_artifact', ['code' => $requirement['code'], 'state' => 'proposed', 'log' => 'Propose.'], $bearer)['state']);
+    $this->assertStringContainsString('moderation_state', (string) $this->tool('update_artifact', ['code' => $requirement['code'], 'state' => 'review', 'log' => 'x'], $bearer));
+
+    // Approving is never possible.
+    foreach (['approved', 'published'] as $state) {
+      $this->assertStringContainsString('Approving stays with people', (string) $this->tool('update_artifact', ['code' => $requirement['code'], 'state' => $state, 'log' => 'x'], $bearer));
+    }
+
+    // Outside its Development, without the scope or without the role: no.
+    $hidden = Artifact::create(['type' => 'decision', 'title' => 'Beta decision', 'development' => $this->beta->id()]);
+    $hidden->save();
+    $this->assertStringStartsWith('Error: No record with code', (string) $this->tool('update_artifact', ['code' => $hidden->get('artifact_key')->value, 'state' => 'review', 'log' => 'x'], $bearer));
+    $read_only = 'Bearer ' . $this->oauthToken($contributor, ['mcp']);
+    $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('update_artifact', ['code' => $requirement['code'], 'log' => 'x'], $read_only));
+    $editor = $this->createUser(static::CONTRIBUTOR);
+    $editor->addRole('mcp_user');
+    $editor->save();
+    $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('update_artifact', ['code' => $requirement['code'], 'log' => 'x'], 'Bearer ' . $this->oauthToken($editor, ['mcp', 'mcp_write'])));
+  }
+
   public function testOnlyWriteTokensOfWritersWrite(): void {
     $create = ['development' => $this->code($this->alpha), 'type' => 'decision', 'title' => 'Drupal is canonical'];
 

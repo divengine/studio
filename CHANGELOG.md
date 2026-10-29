@@ -96,6 +96,9 @@ No release has been published yet; everything below is on `main`.
 
 ### Fixed
 
+- MCP `engineering_update_artifact` can submit a decision or evidence for review with only
+  the Draft and Submit for review transitions: access is checked on the revision as it
+  was, and the transition by moderation validation (#83).
 - Trace links no longer reveal private endpoints through access checks, queries,
   listings, labels or cached collections (#21).
 - Captured baseline content and revisions can no longer be changed or deleted (#21).
