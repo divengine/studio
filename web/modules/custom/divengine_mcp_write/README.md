@@ -12,8 +12,10 @@ All of these, on every call:
 - The client is connected with OAuth (ADR-0017), not with the shared `mcp_bot` token.
 - Its token has the `mcp_write` scope. The token can do what both its person and the
   **MCP editor (scope)** role can do.
-- The person has the **MCP writer** role (*Write engineering records through MCP*) and the
-  **MCP user** role.
+- The person's account explicitly has the **MCP writer** role, and the **MCP user** role.
+  Having every permission is not enough: user 1 and administrators need the role too
+  (#79). Removing the role, deleting it or blocking the account stops writes on the next
+  request.
 - The person may do the same thing in Studio: create or edit that artifact type, add
   records to the Development, see both ends of a link. Content editors can.
 

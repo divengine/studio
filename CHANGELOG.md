@@ -115,6 +115,9 @@ No release has been published yet; everything below is on `main`.
 - Trace endpoint privacy fixes (#21).
 - symfony/mime updated from 7.4.19 to 7.4.22 for CVE-2026-45070, email header injection
   through MIME parameter names (#81).
+- MCP engineering writes require explicit membership in the **MCP writer** role, also for
+  user 1 and administrator roles, which have every permission (#79). The role is read
+  from the account on every request.
 
 ### Upgrade notes
 

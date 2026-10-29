@@ -51,8 +51,14 @@ There is no generic entity write, no SQL and no JSON patch: each tool calls one 
    Review transitions; create and delete trace links; link external work. The token can do
    what both its person and that role can do. The scope is checked on the token itself,
    because simple_oauth gives user 1 every permission whatever the scope.
-3. The person has **Write engineering records through MCP**, given by the new **MCP
-   writer** role. Nobody has it after installing or updating; an administrator grants it.
+3. The person's account explicitly holds the new **MCP writer** role (`mcp_writer`). The
+   role is read from the account as stored at each request, not from the token (whose
+   roles are those of its scopes) nor from effective permissions: user 1 and
+   administrator roles have every permission, so without the role they do not write
+   either (#79). A blocked account never writes. Nobody has the role after installing or
+   updating; an administrator grants it, preferably to a personal account that is not an
+   administrator. The role also carries **Write engineering records through MCP**,
+   checked too.
 4. The person may do the operation in Studio: entity create and update access, update
    access to the Development, view access to both ends of a link, `TraceRules`.
 
