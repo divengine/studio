@@ -158,17 +158,26 @@ class EngineeringWriter {
     }
     /** @var \Drupal\divengine_artifact\Entity\Artifact $working */
     $working = $storage->loadRevision($latest_id);
+    $state = $this->state($values['state'] ?? 'draft');
+    // Access is decided on the revision as it is. Content moderation grants
+    // update access only with a transition out of the current state; asked
+    // after the new state is set, it would look for transitions out of that
+    // one instead (#83). The transition itself, from the current state to the
+    // requested one, is then checked by moderation validation in save(), as
+    // the person.
+    if (!$working->access('update', $account)) {
+      throw new EngineeringWriteException(sprintf('You may not revise %s while it is %s.', $code, $working->get('moderation_state')->value));
+    }
     // A revision is a draft unless the client submits it. The workflow
     // decides what stays the default: a baselined requirement keeps its
     // baselined revision until people baseline the new one.
-    $state = $this->state($values['state'] ?? 'draft');
     $working->set('moderation_state', $state);
     $this->apply($working, $values);
     $working->setNewRevision(TRUE);
     $working->setRevisionUserId((int) $account->id());
     $working->setRevisionCreationTime($this->time->getRequestTime());
     $working->setRevisionLogMessage($this->log($client, (string) $values['log']));
-    $this->save($working, $account, 'update');
+    $this->save($working, $account, 'update', TRUE);
     $this->audit('update_artifact', $working, $account, $client);
     return $this->describe($working, $account);
   }
@@ -369,11 +378,15 @@ class EngineeringWriter {
 
   /**
    * Validates as the person, then saves.
+   *
+   * @param bool $access_checked
+   *   TRUE when the caller checked access on the entity before changing it;
+   *   validation still runs, including the moderation transition.
    */
-  protected function save(ContentEntityInterface $entity, AccountInterface $account, string $operation): void {
-    $allowed = $entity->isNew()
+  protected function save(ContentEntityInterface $entity, AccountInterface $account, string $operation, bool $access_checked = FALSE): void {
+    $allowed = $access_checked || ($entity->isNew()
       ? $this->entityTypeManager->getAccessControlHandler($entity->getEntityTypeId())->createAccess($entity->bundle(), $account)
-      : $entity->access($operation, $account);
+      : $entity->access($operation, $account));
     if (!$allowed) {
       throw new EngineeringWriteException(sprintf('You may not %s this %s.', $operation, $entity->getEntityType()->getSingularLabel()));
     }
