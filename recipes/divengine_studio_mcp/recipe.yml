@@ -65,6 +65,16 @@ config:
         plugins.engineering:
           enabled: true
           config: {}
+        # Configured content (ADR-0020): no bundle is exposed until an
+        # administrator adds a capability under Configuration > Web services
+        # > MCP content. Reading needs no write scope; writing has the same
+        # gates as engineering writes.
+        plugins.records:
+          enabled: true
+          config: {}
+        plugins.records-write:
+          enabled: true
+          config: {}
     # Read-only: the MCP plugins enabled here only read, and the service
     # account gets no write permissions.
     user.role.mcp_agent:

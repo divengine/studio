@@ -47,6 +47,34 @@ A typical session:
 Clients never approve: they set Draft, Proposed (requirements) or Review (decisions,
 evidence). People approve and baseline in Studio.
 
+## Configured content (ADR-0020)
+
+Besides the engineering tools, administrators can let clients work with ordinary content
+bundles, for example Knowledge Articles, without new code. At **Configuration › Web services
+› MCP content** (*Administer MCP content capabilities*), add a content type and choose:
+
+- the operations: read, create, update, and delete (delete off unless needed);
+- the writable fields (fields that decide identity, ownership, publication, revisions or the
+  Development, and unsupported field types, are never offered);
+- the Development field and whether creating a record needs a Development.
+
+| Tool | Who | Does |
+|---|---|---|
+| `records_capabilities` | any MCP connection | The enabled types, operations, writable fields and Development rules. |
+| `records_list`, `records_get` | any MCP connection, as its person | Records the person may see, including their own unpublished drafts. |
+| `records-write_create` | MCP writers (as above) | A record, unpublished and owned by the person, in a Development and language given by code. |
+| `records-write_update` | MCP writers | A new revision; publication, owner, Development and language never change. |
+| `records-write_delete` | MCP writers, only if enabled | Deletes with `confirm: true` and the person's own delete access. |
+
+A write token can only do what both its person and the `mcp_editor` scope role may do. To
+let clients create, for example, Knowledge Articles, also give `mcp_editor` the bundle's
+permissions (`create knowledge_article content`, `edit own knowledge_article content`,
+`view own unpublished content`). The capability form says whether that is still missing;
+nothing grants it automatically.
+
+Only bundles of content entity types that are revisionable with a log, owned, publishable
+and not moderated can be configured; Studio's own records keep their dedicated tools.
+
 ## Audit
 
 - Every write is a revision by the person, with the log `Through MCP (<client>): <reason>`.

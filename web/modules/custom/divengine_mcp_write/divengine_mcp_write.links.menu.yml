@@ -1,0 +1,5 @@
+entity.mcp_content_capability.collection:
+  title: 'MCP content'
+  description: 'Choose which content bundles MCP clients may read and write.'
+  parent: system.admin_config_services
+  route_name: entity.mcp_content_capability.collection

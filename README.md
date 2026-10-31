@@ -275,6 +275,10 @@ OAuth, can also create and revise requirements, decisions and evidence, register
 work and link them from their client. Nobody has that role after installing or updating.
 See `web/modules/custom/divengine_mcp_write/README.md`.
 
+**Configured content** (ADR-0020): administrators choose at **Configuration › Web services ›
+MCP content** which content bundles clients may read and, for MCP writers, create, revise or
+delete, field by field. Nothing is exposed until a bundle is added there.
+
 The web server must pass `/.well-known/oauth-*` to Drupal; the examples in
 [Web server security](#web-server-security) do.
 

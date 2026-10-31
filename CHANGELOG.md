@@ -72,6 +72,11 @@ No release has been published yet; everything below is on `main`.
   seven `engineering_*` tools. Writes are revisions by that person, are logged without
   their content, never approve, and stay inside the Developments the person may change.
 - External references have a code (`EXT-0001`) that MCP tools and `[[EXT-0001]]` use.
+- Administrator-configured content through MCP (#86, ADR-0020): at **Configuration › Web
+  services › MCP content**, enable read, create, update and (separately) delete per content
+  bundle and choose its writable fields. Clients read with `records_*` tools and MCP writers
+  write with `records-write_*` tools; new records are unpublished, owned by the person and
+  placed in a Development given by code. Nothing is exposed until configured.
 
 ### Changed
 
@@ -146,6 +151,10 @@ allowed to write. `drush updatedb` numbers existing external references (`EXT-00
 without new revisions). To let someone write from an AI client, give them the **MCP
 writer** role; clients they connected before must connect again to get the `mcp_write`
 scope.
+
+Re-applying `divengine_studio_mcp` also enables the configured-content MCP plugins (#86),
+which expose nothing until an administrator adds a content type at **Configuration › Web
+services › MCP content**.
 
 Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 
