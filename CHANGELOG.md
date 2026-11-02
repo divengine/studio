@@ -45,8 +45,8 @@ is planned as `0.1.0-alpha1`, with its functional scope frozen to what is listed
 - OAuth 2.1 for MCP clients (`divengine_mcp_oauth`, ADR-0017): claude.ai, Claude Desktop,
   ChatGPT and other clients connect by URL, register themselves and act as the person who
   authorizes them. They read only, unless that person is an MCP writer (see the
-  engineering writes and configured content below). Adds `drupal/simple_oauth`, the **MCP user** role and
-  `drush divengine:mcp-oauth-setup`.
+  engineering writes and configured content below). Adds `drupal/simple_oauth`, the
+  **MCP user** role and `drush divengine:mcp-oauth-setup`.
 - Native web installer: the `divengine_studio_installer` profile is selected
   automatically by `/core/install.php`, has a branded installer theme, an optional
   MCP integration step and finishes at `/studio`; also usable with

@@ -17,10 +17,16 @@ established.
     engineering records.
   - Knowledge articles are nodes (ADR-0011).
   - External work is the `external_reference` entity (ADR-0018).
-- **Decision 2.** Requirements follow `requirement_lifecycle` (draft, proposed, approved,
-  published, deprecated) and use cases follow `use_case_lifecycle`. The other bundles
-  follow `artifact_lifecycle` (draft, review, published, archived). There is no
-  *baselined* moderation state: baselines are separate records that freeze revisions
+- **Decision 2.** Workflows are per bundle family:
+  - requirements and business rules follow `requirement_lifecycle` (draft, proposed,
+    approved, published, deprecated);
+  - use cases and business use cases follow `use_case_lifecycle`;
+  - work products follow `work_product_lifecycle`;
+  - decisions, evidence, risks, references, method fragments and test cases follow
+    `artifact_lifecycle` (draft, review, published, archived);
+  - actor and worker bundles are not moderated.
+
+  There is no *baselined* moderation state: baselines are separate records that freeze revisions
   (ADR-0007), and captured revisions cannot be changed or deleted.
 - **Decision 3.** `trace_link_type` is a config entity with allowed ends; the shipped
   types include those listed above plus others contributed by modules.
