@@ -59,8 +59,9 @@ There is no generic entity write, no SQL and no JSON patch: each tool calls one 
    updating; an administrator grants it, preferably to a personal account that is not an
    administrator. The role also carries **Write engineering records through MCP**,
    checked too.
-4. The person may do the operation in Studio: entity create and update access, update
-   access to the Development, view access to both ends of a link, `TraceRules`.
+4. The person may do the operation in Studio: entity create and update access, taking part
+   in the Development (`contribute`, ADR-0021), view access to both ends of a link,
+   `TraceRules`.
 
 **What clients cannot do.**
 

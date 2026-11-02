@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\divengine_process\Plugin\Validation\Constraint;
 
 use Drupal\Core\Entity\FieldableEntityInterface;
+use Drupal\divengine_process\Access\DevelopmentVisibility;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -27,7 +28,9 @@ class ProcessDevelopmentEditableConstraintValidator extends ConstraintValidator 
         return;
       }
     }
-    if (!$development->access('update')) {
+    // Process structure needs to manage the Development; other records only
+    // to take part in it (#84).
+    if (!$development->access(DevelopmentVisibility::operationFor($entity->getEntityTypeId()))) {
       $this->context->buildViolation($constraint->message)
         ->setParameter('%development', (string) $development->label())
         ->atPath('development')

@@ -5,3 +5,6 @@ administer unified process:
   title: 'Administer the Unified Process (Process Manager)'
   description: 'Edit the process configuration and Development Cases, see every Development and delete process records.'
   restrict access: true
+create developments:
+  title: 'Create Developments'
+  description: 'Start new Developments, becoming their creator. Taking part in a Development (adding records to it) only needs to be one of its members.'

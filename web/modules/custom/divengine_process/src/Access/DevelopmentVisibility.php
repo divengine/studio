@@ -44,6 +44,42 @@ class DevelopmentVisibility {
   }
 
   /**
+   * Scoped records that shape a Development's process: creating, editing or
+   * deleting them manages the Development (#84). Every other scoped record
+   * is participation: whoever sees the Development may add it.
+   */
+  const STRUCTURE_TYPES = ['development_phase', 'iteration', 'milestone', 'role_assignment', 'baseline'];
+
+  /**
+   * Whether the account manages the Development: its details, members,
+   * Responsible and process structure.
+   *
+   * Process Managers, and the Development's creator and Responsible. Members
+   * participate (see access()) but do not manage.
+   */
+  public function manages(DevelopmentInterface $development, AccountInterface $account): AccessResultInterface {
+    if ($account->hasPermission('administer unified process')) {
+      return AccessResult::allowed()->cachePerPermissions();
+    }
+    if (!$account->hasPermission('use unified process') || $account->isAnonymous()) {
+      return AccessResult::neutral()->cachePerPermissions();
+    }
+    $uid = (int) $account->id();
+    return AccessResult::allowedIf((int) $development->getOwnerId() === $uid || (int) $development->get('responsible')->target_id === $uid)
+      ->cachePerPermissions()
+      ->cachePerUser()
+      ->addCacheableDependency($development);
+  }
+
+  /**
+   * The Development operation a record of a scoped entity type needs:
+   * "update" (manage) for process structure, "contribute" otherwise.
+   */
+  public static function operationFor(string $entity_type_id): string {
+    return in_array($entity_type_id, static::STRUCTURE_TYPES, TRUE) ? 'update' : 'contribute';
+  }
+
+  /**
    * Restricts a query on a Development-scoped entity type to visible rows.
    *
    * Developments are restricted to the visible ones; records that belong to

@@ -356,7 +356,7 @@ class ContentGateway {
     if (!$development || $development->getEntityTypeId() !== 'development' || !$development->access('view', $account)) {
       throw new EngineeringWriteException(sprintf('No Development with code %s is visible to you.', mb_strtoupper(mb_substr(trim($code), 0, 40))));
     }
-    if ($update && !$development->access('update', $account)) {
+    if ($update && !$development->access('contribute', $account)) {
       throw new EngineeringWriteException('You cannot add records to this Development.');
     }
     return $development;
@@ -504,7 +504,7 @@ class ContentGateway {
     if ((string) $now !== (string) $development) {
       throw new EngineeringWriteException('Saving would put the record in another Development (for example through its parent); records keep the Development they were created in.');
     }
-    if ($now && !$saved->get($field)->entity?->access('update', $account)) {
+    if ($now && !$saved->get($field)->entity?->access('contribute', $account)) {
       throw new EngineeringWriteException('You cannot add records to this Development.');
     }
   }

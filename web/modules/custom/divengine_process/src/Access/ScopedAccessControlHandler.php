@@ -12,10 +12,14 @@ use Drupal\Core\Session\AccountInterface;
 /**
  * Access to a record that belongs to one Development.
  *
- * Viewing and editing follow the Development. Deleting is for Process
- * Managers, except for lightweight records (see $usersDelete), which whoever
- * edits the Development may delete. Adding a record to a Development one
- * cannot edit is refused by the ProcessDevelopmentEditable constraint.
+ * Viewing follows the Development. Editing needs the Development operation
+ * of the record's type (DevelopmentVisibility::operationFor()): records of
+ * the process structure (phases, iterations, milestones, role assignments,
+ * baselines) are managed by those who manage the Development; other records
+ * by whoever participates in it (#84). Deleting is for Process Managers,
+ * except for lightweight records (see $usersDelete). Adding a record to a
+ * Development without that operation is refused by the
+ * ProcessDevelopmentEditable constraint.
  */
 class ScopedAccessControlHandler extends EntityAccessControlHandler {
 
@@ -33,10 +37,11 @@ class ScopedAccessControlHandler extends EntityAccessControlHandler {
     if (!$development) {
       return AccessResult::neutral()->cachePerPermissions()->addCacheableDependency($entity);
     }
+    $edit = DevelopmentVisibility::operationFor($entity->getEntityTypeId());
     $result = match ($operation) {
       'view', 'view label', 'view revision', 'view all revisions' => $development->access('view', $account, TRUE),
-      'update' => $development->access('update', $account, TRUE),
-      'delete' => $this->usersDelete ? $development->access('update', $account, TRUE) : AccessResult::neutral()->cachePerPermissions(),
+      'update' => $development->access($edit, $account, TRUE),
+      'delete' => $this->usersDelete ? $development->access($edit, $account, TRUE) : AccessResult::neutral()->cachePerPermissions(),
       default => AccessResult::neutral()->cachePerPermissions(),
     };
     return $result->addCacheableDependency($entity);

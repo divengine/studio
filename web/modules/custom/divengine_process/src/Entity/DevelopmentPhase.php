@@ -41,6 +41,7 @@ use Drupal\divengine_process\Form\ScopedEntityForm;
     'uuid' => 'uuid',
   ],
   constraints: [
+    'ProcessDevelopmentEditable' => [],
     'ProcessDateOrder' => ['message' => 'The end date of a phase is before its start date.'],
     'ProcessUniqueFields' => ['fields' => ['development', 'phase_type'], 'message' => 'A Development has one phase of each type.'],
   ],

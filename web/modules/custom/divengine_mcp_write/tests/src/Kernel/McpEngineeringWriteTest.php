@@ -372,6 +372,24 @@ class McpEngineeringWriteTest extends KernelTestBase {
     $this->assertStringStartsWith('JSON-RPC error', (string) $this->tool('update_artifact', ['code' => $requirement['code'], 'log' => 'x'], 'Bearer ' . $this->oauthToken($editor, ['mcp', 'mcp_write'])));
   }
 
+  /**
+   * Members write through MCP without managing the Development (#84).
+   */
+  public function testMembersWriteWithoutManaging(): void {
+    $alpha = Development::load($this->alpha->id());
+    $this->assertTrue($alpha->access('contribute', $this->writer));
+    $this->assertFalse($alpha->access('update', $this->writer), 'The writer is a member, not its creator or Responsible.');
+    $bearer = 'Bearer ' . $this->oauthToken($this->writer, ['mcp', 'mcp_write']);
+    $this->assertSame([['code' => $this->code($this->alpha), 'name' => 'Alpha', 'writable' => TRUE]], $this->tool('developments', [], $bearer));
+    $decision = $this->tool('create_artifact', ['development' => $this->code($this->alpha), 'type' => 'decision', 'title' => 'Member decision'], $bearer);
+    $this->assertIsArray($decision, (string) json_encode($decision));
+    $reference = $this->tool('register_external', ['development' => $this->code($this->alpha), 'url' => 'https://github.com/rafageist/ancora-goh/issues/91'], $bearer);
+    $this->assertIsArray($reference, (string) json_encode($reference));
+    $this->assertTrue($this->tool('link', ['source' => $decision['code'], 'type' => 'references', 'target' => $reference['code']], $bearer)['created']);
+    // No MCP tool creates Developments or changes their members.
+    $this->assertSame([], array_values(preg_grep('/development_(create|update|members)|developments_(create|update)/', $this->toolNames($bearer))));
+  }
+
   public function testOnlyWriteTokensOfWritersWrite(): void {
     $create = ['development' => $this->code($this->alpha), 'type' => 'decision', 'title' => 'Drupal is canonical'];
 

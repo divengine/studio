@@ -55,7 +55,7 @@ class DatabaseController extends ControllerBase {
   public function development(DevelopmentInterface $development): array {
     $storage = $this->entityTypeManager->getStorage('schema_database');
     $databases = $storage->loadMultiple($storage->getQuery()->accessCheck(TRUE)->condition('development', $development->id())->sort('name')->execute());
-    $add = $this->entityTypeManager->getAccessControlHandler('schema_database')->createAccess() && $development->access('update')
+    $add = $this->entityTypeManager->getAccessControlHandler('schema_database')->createAccess() && $development->access('contribute')
       ? $this->button($this->t('Register database'), Url::fromRoute('entity.schema_database.add_form', [], ['query' => ['development' => $development->id()]]), TRUE)
       : NULL;
     return $this->page() + [

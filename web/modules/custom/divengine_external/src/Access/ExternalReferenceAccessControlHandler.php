@@ -27,7 +27,7 @@ class ExternalReferenceAccessControlHandler extends ScopedAccessControlHandler {
     /** @var \Drupal\divengine_external\Entity\ExternalReference $entity */
     $development = $entity->get('development')->entity;
     $writer = AccessResult::allowedIfHasPermissions($account, ['link external work', 'administer external references'], 'OR');
-    $edits = $development ? $development->access('update', $account, TRUE) : AccessResult::neutral();
+    $edits = $development ? $development->access('contribute', $account, TRUE) : AccessResult::neutral();
     $result = $writer->andIf($edits)->orIf(AccessResult::allowedIfHasPermission($account, 'administer external references'));
     if ($operation === 'delete' && \Drupal::service('divengine_external.references')->traceCount($entity)) {
       return AccessResult::forbidden('Trace links still use this reference.')->addCacheTags(['trace_link_list'])->addCacheableDependency($entity);

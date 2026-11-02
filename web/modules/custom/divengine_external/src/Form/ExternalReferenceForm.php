@@ -19,7 +19,7 @@ class ExternalReferenceForm extends ContentEntityForm {
   public function form(array $form, FormStateInterface $form_state): array {
     /** @var \Drupal\divengine_external\Entity\ExternalReference $entity */
     $entity = $this->entity;
-    if ($entity->isNew() && ($id = $this->getRequest()->query->get('development')) && ($development = $this->entityTypeManager->getStorage('development')->load($id)) && $development->access('update')) {
+    if ($entity->isNew() && ($id = $this->getRequest()->query->get('development')) && ($development = $this->entityTypeManager->getStorage('development')->load($id)) && $development->access('contribute')) {
       $entity->set('development', $development->id());
     }
     $form = parent::form($form, $form_state);

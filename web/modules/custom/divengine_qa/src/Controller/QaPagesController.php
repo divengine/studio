@@ -57,7 +57,7 @@ class QaPagesController extends ControllerBase {
       [$this->t('QA Issues'), (string) count($issues), (string) $this->t('@n open', ['@n' => count($open_issues)]), $open_issues ? 'warning' : 'neutral'],
       [$this->t('Pass Rate'), number_format($figures['pass_rate'], 1) . '%', (string) $this->t('Cancelled runs not counted'), $figures['pass_rate'] >= 80 ? 'success' : ($figures['pass_rate'] >= 50 ? 'warning' : 'danger')],
     ]);
-    $add = QaPermissions::isLead($this->currentUser()) && $development->access('update')
+    $add = QaPermissions::isLead($this->currentUser()) && $development->access('contribute')
       ? $this->button($this->t('New Test Plan'), Url::fromRoute('entity.qa_test_plan.add_form', [], ['query' => ['development' => $development->id()]]), TRUE)
       : NULL;
     $build['plans'] = $this->section($this->t('Test Plans'), count($plans), $this->planTable($plans, FALSE), $add);
