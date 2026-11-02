@@ -5,3 +5,9 @@ services:
   divengine_mcp_write.writer:
     class: Drupal\divengine_mcp_write\EngineeringWriter
     arguments: ['@entity_type.manager', '@divengine_traceability.code_resolver', '@divengine_external.references', '@keyvalue.expirable', '@logger.channel.divengine_mcp_write', '@datetime.time']
+  divengine_mcp_write.content_models:
+    class: Drupal\divengine_mcp_write\ContentModels
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@entity_type.bundle.info', '@?content_moderation.moderation_information']
+  divengine_mcp_write.content:
+    class: Drupal\divengine_mcp_write\ContentGateway
+    arguments: ['@entity_type.manager', '@entity_field.manager', '@divengine_mcp_write.content_models', '@divengine_traceability.code_resolver', '@language_manager', '@account_switcher', '@database', '@keyvalue.expirable', '@logger.channel.divengine_mcp_write', '@datetime.time']

@@ -1,0 +1,5 @@
+entity.mcp_content_capability.add_form:
+  route_name: entity.mcp_content_capability.add_form
+  title: 'Add content type'
+  appears_on:
+    - entity.mcp_content_capability.collection

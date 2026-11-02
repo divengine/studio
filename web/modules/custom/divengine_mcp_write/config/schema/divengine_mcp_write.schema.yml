@@ -1,0 +1,41 @@
+divengine_mcp_write.content_capability.*:
+  type: config_entity
+  label: 'MCP content capability'
+  mapping:
+    id:
+      type: machine_name
+      label: 'ID'
+      constraints:
+        Regex:
+          pattern: '/^[a-z0-9_]+--[a-z0-9_]+$/'
+          message: 'The ID is the entity type and bundle joined by two hyphens.'
+    label:
+      type: required_label
+      label: 'Label'
+    entity_type:
+      type: string
+      label: 'Entity type'
+    bundle:
+      type: string
+      label: 'Bundle'
+    operations:
+      type: sequence
+      label: 'Operations'
+      sequence:
+        type: string
+        label: 'Operation'
+        constraints:
+          Choice:
+            choices: [read, create, update, delete]
+    fields:
+      type: sequence
+      label: 'Writable fields'
+      sequence:
+        type: string
+        label: 'Field'
+    development_field:
+      type: string
+      label: 'Development field'
+    require_development:
+      type: boolean
+      label: 'Creating a record needs a Development'

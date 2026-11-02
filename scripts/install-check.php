@@ -61,6 +61,9 @@ if ($expect_mcp) {
   $checks['MCP write scope on mcp_editor'] = ($scope = \Drupal::entityTypeManager()->getStorage('oauth2_scope')->load('mcp_write')) && $scope->getGranularity()->getConfiguration()['role'] === 'mcp_editor';
   $checks['nobody is an MCP writer'] = !\Drupal::entityTypeManager()->getStorage('user')->getQuery()->accessCheck(FALSE)->condition('roles', 'mcp_writer')->count()->execute();
   $checks['read-only MCP roles cannot write'] = !array_filter(['mcp_agent', 'mcp_user'], fn ($role) => \Drupal\user\Entity\Role::load($role)?->hasPermission('write engineering records through mcp'));
+  // Configured content (ADR-0020) exposes nothing until an administrator
+  // adds a content type.
+  $checks['no MCP content capability'] = !\Drupal::entityTypeManager()->getStorage('mcp_content_capability')->getQuery()->accessCheck(FALSE)->count()->execute();
 }
 // Analyzers push database snapshots with HTTP Basic.
 $checks['module basic_auth'] = $modules->moduleExists('basic_auth');

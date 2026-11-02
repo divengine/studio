@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install and update of Divengine MCP engineering writes.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Adds MCP content capabilities (#86, ADR-0020).
+ *
+ * Installs the configuration entity type only; no capability is created, so
+ * nothing is exposed until an administrator adds one.
+ */
+function divengine_mcp_write_update_11001(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  if (!$manager->getEntityType('mcp_content_capability')) {
+    $manager->installEntityType(\Drupal::entityTypeManager()->getDefinition('mcp_content_capability'));
+  }
+}
