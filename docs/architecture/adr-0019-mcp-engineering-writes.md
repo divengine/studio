@@ -2,8 +2,15 @@
 
 ## Status
 
-Proposed for #71 (part of #68). Security-sensitive: the scope, roles and tool list below
-need maintainer review before they are deployed.
+Accepted (reconciled 2026-11-02). Proposed for #71 (part of #68). After maintainer review
+it was merged and deployed, and then amended:
+
+- #79: the **MCP writer** role is required explicitly, also for user 1 and administrator
+  roles.
+- #83: revision access is checked before the moderation state changes.
+- #84 / ADR-0021: writing requires taking part in the Development, not managing it.
+
+Clients never approve. Workflow approval stays a human action in Studio.
 
 ## Context
 

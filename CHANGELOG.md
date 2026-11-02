@@ -4,7 +4,9 @@ All notable changes to Divengine Studio are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Version
 numbers follow the policy in [docs/releasing.md](docs/releasing.md#versioning-and-compatibility).
-No release has been published yet; everything below is on `main`.
+No release has been published yet; everything below is on `main`. The first pre-release
+is planned as `0.1.0-alpha1`, with its functional scope frozen to what is listed under
+**Unreleased** (see the milestone and [docs/releasing.md](docs/releasing.md)).
 
 ## Conventions
 
@@ -38,11 +40,12 @@ No release has been published yet; everything below is on `main`.
   Code Source (Git repositories), database schema snapshots and evolution, and
   language-neutral code documentation with a publishing API.
 - Studio workspace theme and the **Studio Manager** role.
-- Optional read-only MCP server (`recipes/divengine_studio_mcp`) with token
-  authentication and `drush divengine:mcp-setup`.
+- Optional MCP server (`recipes/divengine_studio_mcp`) with token authentication and
+  `drush divengine:mcp-setup`. The token's service account only reads.
 - OAuth 2.1 for MCP clients (`divengine_mcp_oauth`, ADR-0017): claude.ai, Claude Desktop,
   ChatGPT and other clients connect by URL, register themselves and act as the person who
-  authorizes them, read-only. Adds `drupal/simple_oauth`, the **MCP user** role and
+  authorizes them. They read only, unless that person is an MCP writer (see the
+  engineering writes and configured content below). Adds `drupal/simple_oauth`, the **MCP user** role and
   `drush divengine:mcp-oauth-setup`.
 - Native web installer: the `divengine_studio_installer` profile is selected
   automatically by `/core/install.php`, has a branded installer theme, an optional
@@ -77,6 +80,9 @@ No release has been published yet; everything below is on `main`.
   bundle and choose its writable fields. Clients read with `records_*` tools and MCP writers
   write with `records-write_*` tools; new records are unpublished, owned by the person and
   placed in a Development given by code. Nothing is exposed until configured.
+
+- `THIRD-PARTY-NOTICES.md` and a `PROVENANCE.md` for every bundled browser library, with
+  the upstream package, integrity hash and license (#89).
 
 ### Changed
 
@@ -171,6 +177,9 @@ Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 
 ### Known limitations
 
+The functional scope of `0.1.0-alpha1` is frozen; the items below are known and are not
+fixed in it.
+
 - **Alpha quality.** There is no published release and no compatibility promise between
   commits on `main` yet.
 - Only PHP 8.4 and PostgreSQL 16 or later are tested. PHP 8.3 is accepted by Drupal
@@ -178,13 +187,39 @@ Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 - Sites installed before Drupal 11.4 and new sites differ in what Drupal's Standard
   recipe provided (toolbar, Article and Basic page, History). `divengine_studio_base`
   cannot be applied to a site installed with the Minimal profile.
-- Concurrency guarantees for baseline capture, Development deletion and trace writes are
-  incomplete and are tracked in #23.
+- **Approval is role-based.** Approving a requirement, decision or other moderated record
+  needs the workflow's *Approve* transition permission (granted to Content editor and
+  Studio Manager) and the right to take part in its Development. Being a Development's
+  Responsible does **not** grant approval, and independent approval is **not** enforced:
+  a member with an approving role can approve a record they wrote. Development-specific
+  approval authority and independent approval are planned for beta (#90).
+- **MCP writes are new and security-sensitive.** MCP writers (an explicit role, OAuth
+  with the `mcp_write` scope) can create and revise engineering records, register
+  external work, link records and write the content bundles an administrator enables at
+  **MCP content**. MCP never approves: engineering tools only set Draft, Proposed or
+  Review, and configured content is created unpublished. Workflow approval is not an MCP
+  action. Nobody is an MCP writer and no content bundle is exposed after installing or
+  updating.
+- **Not yet tested:** allowed Git roots, pinned references and semantic diffs in Code
+  Source, and rollback of PostgreSQL schema imports in Database (#11).
+- **CodeDocs at scale:** the documentation browser loads the full unit and symbol lists of
+  a snapshot, and MCP CodeDocs output is raw (#22).
+- **Concurrency guarantees are partial (#23).** Transitions, baseline capture and trace
+  writes take locks inside their transactions, and Development deletion checks dependents
+  inside the delete transaction. Not guaranteed: a baseline reads its items in several
+  queries under `READ COMMITTED`, so a concurrent publication can produce a mixed-time
+  set; a dependent record inserted while a Development is being deleted; trace integrity
+  under every concurrent schedule; and anything written with direct SQL.
+- **Unresolved third-party licenses (#89):** Graphviz (EPL-1.0), shipped inside
+  PlantUML's `viz-global.js`, and the bpmn.io watermark clause of bpmn-js. Their
+  compatibility with GPL-3.0-or-later has not been determined. See
+  `THIRD-PARTY-NOTICES.md`.
 - Trace visibility checks grow with the size of the graph; scaling is to be measured
   in #17.
 - CodeDocs publisher permissions and documentation browser queries need bounds (#22).
-- Deprecation notices from contributed modules (`key`, `mcp`, `jsonrpc`) and some Studio
-  code appear in test output (#18).
+- Deprecation notices appear in test output: from contributed modules (`jsonrpc`, `key`,
+  `simple_oauth`, `consumers`, `mcp`), from core services, and from five places in
+  Studio's own code that are to be fixed for beta (#18).
 - `scripts/check-install.sh` and `scripts/check.sh` empty the test database they are
   given (#14); use a dedicated database or `scripts/check-install-paths.sh`.
 - Mermaid, DMN, CMMN, IFML, ArchiMate and Excalidraw notations are planned, not

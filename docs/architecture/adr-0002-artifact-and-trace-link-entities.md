@@ -2,7 +2,34 @@
 
 ## Status
 
-Proposed
+Accepted (reconciled 2026-11-02). Proposed on 2026-10-14; the decision has been the
+basis of every later module and ADR (ADR-0004, ADR-0005, ADR-0007, ADR-0018). Where the
+implementation departed from the original text, the notes below describe what is
+established.
+
+### Implementation notes
+
+- **Decision 1.** Requirements, use cases, actors, business rules, risks, decisions,
+  evidence, references, method fragments and work products are `artifact_type` bundles.
+  Three kinds of knowledge item are not artifacts, by later decisions:
+  - QA test cases are `qa_test_case` entities with runs, executions and frozen snapshots
+    (ADR-0008). A `test_case` artifact bundle also exists for test cases written as
+    engineering records.
+  - Knowledge articles are nodes (ADR-0011).
+  - External work is the `external_reference` entity (ADR-0018).
+- **Decision 2.** Requirements follow `requirement_lifecycle` (draft, proposed, approved,
+  published, deprecated) and use cases follow `use_case_lifecycle`. The other bundles
+  follow `artifact_lifecycle` (draft, review, published, archived). There is no
+  *baselined* moderation state: baselines are separate records that freeze revisions
+  (ADR-0007), and captured revisions cannot be changed or deleted.
+- **Decision 3.** `trace_link_type` is a config entity with allowed ends; the shipped
+  types include those listed above plus others contributed by modules.
+- **Decision 4.** Also enforced: both ends in the same Development, acyclic types
+  (`includes`, `generalizes`), and view access to both ends for creating links and for
+  seeing them.
+- **Decision 6.** Process structure is separate entities as decided. Work product
+  *instances* are the `work_product` artifact bundle, typed by `work_product_definition`
+  config.
 
 ## Context
 
