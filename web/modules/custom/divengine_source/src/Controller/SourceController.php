@@ -58,7 +58,7 @@ class SourceController extends ControllerBase {
   public function development(DevelopmentInterface $development): array {
     $storage = $this->entityTypeManager->getStorage('source_repository');
     $repositories = $storage->loadMultiple($storage->getQuery()->accessCheck(TRUE)->condition('development', $development->id())->sort('name')->execute());
-    $add = $this->entityTypeManager->getAccessControlHandler('source_repository')->createAccess() && $development->access('update')
+    $add = $this->entityTypeManager->getAccessControlHandler('source_repository')->createAccess() && $development->access('contribute')
       ? $this->button($this->t('Register repository'), Url::fromRoute('entity.source_repository.add_form', [], ['query' => ['development' => $development->id()]]), TRUE)
       : NULL;
     return $this->page() + [

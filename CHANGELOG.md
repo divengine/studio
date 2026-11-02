@@ -80,6 +80,11 @@ No release has been published yet; everything below is on `main`.
 
 ### Changed
 
+- Taking part in a Development is separate from managing it (#84, ADR-0021). Members add
+  records, but only the creator, the Responsible and Process Managers edit the Development
+  (details, members, Responsible) and its phases, iterations, milestones, role assignments
+  and baselines. Starting a Development needs the new **Create Developments** permission;
+  changing its creator, Process Manager.
 - Drupal core 11.4.10, Gin 5.0.16 and Drush 13.8.0 (#53, #54).
 - `recipes/divengine_studio` is now Drupal's Standard recipe followed by
   `divengine_studio_base`, and is only applied to new sites (#54).
@@ -155,6 +160,12 @@ scope.
 Re-applying `divengine_studio_mcp` also enables the configured-content MCP plugins (#86),
 which expose nothing until an administrator adds a content type at **Configuration › Web
 services › MCP content**.
+
+Re-applying `divengine_studio_base` grants **Create Developments** to Content editor
+(#84). Members who are neither creator nor Responsible no longer edit a Development, its
+members or its process structure, and roles without Content editor (QA-only and custom
+roles) no longer start Developments: give the Responsible role, **Create Developments** or
+**Administer the Unified Process** where that is wanted. There is no database update.
 
 Do not re-apply `recipes/divengine_studio` to an existing site (ADR-0015).
 

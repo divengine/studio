@@ -64,7 +64,7 @@ class LinkExternalWorkForm extends FormBase {
       return AccessResult::forbidden()->addCacheableDependency($record);
     }
     return $record->access('view', $account, TRUE)
-      ->andIf($development->access('update', $account, TRUE))
+      ->andIf($development->access('contribute', $account, TRUE))
       ->andIf(\Drupal::entityTypeManager()->getAccessControlHandler('external_reference')->createAccess(NULL, $account, [], TRUE))
       ->andIf(\Drupal::entityTypeManager()->getAccessControlHandler('trace_link')->createAccess(NULL, $account, [], TRUE));
   }

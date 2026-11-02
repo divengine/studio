@@ -169,6 +169,8 @@ config:
         - 'access divengine'
         - 'view divengine reports'
         - 'use unified process'
+        # Starting Developments is separate from taking part in them (#84).
+        - 'create developments'
         - 'view artifact'
         - 'create artifact'
         - 'edit artifact'

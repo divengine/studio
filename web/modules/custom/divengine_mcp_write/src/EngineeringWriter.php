@@ -84,7 +84,7 @@ class EngineeringWriter {
       $out[] = [
         'code' => $development->get('code')->value,
         'name' => $development->get('name')->value,
-        'writable' => $development->access('update', $account),
+        'writable' => $development->access('contribute', $account),
       ];
     }
     return $out;
@@ -318,7 +318,7 @@ class EngineeringWriter {
     if (!$development || $development->getEntityTypeId() !== 'development' || !$development->access('view', $account)) {
       throw new EngineeringWriteException(sprintf('No Development with code %s is visible to you.', mb_strtoupper(mb_substr(trim($code), 0, 40))));
     }
-    if (!$development->access('update', $account)) {
+    if (!$development->access('contribute', $account)) {
       throw new EngineeringWriteException('You cannot add records to this Development.');
     }
     return $development;

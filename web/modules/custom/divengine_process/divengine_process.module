@@ -119,8 +119,9 @@ function divengine_process_baseline_access(EntityInterface $baseline, string $op
 /**
  * Implements hook_ENTITY_TYPE_access() for artifact.
  *
- * An artifact of a Development is seen and edited only by those who see
- * and edit the Development; its type permissions still apply on top.
+ * An artifact of a Development is seen by those who see the Development and
+ * edited by those who take part in it (#84); its type permissions still apply
+ * on top.
  */
 function divengine_process_artifact_access(EntityInterface $artifact, string $operation, AccountInterface $account): AccessResult {
   if ($protected = divengine_process_baseline_protection($artifact, $operation)) {
@@ -130,7 +131,7 @@ function divengine_process_artifact_access(EntityInterface $artifact, string $op
   if (!$development) {
     return AccessResult::neutral()->addCacheableDependency($artifact);
   }
-  $development_operation = in_array($operation, ['view', 'view label', 'view revision', 'view all revisions'], TRUE) ? 'view' : 'update';
+  $development_operation = in_array($operation, ['view', 'view label', 'view revision', 'view all revisions'], TRUE) ? 'view' : 'contribute';
   $result = $development->access($development_operation, $account, TRUE);
   return ($result->isAllowed() ? AccessResult::neutral() : AccessResult::forbidden())
     ->addCacheableDependency($result)
@@ -166,7 +167,7 @@ function divengine_process_entity_prepare_form(EntityInterface $entity, string $
     return;
   }
   $id = \Drupal::request()->query->get('development');
-  if ($id && ($development = \Drupal::entityTypeManager()->getStorage('development')->load($id)) && $development->access('update')) {
+  if ($id && ($development = \Drupal::entityTypeManager()->getStorage('development')->load($id)) && $development->access('contribute')) {
     $entity->set('development', $development->id());
   }
 }

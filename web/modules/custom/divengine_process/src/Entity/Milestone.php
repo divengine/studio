@@ -47,6 +47,7 @@ use Drupal\divengine_process\Vocabulary;
     'uuid' => 'uuid',
   ],
   constraints: [
+    'ProcessDevelopmentEditable' => [],
     'ProcessStateTransition' => [],
     'ProcessSameDevelopment' => ['fields' => ['phase']],
     'ProcessUniqueFields' => ['fields' => ['development', 'milestone_type'], 'message' => 'A Development has one milestone of each type.'],

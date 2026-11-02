@@ -70,7 +70,7 @@ catalogue stays at six tools whatever the number of bundles.
 - the capability: operation enabled, fields allowlisted, model still supported;
 - Drupal, as the person: create, view, update and delete access, field edit access, entity
   validation, text formats the person may use, reference targets the person may view, and
-  update access to the Development.
+  the right to take part in the Development (`contribute`, ADR-0021).
 
 **Writes never change what Studio governs.**
 

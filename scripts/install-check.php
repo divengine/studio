@@ -71,6 +71,8 @@ $checks['module basic_auth'] = $modules->moduleExists('basic_auth');
 foreach (['content_editor', 'studio_manager', 'project_manager', 'qa_tester', 'qa_lead', 'qa_manager', 'database_analyzer', 'code_docs_publisher'] as $role) {
   $checks["role $role"] = (bool) \Drupal\user\Entity\Role::load($role);
 }
+// Starting Developments is its own permission (#84); Content editors keep it.
+$checks['Content editor starts Developments'] = (bool) \Drupal\user\Entity\Role::load('content_editor')?->hasPermission('create developments');
 $checks['every record type has a discussion'] = count(\Drupal::service('divengine_thread.manager')->types()) >= 17
   && (bool) \Drupal\field\Entity\FieldConfig::loadByName('node', 'knowledge_article', 'thread');
 $checks['[[CODE]] filter on Basic HTML'] = (bool) \Drupal\filter\Entity\FilterFormat::load('basic_html')?->filters('divengine_record_references')->status;

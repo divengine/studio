@@ -209,8 +209,13 @@ class DevelopmentTest extends KernelTestBase {
     $development->set('members', [$member->id(), $member_without_permission->id()])->set('responsible', $responsible->id())->save();
     \Drupal::entityTypeManager()->getAccessControlHandler('development')->resetCache();
     \Drupal::entityTypeManager()->getAccessControlHandler('development_phase')->resetCache();
-    $this->assertTrue($development->access('update', $member));
-    $this->assertTrue($phase->access('update', $member));
+    // Members take part; editing the Development and its structure is for
+    // its creator, Responsible and Process Managers (#84).
+    $this->assertTrue($development->access('contribute', $member));
+    $this->assertFalse($development->access('update', $member));
+    $this->assertFalse($phase->access('update', $member));
+    $this->assertTrue($development->access('update', $responsible));
+    $this->assertTrue($phase->access('update', $responsible));
     $this->assertTrue($development->access('view', $responsible));
     $this->assertFalse($development->access('view', $member_without_permission));
 
@@ -219,7 +224,8 @@ class DevelopmentTest extends KernelTestBase {
     $this->assertFalse($phase->access('delete', $member));
     $assignment = RoleAssignment::create(['development' => $development->id(), 'process_role' => 'tester', 'user' => $member->id()]);
     $assignment->save();
-    $this->assertTrue($assignment->access('delete', $member), 'Lightweight records can be deleted by whoever edits the Development.');
+    $this->assertFalse($assignment->access('delete', $member), 'Members do not remove role assignments.');
+    $this->assertTrue($assignment->access('delete', $responsible), 'Lightweight records can be deleted by whoever manages the Development.');
 
     // Queries only return what the user sees.
     $this->setCurrentUser($outsider);

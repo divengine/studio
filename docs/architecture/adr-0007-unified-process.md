@@ -113,6 +113,10 @@ is, in entity access and in queries (lists, Views, counts). Process roles never 
 access. Process configuration is visible to every user of the Unified Process and edited by
 Process Managers.
 
+Seeing a Development is taking part in it: adding records to it. Managing it, meaning its
+details, members, Responsible and process structure, is for its creator, its Responsible and
+Process Managers. Starting a Development needs **Create Developments** (see ADR-0021).
+
 ### Readiness and overview
 
 `ReadinessCriterion` plugins (the 11 core criteria, more from integrations) evaluate the

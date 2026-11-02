@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityFieldManagerInterface;
 use Drupal\Core\Entity\FieldableEntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\divengine_core\Form\EntityFormLayout;
+use Drupal\divengine_process\Access\DevelopmentVisibility;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,7 +34,7 @@ class ScopedEntityForm extends ContentEntityForm {
     $entity = $this->entity;
     if ($entity->isNew() && $entity->get('development')->isEmpty() && ($id = $this->getRequest()->query->get('development'))) {
       $development = $this->entityTypeManager->getStorage('development')->load($id);
-      if ($development && $development->access('update')) {
+      if ($development && $development->access(DevelopmentVisibility::operationFor($entity->getEntityTypeId()))) {
         $entity->set('development', $development->id());
       }
     }

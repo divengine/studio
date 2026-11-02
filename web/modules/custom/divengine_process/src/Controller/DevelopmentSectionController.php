@@ -9,6 +9,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Link;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Url;
+use Drupal\divengine_process\Access\DevelopmentVisibility;
 use Drupal\divengine_process\Entity\DevelopmentInterface;
 use Drupal\divengine_process\Vocabulary;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -46,7 +47,6 @@ class DevelopmentSectionController extends ControllerBase {
       ],
     ];
     $destination = Url::fromRoute('<current>')->toString();
-    $can_add = $development->access('update');
 
     foreach ($this->sections($section) as $key => $definition) {
       $count = $this->entityTypeManager->getStorage($definition['entity_type'])->getQuery()
@@ -60,7 +60,8 @@ class DevelopmentSectionController extends ControllerBase {
         'query' => ['development' => $development->id(), 'destination' => $destination],
       ]);
       $actions = NULL;
-      if ($can_add && $add->access()) {
+      // Baselines are process structure; other records are participation.
+      if ($development->access(DevelopmentVisibility::operationFor($definition['entity_type'])) && $add->access()) {
         $actions = Link::fromTextAndUrl($definition['add_label'], $add)->toRenderable()
           + ['#attributes' => ['class' => ['button', 'button--small', 'button--primary']]];
       }
