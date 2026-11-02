@@ -75,8 +75,9 @@ config:
         plugins.records-write:
           enabled: true
           config: {}
-    # Read-only: the MCP plugins enabled here only read, and the service
-    # account gets no write permissions.
+    # The token service account only reads: this role has no write
+    # permissions, and the write tools above are listed only to OAuth tokens
+    # with the mcp_write scope of MCP writers.
     user.role.mcp_agent:
       createIfNotExists:
         label: 'MCP agent'
@@ -97,7 +98,7 @@ config:
         - 'use code docs'
     # People who may connect an AI client to their own account with OAuth
     # (ADR-0017). The token can only do what both the person and the
-    # "MCP agent" role can do, so it never writes.
+    # "MCP agent" role can do, so a token with only the mcp scope never writes.
     user.role.mcp_user:
       createIfNotExists:
         label: 'MCP user'

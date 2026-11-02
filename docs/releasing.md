@@ -7,10 +7,13 @@ itself.
 
 ## Current status
 
-**No release has been published.** `main` is **alpha** by the criteria below: the
-installation paths are verified, but features and stored data are still changing, the
-upgrade path is tested only between selected commits and open integrity work remains
-(see the known limitations in [CHANGELOG.md](../CHANGELOG.md)).
+**No release has been published.** The first pre-release is planned as
+**`0.1.0-alpha1`**, with the functional scope of `main` frozen: only fixes for problems
+found by the release checklist are merged into it. The next planned pre-release is
+**`0.2.0-beta1`**. Both are tracked as GitHub milestones. `main` is **alpha** by the
+criteria below: the installation paths are verified, but features and stored data are
+still changing, the upgrade path is tested only between selected commits and open
+integrity work remains (see the known limitations in [CHANGELOG.md](../CHANGELOG.md)).
 
 ## Release stages
 
@@ -18,7 +21,7 @@ A stage is claimed only when its evidence exists for the release commit.
 
 | Stage | Evidence required | What users can expect |
 |---|---|---|
-| **alpha** | Required CI jobs pass. `scripts/check-install-paths.sh` passes on all paths. Installer Functional tests pass. Known limitations are listed. | For evaluation. Data, configuration and APIs may change; upgrading from an earlier alpha is attempted but may need manual steps. |
+| **alpha** | Required CI jobs pass. `scripts/check-install-paths.sh` passes on all paths. Installer Functional tests pass. Known limitations are listed. No bundled third-party license is undetermined or incompatible (`THIRD-PARTY-NOTICES.md`). Private vulnerability reporting is enabled and verified, and every reporting contact the documents publish is operational. | For evaluation. Data, configuration and APIs may change; upgrading from an earlier alpha is attempted but may need manual steps. |
 | **beta** | Alpha evidence, plus: the scope of the release is complete; an upgrade test from the previous pre-release passes; no known open bug causes data loss, an access bypass or a failed installation; deprecations from Studio's own code are addressed. | Upgrades from the previous beta are supported through the documented update steps. APIs and data structures change only when needed to fix bugs. |
 | **release candidate** | Beta evidence on the candidate commit, with no change other than fixes since. | The release unless a blocking problem is found. |
 | **stable** | Release candidate evidence, plus: an upgrade test from the previous stable release (or the last beta for the first stable); private vulnerability reporting enabled; a documented support window for the release line. | Supported as described in [SECURITY.md](../SECURITY.md) and below. No promise of response or fix times. |
@@ -37,10 +40,13 @@ Studio uses [Semantic Versioning](https://semver.org/) for the distribution as a
   documented update steps.
 - **PATCH**: bug fixes and security fixes, with no new configuration beyond what the fix
   needs.
-- Pre-releases carry a suffix: `1.0.0-alpha1`, `1.0.0-beta1`, `1.0.0-rc1`.
+- Pre-releases carry a suffix: `0.1.0-alpha1`, `0.2.0-beta1`, `1.0.0-rc1`.
+- Before `1.0.0`, versions start at `0.1.0`. A `0.x` MINOR may change data or
+  configuration in ways that need the manual steps described in its notes; stability
+  promises begin with beta as described in the stages above.
 
-Tags are the bare version (`1.0.0-alpha1`, without a `v` prefix), the format Composer and
-Drupal.org both accept. The numbering of the first release is a maintainer decision.
+Tags are the bare version (`0.1.0-alpha1`, without a `v` prefix), the format Composer and
+Drupal.org both accept. `0.1.0-alpha1` is the adopted identifier of the first pre-release.
 
 ### Supported platform
 
@@ -54,7 +60,7 @@ Each release states in its notes the versions it was tested with. For the curren
 | Drush, Composer | The versions locked in `composer.lock`; Composer 2. | Drush 13.8.0 |
 | Installation profile | `divengine_studio_installer` is the way to install new sites, through the web installer or `drush site:install`. | |
 | Recipes | `recipes/divengine_studio` is for new sites only. `recipes/divengine_studio_base` is applied to existing Drupal 11 sites that have what the Standard recipe or profile provides, and re-applied on every update (ADR-0015). | |
-| MCP integration | Optional. `recipes/divengine_studio_mcp` and the `drupal/mcp` and `drupal/jsonapi_schema` versions in `composer.lock`. Read-only. Sites without it are fully supported. | drupal/mcp 1.2.3 |
+| MCP integration | Optional. `recipes/divengine_studio_mcp` and the `drupal/mcp`, `drupal/jsonapi_schema` and `drupal/simple_oauth` versions in `composer.lock`. Clients read as the person who authorizes them (OAuth) or as a read-only service account (token). People with the explicit MCP writer role can also write engineering records and administrator-enabled content bundles (ADR-0019, ADR-0020); MCP never approves. Sites without it are fully supported. | drupal/mcp 1.2.3 |
 
 ### Upgrade support boundaries
 
@@ -93,7 +99,10 @@ Run every step on the exact commit to be released. Record the results in the rel
 issue; a failed step stops the release.
 
 1. **Approval.** The maintainer opens or confirms a release issue with the target
-   version and stage.
+   version and stage, and confirms that private vulnerability reporting is enabled
+   (open `https://github.com/divengine/studio/security/advisories/new` from an account
+   without write access) and that every contact published in `SECURITY.md` and
+   `CODE_OF_CONDUCT.md` is operational.
 2. **Commit.** Choose the commit on `main` and record its SHA. Only fixes for problems
    found by this checklist are merged until the tag is created.
 3. **Dependencies.**
@@ -143,10 +152,13 @@ issue; a failed step stops the release.
    permissions, access checks and queries, file handling, user input and output
    escaping, and configuration that grants permissions. Confirm that no reported
    vulnerability is unresolved without a decision.
-9. **License notices.** `LICENSE` is present. Every vendored library under
-   `web/modules/custom/*/js/vendor/` has its license file and a `PROVENANCE.md` matching
-   the shipped version. `composer licenses --no-dev` lists no license incompatible with
-   GPL-3.0-or-later.
+9. **License notices.** `LICENSE` and `THIRD-PARTY-NOTICES.md` are present. Every
+   vendored library under `web/modules/custom/*/js/vendor/` has its license file and a
+   `PROVENANCE.md` matching the shipped version, and its files are byte-identical to
+   the upstream package named there. No entry of `THIRD-PARTY-NOTICES.md` is
+   **Not determined** or incompatible with GPL-3.0-or-later; such an entry stops the
+   release until the maintainer decides it. `composer licenses --no-dev` is compared
+   with the notices.
 10. **Documentation.** README requirements and installation and update steps match what
     was tested. The **Unreleased** section of `CHANGELOG.md` becomes the release section,
     with upgrade notes and known limitations.
@@ -156,15 +168,15 @@ issue; a failed step stops the release.
 12. **Tag.** After the maintainer's approval of the results:
 
     ```bash
-    git tag -a 1.0.0-alpha1 -m "Divengine Studio 1.0.0-alpha1" <sha>
-    git push origin 1.0.0-alpha1
+    git tag -a 0.1.0-alpha1 -m "Divengine Studio 0.1.0-alpha1" <sha>
+    git push origin 0.1.0-alpha1
     ```
 
 13. **GitHub Release.** Create it from the tag with the changelog section as notes, and
     mark alpha, beta and release candidates as pre-releases:
 
     ```bash
-    gh release create 1.0.0-alpha1 --verify-tag --prerelease --title "1.0.0-alpha1" --notes-file notes.md
+    gh release create 0.1.0-alpha1 --verify-tag --prerelease --title "0.1.0-alpha1" --notes-file notes.md
     ```
 
 14. **After the release.** Start a new **Unreleased** section and close the release issue

@@ -261,9 +261,9 @@ Clients connect in one of two ways:
 
 - **OAuth 2.1** (any client, required by claude.ai and ChatGPT): add the server by its URL,
   `https://studio.example.com/mcp/post`, with no headers. The client opens Studio's login
-  and consent page and then acts as that person, read-only. People need the **MCP user**
-  role. `divengine:mcp-oauth-setup` creates the token signing keys in `private/oauth/`.
-  See `web/modules/custom/divengine_mcp_oauth/README.md` and
+  and consent page and then acts as that person (reading only, unless the person is an MCP
+  writer). People need the **MCP user** role. `divengine:mcp-oauth-setup` creates the
+  token signing keys in `private/oauth/`. See `web/modules/custom/divengine_mcp_oauth/README.md` and
   [ADR-0017](docs/architecture/adr-0017-mcp-oauth.md).
 - **Token** (clients that accept headers, and scripts): `divengine:mcp-setup` creates the
   `mcp_bot` account and a token in `private/divengine-mcp.token` (outside the web root,
@@ -368,4 +368,6 @@ issues.
 
 ## License
 
-GPL-3.0-or-later. See [LICENSE](LICENSE).
+GPL-3.0-or-later. See [LICENSE](LICENSE). Bundled third-party browser libraries keep their
+own licenses; see [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), which also lists the
+license questions still open.

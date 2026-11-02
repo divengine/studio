@@ -22,3 +22,8 @@ clause). Never edit these files; Divengine behaviour lives in
 To upgrade: `npm pack bpmn-js@<version>`, compare the tarball's sha512 with
 `npm view bpmn-js@<version> dist.integrity`, copy the files above and update
 this note and the library version in `divengine_modeler_bpmn.libraries.yml`.
+
+Whether the watermark clause is compatible with distributing Studio under
+GPL-3.0-or-later has **not been determined**. `divengine_modeler_bpmn.libraries.yml`
+declares `gpl-compatible: true`, which is a presumption. See #89 and
+`THIRD-PARTY-NOTICES.md`.

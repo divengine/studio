@@ -13,6 +13,23 @@ CRLF line endings; `../.gitattributes` stops git from converting them):
 - `themes.js` — the bundled `!theme` definitions.
 - `LICENSE`
 
+## What `viz-global.js` contains
+
+`viz-global.js` is Viz.js 3.24.0 (MIT, Copyright Michael Daines) as shipped inside
+`@plantuml/core`. It is not byte-identical to the `viz-global.js` of the `@viz-js/viz`
+3.24.0 package. Its header states that it contains other software in object code
+(WebAssembly) form:
+
+- **Graphviz** 14.1.1 (`graphvizVersion` in the file), licensed under the
+  **Eclipse Public License 1.0**. Source: <https://gitlab.com/graphviz/graphviz>.
+- **Expat**, licensed under the MIT license. Source: <https://github.com/libexpat/libexpat>.
+
+The package's `LICENSE` covers PlantUML only. It does not include the EPL-1.0 text or a
+source offer for Graphviz. Whether distributing this file with Studio is compatible with
+GPL-3.0-or-later has **not been determined**. The `plantuml` library in
+`divengine_modeler_uml.libraries.yml` declares MIT and `gpl-compatible: true`, which
+does not describe this file. See #89 and `THIRD-PARTY-NOTICES.md`.
+
 Never edit these files; Divengine behaviour lives in `../../uml-notation.js`.
 
 The standard library (`!include <C4/...>` and the sprite libraries) is not

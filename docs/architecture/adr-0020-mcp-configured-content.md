@@ -2,8 +2,11 @@
 
 ## Status
 
-Proposed for #86. Builds on [ADR-0019](adr-0019-mcp-engineering-writes.md). Security-sensitive:
-needs maintainer review before it is deployed.
+Accepted (reconciled 2026-11-02). Proposed for #86 and merged in #87 after maintainer and
+architecture review. Builds on [ADR-0019](adr-0019-mcp-engineering-writes.md). No content
+capability is configured by installing or updating. Generic content writes stay separate
+from workflow approval: records are created unpublished, and publication and moderation
+fields cannot be written.
 
 ## Context
 

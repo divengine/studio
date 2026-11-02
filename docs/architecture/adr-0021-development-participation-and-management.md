@@ -2,8 +2,21 @@
 
 ## Status
 
-Proposed for #84. Refines the access rules of
-[ADR-0007](adr-0007-unified-process.md).
+Accepted (reconciled 2026-11-02). Proposed for #84 and merged in #88 after maintainer
+review. Refines the access rules of [ADR-0007](adr-0007-unified-process.md).
+
+### Approval is not management
+
+Managing a Development, as its creator or Responsible, does **not** grant approval of its
+records. Approval stays role-based:
+
+- it needs the workflow's *Approve* transition permission, held by Content editor and
+  Studio Manager;
+- it needs the right to take part in the Development.
+
+Independent approval, where an author cannot approve their own record, is not enforced.
+Development-specific approval authority and independent approval are deferred to the beta
+design backlog (#90). No approval behaviour changed with this ADR.
 
 ## Context
 

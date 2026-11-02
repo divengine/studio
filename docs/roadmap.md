@@ -5,6 +5,29 @@ modelers whose elements link to engineering records, and a Unified Process layer
 governs the work. Each phase ends with kernel tests passing and the site installable from
 config.
 
+## Status (2026-11-02)
+
+The phases below describe how the core was built. Since Phase 4, Studio has also gained:
+
+- test management (ADR-0008);
+- projects and timesheets (ADR-0009, ADR-0010);
+- knowledge articles and discussions (ADR-0011);
+- Code Source (ADR-0012), database schemas (ADR-0013) and code documentation;
+- the web installer and the base recipe for updates (ADR-0014, ADR-0015);
+- MCP access with OAuth (ADR-0016, ADR-0017);
+- external references to GitHub work (ADR-0018);
+- MCP engineering writes and administrator-configured content (ADR-0019, ADR-0020);
+- separate rights to take part in a Development and to manage it (ADR-0021).
+
+**Releases.** The first pre-release, `0.1.0-alpha1`, freezes that scope: no new features,
+only documentation, licensing and checklist fixes. `0.2.0-beta1` is about upgrades,
+access and approval policy (#90), acceptance of the engineering traceability pilot (#72)
+and release hardening. Both are GitHub milestones; see
+[releasing.md](releasing.md) for the stage criteria.
+
+Phases 3 and 5 below, and the roadmap epics on GitHub (#27–#32, #38–#56), are after beta
+unless a milestone says otherwise.
+
 ## Phase 0 — Foundation cleanup ✅
 
 Done; see [handoff-003](handoff-003.md).
@@ -84,4 +107,5 @@ Never counts hours.
 
 - Semantic search across diagrams.
 - UI design (GrapesJS) and flow/function authoring.
-- AI assistance (planned on top of the explicit artifact and trace model).
+- AI assistance beyond MCP access (which exists: reading, and scoped writes that never
+  approve), planned on top of the explicit artifact and trace model.
