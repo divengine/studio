@@ -139,6 +139,13 @@ is planned as `0.1.0-alpha1`, with its functional scope frozen to what is listed
 - MCP engineering writes require explicit membership in the **MCP writer** role, also for
   user 1 and administrator roles, which have every permission (#79). The role is read
   from the account on every request.
+- Simple OAuth updated from 6.1.3 to 6.1.4 for SA-CONTRIB-2026-296 (CVE-2026-122058), an
+  access bypass through consumer settings. The client registration of MCP clients sets no
+  privileged consumer setting, so it keeps working without the new **Administer consumer
+  access settings** permission. Grant that permission to nobody but trusted administrators.
+- Drupal core updated from 11.4.10 to 11.4.12, which brings the Symfony 7.4.23 security
+  updates (among them symfony/http-foundation, http-kernel, routing, serializer, validator
+  and yaml) and masterminds/html5 2.12.0.
 
 ### Upgrade notes
 
