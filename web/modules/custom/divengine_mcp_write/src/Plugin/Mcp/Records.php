@@ -70,7 +70,7 @@ class Records extends McpPluginBase {
             'type' => $type,
             'development' => ['type' => 'string', 'description' => 'Only records of this Development (code, e.g. DEV-0001).'],
             'limit' => ['type' => 'integer', 'minimum' => 1, 'maximum' => ContentGateway::MAX_LIMIT],
-            'offset' => ['type' => 'integer', 'minimum' => 0],
+            'offset' => ['type' => 'integer', 'minimum' => 0, 'maximum' => ContentGateway::MAX_OFFSET],
           ],
           'required' => ['type'],
         ],

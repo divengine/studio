@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\divengine_mcp_write\Kernel;
 
 use Drupal\Core\Session\UserSession;
+use Drupal\divengine_mcp_write\ContentGateway;
 use Drupal\divengine_mcp_write\Entity\McpContentCapability;
 use Drupal\divengine_process\Entity\Development;
 use Drupal\field\Entity\FieldConfig;
@@ -227,6 +228,9 @@ class McpContentCapabilityTest extends KernelTestBase {
     $this->assertSame("Error: No node--knowledge_article record with id {$created['id']} is visible to you.", $hidden);
     $this->assertSame($hidden, str_replace('00000000-0000-4000-8000-000000000000', $created['id'], (string) $this->tool('records_get', ['type' => 'node--knowledge_article', 'id' => '00000000-0000-4000-8000-000000000000'], $colleague)));
     $this->assertSame([], $this->tool('records_list', ['type' => 'node--knowledge_article'], $colleague)['records']);
+    // Pages are bounded: a list never reads more than the offset limit plus a page.
+    $this->assertSame([], $this->tool('records_list', ['type' => 'node--knowledge_article', 'offset' => ContentGateway::MAX_OFFSET], $writer)['records']);
+    $this->assertSame('Error: The offset is at most 1000. Filter by Development to reach older records.', $this->tool('records_list', ['type' => 'node--knowledge_article', 'offset' => ContentGateway::MAX_OFFSET + 1], $writer));
 
     // Revise: a new revision with the log; stale and protected writes fail.
     $revised = $this->tool('records-write_update', ['type' => 'node--knowledge_article', 'id' => $created['id'], 'values' => ['title' => 'Contexto de Áncora GOH'], 'log' => 'Título', 'base_revision' => $created['revision']], $writer);

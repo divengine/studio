@@ -127,6 +127,8 @@ is planned as `0.1.0-alpha1`, with its functional scope frozen to what is listed
 - Cron no longer logs `ServiceNotFoundException: mcp.client_message.storage` on every run
   when the MCP integration is installed: Divengine MCP removes the MCP module's cron
   hook, which still calls the message storage that MCP removed with its SSE transport.
+- MCP `records_list` accepts an offset of at most 1000. A larger offset made one request
+  read and check most records of a configured content type (#86).
 
 ### Security
 

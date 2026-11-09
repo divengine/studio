@@ -38,6 +38,11 @@ class ContentGateway {
   const MAX_LIMIT = 50;
 
   /**
+   * How far a list may page: each page is read from the newest record on.
+   */
+  const MAX_OFFSET = 1000;
+
+  /**
    * How long an idempotency key is remembered, in seconds.
    */
   const IDEMPOTENCY_TTL = 7 * 86400;
@@ -119,6 +124,9 @@ class ContentGateway {
     $storage = $this->entityTypeManager->getStorage($entity_type->id());
     $limit = max(1, min(static::MAX_LIMIT, $limit));
     $offset = max(0, $offset);
+    if ($offset > static::MAX_OFFSET) {
+      throw new EngineeringWriteException(sprintf('The offset is at most %d. Filter by Development to reach older records.', static::MAX_OFFSET));
+    }
     $id_key = $entity_type->getKey('id');
     $base = function (bool $access_check) use ($storage, $entity_type, $capability, $id_key) {
       return $storage->getQuery()->accessCheck($access_check)
