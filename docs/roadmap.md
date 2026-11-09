@@ -79,10 +79,11 @@ renderer, link extractor, tests.
 
 ## Phase 4 — Unified Process ✅
 
-Done; see ADR-0007 and `web/modules/custom/divengine_process/README.md`. Integrations
-(UML generation, Discovery, QA, Project, dashboard) remain.
+Done; see ADR-0007 and `web/modules/custom/divengine_process/README.md`. QA and Project
+were added after it (see the status above). Deterministic UML generation, Discovery and the
+dashboard remain.
 
-Port the ideas of the CodeIntel Unified Process (not its code):
+The phase covers:
 
 - Business and system model as artifact bundles with workflows (ADR-0002).
 - `divengine_process`: process configuration (phase types, disciplines, process roles,
@@ -92,8 +93,8 @@ Port the ideas of the CodeIntel Unified Process (not its code):
 - Readiness engine with `ReadinessCriterion` plugins: advisory, never blocking, per
   milestone.
 - Work products and traces pointing to diagrams.
-- Deterministic UML generation from the model (system and business use-case diagrams)
-  with provenance: canonical input, input and output hashes, author, previous generation.
+- Not implemented yet: deterministic UML generation from the model (system and business
+  use-case diagrams) with provenance: canonical input, input and output hashes, author, previous generation.
   Regenerating never overwrites a diagram that was edited by hand; it creates a new
   revision instead.
 

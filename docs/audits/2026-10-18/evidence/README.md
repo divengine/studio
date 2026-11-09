@@ -1,5 +1,7 @@
 # Evidencia mínima reproducible
 
+> **Archived record — not maintained.** Consolidation audit of 2026-10-18 at commit `b6607ae`, written in Spanish. Every action it proposes became a GitHub issue (C01–C17, #1–#20). The P0 and P1 defects it describes were fixed before any release; the remaining follow-ups are open issues #11 and #15–#18, and the concurrency conditions of #23. Its commands and the state it reports are those of that date. For current behaviour see the module READMEs, the [ADRs](../../../architecture/) and [docs/development.md](../../../development.md); the [docs index](../../../README.md) explains how historical documents are kept.
+
 * [inventory.json](inventory.json): inventario derivado de `*.info.yml`, atributos de entidades, `*.services.yml` y archivos de tests en el commit analizado. El indicador de grafo acíclico se calculó sobre dependencias personalizadas declaradas, no sobre toda llamada PHP dinámica.
 * [results.json](results.json): entornos, resultados y ejecuciones no realizadas.
 * [junit-summary.json](junit-summary.json): métricas y 143 casos del JUnit de la suite existente, sin rutas absolutas del checkout. No incluye las sondas adicionales.

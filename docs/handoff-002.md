@@ -1,5 +1,7 @@
 # Handoff Report 002 — Drupal 11 Modernization & Test Hardening
 
+> **Archived record — not maintained.** Development handoff of 2026-10-14. It describes the code, the tests and the development site at that time; later work changed several of the modules, commands and limitations it mentions. For current behaviour see the module READMEs, the [ADRs](architecture/) and [docs/development.md](development.md); the [docs index](README.md) explains how historical documents are kept.
+
 ## Summary
 Completed Drupal 11 entity annotation→attribute migration, validation constraint cleanup, expanded test coverage, and test configuration hardening.
 

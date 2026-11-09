@@ -1,5 +1,7 @@
 # Iteración 1: privacidad de trazas y retención histórica
 
+> **Archived record — not maintained.** Report of consolidation iteration 1 (C01–C03, PR #21), 2026-10-19, written in Spanish. The test commands it records predate the safe test scripts of #14: `STUDIO_TEST_DB` and `scripts/check-install.sh` with a database URL are no longer supported. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Fecha: 19 de octubre de 2026. Alcance autorizado: **C01, C02 y C03** del informe `ad535bc`. Rama: `fix/iteration-1-trace-access-history`. Este documento registra implementación y validación para revisión; no autoriza desplegar ni continuar la Iteración 2.
 
 Complemento posterior: [revisión del PR #21 sobre rendimiento, retención y reproducción de sondas](PR-REVIEW.md). No modifica los resultados de implementación registrados aquí ni el código funcional de `735df0f`.

@@ -1,5 +1,7 @@
 # Arquitectura actual
 
+> **Archived record — not maintained.** Consolidation audit of 2026-10-18 at commit `b6607ae`, written in Spanish. Every action it proposes became a GitHub issue (C01–C17, #1–#20). The P0 and P1 defects it describes were fixed before any release; the remaining follow-ups are open issues #11 and #15–#18, and the concurrency conditions of #23. Its commands and the state it reports are those of that date. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Los paths de código de este informe se interpretan desde la raíz de Studio. El [inventario generado](evidence/inventory.json) enumera dependencias declaradas, entidades, servicios y clases de prueba por módulo.
 
 ## Módulos, entidades y relaciones
