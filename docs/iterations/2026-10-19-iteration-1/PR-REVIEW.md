@@ -1,5 +1,7 @@
 # Revisión adicional del PR de Iteración 1
 
+> **Archived record — not maintained.** Review notes on PR #21, 2026-10-19, written in Spanish. The trace visibility cost it measures is followed up in #17. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Fecha: 2026-10-19. [PR #21](https://github.com/divengine/studio/pull/21), base `main` en `ad535bc`, implementación revisada `735df0f`. Este complemento registra rendimiento y consecuencias operativas de C01–C03. No modifica código funcional, ADR ni alcance; no implementa C14 ni autoriza un despliegue.
 
 ## TraceVisibility: coste observado

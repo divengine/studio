@@ -1,5 +1,7 @@
 # Inventario y cobertura de comportamientos
 
+> **Archived record — not maintained.** Consolidation audit of 2026-10-18 at commit `b6607ae`, written in Spanish. Every action it proposes became a GitHub issue (C01–C17, #1–#20). The P0 and P1 defects it describes were fixed before any release; the remaining follow-ups are open issues #11 and #15–#18, and the concurrency conditions of #23. Its commands and the state it reports are those of that date. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Se ejecutó la suite existente sobre una base PostgreSQL nueva, separada de la del sitio, en la VM. El [resumen de resultados](evidence/results.json) y el [inventario](evidence/inventory.json) permiten revisar cifras y clases sin exponer DSN ni credenciales. El resumen JUnit conserva los 143 casos, incluidas variantes de data providers.
 
 ## Tipos de prueba encontrados
@@ -47,12 +49,12 @@ Los nombres cortos siguientes corresponden a `web/modules/custom/<módulo>/tests
 
 ## Ejecución segura y comandos
 
-En la VM `/home/rafa/workspace/divengine/studio`, un driver temporal creó una base nueva con nombre `studio_audit_<uuid>`, usando un rol de pruebas ya configurado. Se sobreescribió `SIMPLETEST_DB` en el entorno del proceso, sin imprimir su valor. Al terminar, se eliminó **solo esa base creada por la ejecución**. El Kernel usó el esquema/prefix de pruebas habitual. No se ejecutó el reset de `scripts/check-install.sh`.
+En el checkout de la VM de desarrollo, un driver temporal creó una base nueva con nombre `studio_audit_<uuid>`, usando un rol de pruebas ya configurado. Se sobreescribió `SIMPLETEST_DB` en el entorno del proceso, sin imprimir su valor. Al terminar, se eliminó **solo esa base creada por la ejecución**. El Kernel usó el esquema/prefix de pruebas habitual. No se ejecutó el reset de `scripts/check-install.sh`.
 
 Comando de la suite (con `SIMPLETEST_DB` apuntando a esa base nueva):
 
 ```sh
-vendor/bin/phpunit -c /home/rafa/workspace/divengine/studio/phpunit.xml.dist \
+vendor/bin/phpunit -c phpunit.xml.dist \
   --no-progress --do-not-cache-result \
   --log-junit /tmp/studio-audit-yhl5ubcq/junit.xml
 ```
