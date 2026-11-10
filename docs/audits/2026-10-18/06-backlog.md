@@ -1,5 +1,7 @@
 # Backlog de consolidación
 
+> **Archived record — not maintained.** Consolidation audit of 2026-10-18 at commit `b6607ae`, written in Spanish. Every action it proposes became a GitHub issue (C01–C17, #1–#20). The P0 and P1 defects it describes were fixed before any release; the remaining follow-ups are open issues #11 and #15–#18, and the concurrency conditions of #23. Its commands and the state it reports are those of that date. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Este backlog es una propuesta ejecutable, no autorización para cambiar arquitectura ni una lista de correcciones ya aplicadas. Cada acción remite al [hallazgo con evidencia exacta](03-hallazgos.md). P0 = exposición o pérdida histórica crítica; P1 = consolidación necesaria; P2 = mantenibilidad/documentación; P3 = ampliación condicionada a una necesidad real.
 
 ## C01 · P0 · Acceso a trazas y referencias privadas

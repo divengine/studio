@@ -1,5 +1,7 @@
 # Handoff Report 004 — Phase 1: Modeler Platform, BPMN and UML
 
+> **Archived record — not maintained.** Development handoff of 2026-10-15. It describes the code, the tests and the development site at that time; later work changed several of the modules, commands and limitations it mentions. For current behaviour see the module READMEs, the [ADRs](architecture/) and [docs/development.md](development.md); the [docs index](README.md) explains how historical documents are kept.
+
 ## Summary
 
 Studio now has a diagram platform and its first two notations, one of each family:

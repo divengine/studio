@@ -1,5 +1,7 @@
 # Handoff Report 005 — Phase 2: Embedding Diagrams in Text
 
+> **Archived record — not maintained.** Development handoff of 2026-10-15. It describes the code, the tests and the development site at that time; later work changed several of the modules, commands and limitations it mentions. For current behaviour see the module READMEs, the [ADRs](architecture/) and [docs/development.md](development.md); the [docs index](README.md) explains how historical documents are kept.
+
 ## Summary
 
 Diagrams can now be embedded in any formatted text field. CKEditor 5 has a "Diagram"

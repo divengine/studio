@@ -1,5 +1,7 @@
 # Divengine Studio — MVP Scope
 
+> **Archived record — not maintained.** Initial MVP scope of 2026-10-14. Studio has since grown well beyond it; the [roadmap](../roadmap.md) and the [CHANGELOG](../../CHANGELOG.md) describe the current scope. For current behaviour see the module READMEs, the [ADRs](../architecture/) and [docs/development.md](../development.md); the [docs index](../README.md) explains how historical documents are kept.
+
 ## Goal
 
 Deliver a working installable Drupal codebase with the core domain model for

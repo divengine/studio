@@ -1,5 +1,7 @@
 # Iteración 2: integridad del dominio
 
+> **Archived record — not maintained.** Report of consolidation iteration 2 (C04–C08, PR #33), 2026-10-20, written in Spanish. The open concurrency conditions it lists are tracked in #23. The test commands it records predate the safe test scripts of #14: `STUDIO_TEST_DB` and `scripts/check-install.sh` with a database URL are no longer supported. For current behaviour see the module READMEs, the [ADRs](../../architecture/) and [docs/development.md](../../development.md); the [docs index](../../README.md) explains how historical documents are kept.
+
 Fecha: 20 de octubre de 2026. Alcance autorizado: **C04, C05, C06, C07 y C08** (issues #4–#8). Rama: `fix/iteration-2-domain-integrity`, basada en `f42c24a` (merge del PR #21). Este documento registra implementación y validación; no autoriza desplegar ni iniciar la Iteración 3.
 
 Las condiciones de concurrencia que quedan abiertas están registradas en la issue #23 y se aplazaron por decisión explícita. Este documento **no** las declara resueltas.
