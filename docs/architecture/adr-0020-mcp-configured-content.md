@@ -100,7 +100,8 @@ catalogue stays at six tools whatever the number of bundles.
 
 - `base_revision` refuses stale updates.
 - Idempotency keys work as in ADR-0019: the ID only, rechecked on replay.
-- Lists are capped at 50 records.
+- Lists are capped at 50 records, and their offset at 1000: each page is read from the
+  newest record on, so a larger offset would read most of the bundle in one request.
 
 **Delete** is off by default. When enabled it needs `confirm: true` and the person's own
 delete access, and runs the entity's delete with its hooks; nothing cascades from MCP.
